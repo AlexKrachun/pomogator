@@ -1,0 +1,8 @@
+aiogram==3.15.0
+fastapi==0.115.6
+jose==1.0.0
+openai==1.57.0
+passlib==1.7.4
+pydantic==2.10.3
+python-dotenv==1.0.1
+python_jose==3.3.0

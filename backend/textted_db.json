@@ -24,6 +24,11 @@
             "id": "2f88fb08-55cc-4d26-8ddb-d6a79cc42a5f",
             "username": "string1",
             "hashed_password": "$2b$12$gIveUcSm1cNsEpjaCpJCVeQed2fLOg4IRA/ezSvK18rV9M6hK4TUa"
+        },
+        {
+            "id": "498ac87e-5b86-4567-8f0c-9154b9e83d96",
+            "username": "karim",
+            "hashed_password": "$2b$12$R0XQLY9ibi0l9u9sCkEEvOtIoUQ8YfHO0EimlexOlva5wl1alLQQa"
         }
     ]
 }

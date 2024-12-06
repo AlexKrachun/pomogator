@@ -1,0 +1,29 @@
+{
+    "users": [
+        {
+            "id": "94a7fd27-180e-40ff-a126-ba037f4fe06a",
+            "username": "testname",
+            "hashed_password": "$2b$12$4ko6ZmK1Vnm32MR0XEGuTO9RzX93SEh.2CKUqLs601qNiPb7MAMZy"
+        },
+        {
+            "id": "54eb1bc2-5750-4dd9-9ae2-d08cd853985b",
+            "username": "string",
+            "hashed_password": "$2b$12$cVQ62qL8EGFTdeIvtE1Ri.C9HdiGcXn71cPgYC.ejyG93d39DV4JO"
+        },
+        {
+            "id": "3288bd06-de77-4a38-9ead-aaa4ab0ad7ef",
+            "username": "string",
+            "hashed_password": "$2b$12$QVzE68Uic0aH3NsrXefEOO5jsBjwe3uf4xnq6kxPzGVN.U/naNW/y"
+        },
+        {
+            "id": "8f30248e-9416-4142-8af9-c94dd7151147",
+            "username": "string",
+            "hashed_password": "$2b$12$Uu0QKGJY0C7xercUazyMAuQyQsEPy16TrDmC.Hw9Paok/YoMc8KN2"
+        },
+        {
+            "id": "2f88fb08-55cc-4d26-8ddb-d6a79cc42a5f",
+            "username": "string1",
+            "hashed_password": "$2b$12$gIveUcSm1cNsEpjaCpJCVeQed2fLOg4IRA/ezSvK18rV9M6hK4TUa"
+        }
+    ]
+}

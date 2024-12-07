@@ -51,7 +51,7 @@ async def test_inline_modes():
 
     all_buttons = {button.text for row in result.inline_keyboard for button in row}
 
-    assert all_buttons == expected_buttons, f"Expected buttons {expected_buttons}, but got {all_buttons}"
+    assert all_buttons == expected_buttons
 
 
 def test_inline_pay():

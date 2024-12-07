@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from aiogram.filters import Command
 from additioanl.message_templates import message_templates, get_changed_context_line
 from app.keyboard import inline_contexts, inline_modes, inline_pay, chatgpt_models
-from app.openai_api_test import get_completion
+from app.openai_api_test import get_completion, request_get_topic
 
 import uuid
 
@@ -26,6 +26,23 @@ def get_user_model(user_id, curr_users_models):
     return curr_users_models[user_id]
 
 
+def make_context_history(all_contexts_dict, context_id, us_name):
+    context_history = ''
+    for d in all_contexts_dict[context_id]:
+        if d['role'] == 'user':
+            context_history += '😍' + us_name + ':'
+        elif d['role'] == 'assistant':
+            context_history += '🤖ChatGPT:'
+        context_history += '\n'
+        context_history += d['content']
+        context_history += '\n'
+        context_history += '\n'
+
+    context_history += 'Контекст переключен'
+
+    return context_history
+
+
 user_languages = {}
 messages = dict()
 all_contexts = dict()  # context_id -> JSON
@@ -35,10 +52,6 @@ curr_users_models = dict()
 from_context_id_get_topic = dict()  # context_id -> topic
 router = Router()
 
-base_for_request = [{"role": "system", "content": "You are a helpful assistant."}]
-base_for_topic_request = [{"role": "system",
-                           "content": "You make a title for messages in a maximum of several words, write only words,"
-                                      " without formulas and nothing else"}]
 
 id_in_processing = set()
 id_not_new_users = set()
@@ -109,45 +122,26 @@ async def about_cmd(message: Message):
     await message.answer(message_templates['ru']['delete_context'])
 
 
-@router.callback_query()
-async def callback_router(callback: types.CallbackQuery):
-    # Разделяем callback.data для различения типов
-    if callback.data.startswith("context:"):
-        await handle_context_switch(callback)
-    elif callback.data.startswith("model:"):
-        await handle_model_switch(callback)
-    else:
-        await callback.answer("Неизвестная команда")
-
-
+@router.callback_query(F.data.startswith('context:'))
 async def handle_context_switch(callback: types.CallbackQuery):
-    context_id = callback.data.split("context:")[1]
+    print(callback.data)
+    context_id = callback.data.removeprefix("context:")
+
     us_id = callback.from_user.id
     us_name = callback.from_user.username
-
     topic = from_context_id_get_topic[context_id]
     curr_users_context[us_id] = context_id
 
     await callback.answer()
     await callback.message.answer(get_changed_context_line(topic))
 
-    context_history = ''
-    for d in all_contexts[context_id]:
-        if d['role'] == 'user':
-            context_history += us_name + ':'
-        elif d['role'] == 'assistant':
-            context_history += 'ChatGPT:'
-        context_history += '\n'
-        context_history += d['content']
-        context_history += '\n'
-        context_history += '\n'
-
-    context_history += 'Контекст переключен'
+    context_history = make_context_history(all_contexts, context_id, us_name)
     await callback.message.answer(context_history)
 
 
+@router.callback_query(F.data.startswith('model:'))
 async def handle_model_switch(callback: types.CallbackQuery):
-    model_name = callback.data.split("model:")[1]
+    model_name = callback.data.removeprefix("model:")
     us_id = callback.from_user.id
     print(model_name, us_id)
 
@@ -159,14 +153,12 @@ async def handle_model_switch(callback: types.CallbackQuery):
                                      reply_markup=await inline_modes(us_id, curr_users_models))
 
 
-
 # @router.message()
 @router.message(F.content_type.in_({'text', 'photo'}))
 async def echo_msg(message):
     us_id = message.from_user.id
     user_message = message.text
     print(message.photo)
-
 
     if us_id in id_in_processing:
         await message.answer(message_templates['ru']['id_in_procces'])
@@ -184,8 +176,7 @@ async def echo_msg(message):
             get_users_contexts[us_id] = [new_hash]
             curr_users_context[us_id] = new_hash
             all_contexts[new_hash] = [{"role": "user", "content": message.text}]
-            from_context_id_get_topic[new_hash] = await get_completion(
-                base_for_topic_request + [{"role": "user", "content": message.text}], 'gpt-4o-mini')
+            from_context_id_get_topic[new_hash] = await request_get_topic(message.text)
 
         elif curr_users_context[us_id] == '':
             new_hash = generate_unique_number()
@@ -193,30 +184,23 @@ async def echo_msg(message):
             curr_users_context[us_id] = new_hash
             all_contexts[new_hash] = [{"role": "user", "content": message.text}]
 
-            from_context_id_get_topic[new_hash] = await get_completion(
-                base_for_topic_request + [{"role": "user", "content": message.text}], 'gpt-4o-mini')
+            from_context_id_get_topic[new_hash] = await request_get_topic(message.text)
         else:
             all_contexts[curr_users_context[us_id]].append({"role": "user", "content": message.text})
 
-
-        print(f'Пишу модели пользователей: {get_user_model(us_id, curr_users_models)}', us_id, curr_users_models)
         curr_context_id = curr_users_context[us_id]
-        print(from_context_id_get_topic)
+
+
         processing_message = await message.answer(message_templates['ru']['processing'])
         await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
         # response = "ЗАГЛУШКА"
-        response = await get_completion(base_for_request + all_contexts[curr_context_id][-10:],
+        response = await get_completion(all_contexts[curr_context_id][-10:],
                                         get_user_model(us_id, curr_users_models))
         await message.answer(response)
-        # await message.answer(response, parse_mode='Markdown')
-
-        # await message.answer(response, parse_mode="MarkdownV2")
-        # await message.answer(f"<code>{response}</code>", parse_mode="HTML")
 
         all_contexts[curr_context_id].append({"role": "assistant", "content": response})
 
         await message.bot.delete_message(chat_id=processing_message.chat.id, message_id=processing_message.message_id)
-        print(all_contexts[curr_context_id])
 
         id_in_processing.remove(us_id)
     finally:

@@ -13,8 +13,15 @@ limit_tokens = {
     'o1-preview': 5000
 }
 
+base_for_request = [{"role": "system", "content": "You are a helpful assistant."}]
+
+base_for_topic_request = [{"role": "system",
+                           "content": "You make a title for messages in a maximum of several words, write only words,"
+                                      " without formulas and nothing else"}]
+
 
 async def get_completion(messages_array, model):
+    messages_array = base_for_request + messages_array
     completion = await client.chat.completions.create(
         model=model,
         messages=messages_array,
@@ -23,3 +30,14 @@ async def get_completion(messages_array, model):
     print(f'Модель - {model}')
     return completion.choices[0].message.content
 
+
+async def request_get_topic(message):
+    model = 'gpt-4o-mini'
+    messages_array = base_for_topic_request + [{"role": "user", "content": message}]
+    completion = await client.chat.completions.create(
+        model=model,
+        messages=messages_array,
+        max_tokens=limit_tokens[model]
+    )
+    print(f'Модель - {model}')
+    return completion.choices[0].message.content

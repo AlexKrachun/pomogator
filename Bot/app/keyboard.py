@@ -1,3 +1,4 @@
+ 
 from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardMarkup, InlineKeyboardButton)
 
@@ -16,40 +17,29 @@ def get_user_model(user_id, curr_users_models):
     if user_id not in curr_users_models:
         return 'gpt-4o-mini'
 
-    # return curr_users_models[user_id]
     return curr_users_models.get(user_id, 'gpt-4o-mini')
 
 
-chatgpt_models = ['gpt-4o', 'gpt-4o-mini']
+chatgpt_models = ['gpt-4o-mini', 'gpt-4o']
 
 
 async def inline_modes(user_id, curr_users_models):
-    own_chatgpt_models = []
     print(curr_users_models)
     print(user_id, get_user_model(user_id, curr_users_models))
-    for mode in chatgpt_models:
-        if get_user_model(user_id, curr_users_models) == mode:
-            own_chatgpt_models.append(mode + '✅')
-        else:
-            own_chatgpt_models.append(mode)
-
     keyboard = InlineKeyboardBuilder()
-    keyboard.add(InlineKeyboardButton(text=own_chatgpt_models[1], callback_data=f'model:{chatgpt_models[1]}'))
-    keyboard.add(InlineKeyboardButton(text=own_chatgpt_models[0], callback_data=f'model:{chatgpt_models[0]}'))
-    keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
-    keyboard.add(InlineKeyboardButton(text='o1-mini', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
+
+    for mode in chatgpt_models:
+        curr_mode = mode
+        if get_user_model(user_id, curr_users_models) == mode:
+            curr_mode += '✅'
+
+        keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{curr_mode}'))
+
+    # keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
+    # keyboard.add(InlineKeyboardButton(text='o1-mini', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
 
     return keyboard.adjust(2).as_markup()
 
-
-# mode_keyboard = InlineKeyboardMarkup(
-#     inline_keyboard=[
-#         [InlineKeyboardButton(text="GPT-4o mini", callback_data=f'model:{chatgpt_models[1]}'),
-#          InlineKeyboardButton(text="GPT-4o", callback_data=f'model:{chatgpt_models[0]}')],
-#         [InlineKeyboardButton(text="o1-mini", url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
-#          InlineKeyboardButton(text="o1-preview", url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')],
-#     ]
-# )
 
 inline_pay = InlineKeyboardMarkup(
     inline_keyboard=[

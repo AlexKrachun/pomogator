@@ -9,7 +9,9 @@ message_templates = {
         'language_confirmation': "Language has been set to English.",
         'language_selection': "Available in 3 languages:",
         'processing': "Your request is being processed, please wait.",
-        'error': "An error occurred during processing:"
+        'error': "An error occurred during processing:",
+        'delete_context': "New context has been created",
+
     },
     'ru': {
         'start': "Привет, я бот, работающий на API GPT-4. Напишите свой запрос или выведите справку /help",

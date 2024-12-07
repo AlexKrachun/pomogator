@@ -120,7 +120,8 @@ async def test_handle_model_switch(mock_callback_query):
     await handle_model_switch(mock_callback_query)
     mock_callback_query.answer.assert_called_once()
     mock_callback_query.message.edit_text.assert_called_once()
-    
+
+
 # @pytest.mark.asyncio
 # async def test_echo_msg(mock_message):
 #     mock_message.text = "Hello"

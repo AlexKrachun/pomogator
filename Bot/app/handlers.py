@@ -8,8 +8,8 @@ from openai import AsyncOpenAI
 from dotenv import load_dotenv
 
 from aiogram.filters import Command
-from additioanl.message_templates import message_templates, get_changed_context_line
-from app.keyboard import inline_contexts, inline_modes, inline_pay, chatgpt_models
+from Bot.additioanl.message_templates import message_templates, get_changed_context_line
+from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay, chatgpt_models
 from Bot.app.openai_api import get_completion, request_get_topic
 
 import uuid
@@ -108,16 +108,10 @@ async def profile_command(message: Message):
 async def help_cmd(message: Message):
     language = user_languages.get(message.from_user.id, 'ru')
     await message.answer(message_templates[language]['help'])
-
-
-@router.message(Command('about'))
-async def about_cmd(message: Message):
-    language = user_languages.get(message.from_user.id, 'ru')
-    await message.answer(message_templates[language]['about'])
-
+    
 
 @router.message(Command('delete_context'))
-async def about_cmd(message: Message):
+async def new_context(message: Message):
     curr_users_context[message.from_user.id] = ''
     await message.answer(message_templates['ru']['delete_context'])
 

@@ -15,6 +15,7 @@ from Bot.app.handlers import (
     make_context_history,
     get_user_model,
     user_languages,
+    id_in_processing,
 )
 from Bot.additioanl.message_templates import message_templates, get_changed_context_line
 from aiogram.types import Message, CallbackQuery, User, Chat
@@ -144,3 +145,24 @@ async def test_handle_model_switch(mock_callback_query):
 #     mock_message.photo = None
 #     await echo_msg(mock_message)
 #     mock_message.answer.assert_called()
+
+
+
+
+# @pytest.mark.asyncio
+# async def test_echo_msg_user_already_in_processing():
+#     mock_message = AsyncMock(spec=Message)
+#     mock_message.from_user.id = 12345
+#     mock_message.from_user.username = "test_user"
+#     mock_message.text = "Test message"
+#     mock_message.answer = AsyncMock()
+
+#     id_in_processing.add(12345)
+
+#     await echo_msg(mock_message)
+
+#     mock_message.answer.assert_called_once_with(message_templates['ru']['id_in_procces'])
+
+#     assert 12345 in id_in_processing
+
+#     id_in_processing.clear()

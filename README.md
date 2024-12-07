@@ -1,11 +1,12 @@
-| **Функция** | **Статус** |
-|-------------|---------------|
-| Выбор нейросети - среди моделей OpenAI | <div style="background-color: #ccffcc; width: 20px; height: 20px; display: inline-block;"></div> |
-| Отображение профиля - количество оставшихся запросов | <div style="background-color: #ccffcc; width: 20px; height: 20px; display: inline-block;"></div> |
-| Создать новый чат | <div style="background-color: #ccffcc; width: 20px; height: 20px; display: inline-block;"></div> |
-| Получить памятку об устройстве бота | <div style="background-color: #ccffcc; width: 20px; height: 20px; display: inline-block;"></div> |
-| Отправить текстовый промпт | <div style="background-color: #ccffcc; width: 20px; height: 20px; display: inline-block;"></div> |
-| Получить текстовый ответ на промпт | <div style="background-color: #ccffcc; width: 20px; height: 20px; display: inline-block;"></div> |
+| **Функция**                                    | **Статус** |
+|------------------------------------------------|------------|
+| Выбор нейросети - среди моделей OpenAI         | ✅         |
+| Отображение профиля - количество оставшихся запросов | ✅         |
+| Создать новый чат                              | ✅         |
+| Получить памятку об устройстве бота            | ✅         |
+| Отправить текстовый промпт                     | ✅         |
+| Получить текстовый ответ на промпт             | ✅         |
+
 
 
 #                     Telegram Bot                         #
@@ -13,6 +14,7 @@
 ## Обзор проекта
 Этот проект представляет собой Telegram-бота, реализованного с 
 использованием библиотеки Aiogram и API OpenAI GPT.
+**❗Важно:** В проекте также есть папка `backend`, которая содержит код для создания сайта с использованием FastAPI. Однако эта часть проекта **не относится** к реализации бота на Python и рассматривается отдельно.
 
 ------------------------------------------------------------
 ## 1. Структура проекта

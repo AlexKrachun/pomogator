@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from aiogram.filters import Command
 from additioanl.message_templates import message_templates, get_changed_context_line
 from app.keyboard import inline_contexts, inline_modes, inline_pay, chatgpt_models
-from app.openai_api_test import get_completion, request_get_topic
+from Bot.app.openai_api import get_completion, request_get_topic
 
 import uuid
 

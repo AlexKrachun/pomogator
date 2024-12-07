@@ -130,6 +130,8 @@ async def handle_context_switch(callback: types.CallbackQuery):
     await callback.message.answer(get_changed_context_line(topic))
 
     context_history = make_context_history(all_contexts, context_id, us_name)
+    logging.info(f'context_history: |{context_history}|')
+
     await callback.message.answer(context_history)
 
 
@@ -148,11 +150,10 @@ async def handle_model_switch(callback: types.CallbackQuery):
 
 
 # @router.message()
-@router.message(F.content_type.in_({'text', 'photo'}))
+@router.message()
 async def echo_msg(message):
     us_id = message.from_user.id
     user_message = message.text
-    print(message.photo)
 
     if us_id in id_in_processing:
         await message.answer(message_templates['ru']['id_in_procces'])

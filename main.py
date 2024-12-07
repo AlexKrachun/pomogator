@@ -3,8 +3,8 @@ import logging
 import asyncio
 from aiogram import Bot, Dispatcher
 
-from app.handlers import router
-from app.commands import set_commands
+from Bot.app.handlers import router
+from Bot.app.commands import set_commands
 from dotenv import load_dotenv
 
 load_dotenv()

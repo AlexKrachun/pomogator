@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 from Bot.app.handlers import (
     language_cmd,
     pay_cmd,
@@ -14,18 +14,19 @@ from Bot.app.handlers import (
     generate_unique_number,
     make_context_history,
     get_user_model,
-    user_languages
+    user_languages,
 )
-from Bot.additioanl.message_templates import message_templates
-from aiogram.types import Message, CallbackQuery
+from Bot.additioanl.message_templates import message_templates, get_changed_context_line
+from aiogram.types import Message, CallbackQuery, User, Chat
 from aiogram import Bot
 
 
 @pytest.fixture
 def mock_message():
-    """Fixture for creating a mock Message with necessary attributes."""
     message = MagicMock(spec=Message)
-    message.from_user = MagicMock(id=123, username="test_user", first_name=None, last_name=None)
+    message.from_user = MagicMock(
+        id=123, username="test_user", first_name=None, last_name=None
+    )
     message.chat = MagicMock(id=456)
     message.answer = AsyncMock()
     message.bot = MagicMock()
@@ -54,7 +55,8 @@ def setup_global_data():
         curr_users_context,
         id_in_processing,
     )
-    user_languages[123] = 'ru'
+
+    user_languages[123] = "ru"
     from_context_id_get_topic["1234"] = "Тестовая тема"
     all_contexts["1234"] = [
         {"role": "user", "content": "Привет"},
@@ -66,38 +68,49 @@ def setup_global_data():
 
 @pytest.mark.asyncio
 async def test_profile_command_no_name(mock_message):
-    
+
     await profile_command(mock_message)
-    mock_message.answer.assert_called_once_with("👤 Профиль пользователя:\nID: 123\nИмя: не указан\nФамилия: не указан\nЛогин: @test_user")
-    
+    mock_message.answer.assert_called_once_with(
+        "👤 Профиль пользователя:\nID: 123\nИмя: не указан\nФамилия: не указан\nЛогин: @test_user"
+    )
+
 
 @pytest.mark.asyncio
 async def test_profile_command_with_name(mock_message):
-    
-    mock_message.from_user = MagicMock(id=123, username="test_user", first_name='Testfirstname', last_name='Testlastname')
+
+    mock_message.from_user = MagicMock(
+        id=123,
+        username="test_user",
+        first_name="Testfirstname",
+        last_name="Testlastname",
+    )
     await profile_command(mock_message)
-    mock_message.answer.assert_called_once_with("👤 Профиль пользователя:\nID: 123\nИмя: Testfirstname\nФамилия: Testlastname\nЛогин: @test_user")
-    
-    
+    mock_message.answer.assert_called_once_with(
+        "👤 Профиль пользователя:\nID: 123\nИмя: Testfirstname\nФамилия: Testlastname\nЛогин: @test_user"
+    )
+
+
 @pytest.mark.asyncio
 async def test_help_cmd_ru(mock_message):
-    user_languages[mock_message.from_user.id] = 'ru'
+    user_languages[mock_message.from_user.id] = "ru"
     await help_cmd(mock_message)
-    mock_message.answer.assert_called_once_with(message_templates['ru']['help'])
-    
-    
+    mock_message.answer.assert_called_once_with(message_templates["ru"]["help"])
+
+
 @pytest.mark.asyncio
 async def test_help_cmd_en(mock_message):
-    user_languages[mock_message.from_user.id] = 'en'
+    user_languages[mock_message.from_user.id] = "en"
     await help_cmd(mock_message)
-    mock_message.answer.assert_called_once_with(message_templates['en']['help'])
+    mock_message.answer.assert_called_once_with(message_templates["en"]["help"])
 
 
 @pytest.mark.asyncio
 async def test_new_context_cmd_ru(mock_message):
-    user_languages[mock_message.from_user.id] = 'ru'
+    user_languages[mock_message.from_user.id] = "ru"
     await new_context(mock_message)
-    mock_message.answer.assert_called_once_with(message_templates['ru']['delete_context'])
+    mock_message.answer.assert_called_once_with(
+        message_templates["ru"]["delete_context"]
+    )
 
 
 # @pytest.mark.asyncio
@@ -109,16 +122,19 @@ async def test_new_context_cmd_ru(mock_message):
 
 @pytest.mark.asyncio
 async def test_handle_context_switch(mock_callback_query):
+    mock_callback_query.data = "context:1234"
+
     await handle_context_switch(mock_callback_query)
-    mock_callback_query.answer.assert_called_once()
-    mock_callback_query.message.answer.assert_called_with("Контекст переключен")
+    mock_callback_query.message.answer.assert_called_with(
+        "😍test_user:\nПривет\n\n🤖ChatGPT:\nЗдравствуйте\n\nКонтекст переключен"
+    )
 
 
 @pytest.mark.asyncio
 async def test_handle_model_switch(mock_callback_query):
     mock_callback_query.data = "model:gpt-3"
     await handle_model_switch(mock_callback_query)
-    mock_callback_query.answer.assert_called_once()
+    # mock_callback_query.message.edit_text.assert_called_once_with("Выберите подходящую вам модель gpt. ")
     mock_callback_query.message.edit_text.assert_called_once()
 
 

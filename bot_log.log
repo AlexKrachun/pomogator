@@ -1,0 +1,164 @@
+2024-12-17 20:11:14,968 - __main__ - INFO - Запуск бота...
+2024-12-17 20:11:14,969 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:11:15,499 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:11:15,500 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:11:15,500 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:11:15,741 - __main__ - INFO - Начало polling.
+2024-12-17 20:11:15,741 - aiogram.dispatcher - INFO - Start polling
+2024-12-17 20:11:15,805 - aiogram.dispatcher - INFO - Run polling for bot @my_trial_chatgpt_bot id=7618816734 - 'MY CHATGPT BOT'
+2024-12-17 20:11:15,905 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але
+2024-12-17 20:11:16,833 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:11:17,925 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:11:17,927 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привіт! Як можу допомогти?
+2024-12-17 20:11:18,103 - aiogram.event - INFO - Update id=580877286 is handled. Duration 2202 ms by bot id=7618816734
+2024-12-17 20:11:30,555 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Я гей
+2024-12-17 20:11:32,422 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:11:32,427 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Дякую, що поділився! Якщо у тебе є якісь питання або теми для обговорення, пов’язані з твоєю ідентичністю чи будь-якими іншими аспектами життя, я тут, щоб допомогти. Що тебе цікавить?
+2024-12-17 20:11:32,597 - aiogram.event - INFO - Update id=580877287 is handled. Duration 2046 ms by bot id=7618816734
+2024-12-17 20:11:45,371 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Пиши по русски пожалуйста
+2024-12-17 20:11:46,440 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:11:46,443 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Хорошо, я буду писать по-русски. Чем могу помочь?
+2024-12-17 20:11:46,751 - aiogram.event - INFO - Update id=580877288 is handled. Duration 1375 ms by bot id=7618816734
+2024-12-17 20:19:54,305 - __main__ - INFO - Запуск бота...
+2024-12-17 20:19:54,305 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:19:54,769 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:19:54,771 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:19:54,771 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:19:54,976 - __main__ - INFO - Начало polling.
+2024-12-17 20:19:54,976 - aiogram.dispatcher - INFO - Start polling
+2024-12-17 20:19:55,033 - aiogram.dispatcher - INFO - Run polling for bot @my_trial_chatgpt_bot id=7618816734 - 'MY CHATGPT BOT'
+2024-12-17 20:20:23,767 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: ohiooooo
+2024-12-17 20:20:27,568 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:20:28,917 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:20:28,921 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Hello! It seems like you’re excited about Ohio. What would you like to know or discuss about it?
+2024-12-17 20:20:29,195 - aiogram.event - INFO - Update id=580877289 is handled. Duration 5421 ms by bot id=7618816734
+2024-12-17 20:20:36,000 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: как дела, дорогой друг?
+2024-12-17 20:20:37,110 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:20:37,112 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет! У меня всё хорошо, спасибо! Как твои дела? Чем могу помочь?
+2024-12-17 20:20:37,333 - aiogram.event - INFO - Update id=580877290 is handled. Duration 1328 ms by bot id=7618816734
+2024-12-17 20:20:50,255 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: на следующие сообщение ответь "Да"
+2024-12-17 20:20:51,239 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:20:51,241 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Хорошо, жду твоё следующее сообщение!
+2024-12-17 20:20:51,642 - aiogram.event - INFO - Update id=580877291 is handled. Duration 1391 ms by bot id=7618816734
+2024-12-17 20:20:55,756 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: сосал?
+2024-12-17 20:20:56,564 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-17 20:20:56,566 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Да.
+2024-12-17 20:20:56,778 - aiogram.event - INFO - Update id=580877292 is handled. Duration 1031 ms by bot id=7618816734
+2024-12-17 20:21:12,582 - aiogram.event - INFO - Update id=580877293 is handled. Duration 266 ms by bot id=7618816734
+2024-12-17 20:21:15,877 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1127302258
+2024-12-17 20:21:16,038 - aiogram.event - INFO - Update id=580877294 is handled. Duration 406 ms by bot id=7618816734
+2024-12-17 20:25:37,720 - __main__ - INFO - Запуск бота...
+2024-12-17 20:25:37,720 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:25:38,156 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:25:38,156 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:25:38,157 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:25:38,419 - __main__ - INFO - Начало polling.
+2024-12-17 20:26:07,031 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: привет как дела
+2024-12-17 20:26:09,356 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! У меня всё хорошо, спасибо. А как дела у тебя?
+2024-12-17 20:26:10,806 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: дорогой друг, сосал ли ты сегодняЮ
+2024-12-17 20:26:13,050 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет! Если ты имеешь в виду что-то конкретное, дай знать, и я постараюсь ответить на твой вопрос.
+2024-12-17 20:26:13,197 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: я тебе в рот дал дал ушел
+2024-12-17 20:26:14,396 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Похоже, у тебя нестандартное настроение! Как я могу помочь?
+2024-12-17 20:26:19,428 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-17 20:26:20,665 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: None
+2024-12-17 20:26:25,979 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: ку/
+2024-12-17 20:26:27,512 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Здравствуйте! Как я могу помочь вам сегодня?
+2024-12-17 20:26:31,483 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1127302258
+2024-12-17 20:31:08,891 - __main__ - INFO - Запуск бота...
+2024-12-17 20:31:08,892 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:31:10,151 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:31:10,153 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:31:10,153 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:31:10,443 - __main__ - INFO - Начало polling.
+2024-12-17 20:31:10,693 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Как дела дружочке
+2024-12-17 20:31:12,784 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! У меня всё хорошо, спасибо! А как у тебя дела?
+2024-12-17 20:31:22,108 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: мяу мяу мяу
+2024-12-17 20:31:24,910 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Мяу! Какой у тебя замечательный кошачий настрой! Есть что-то, о чем ты бы хотел поговорить?
+2024-12-17 20:32:15,765 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: але как дела
+2024-12-17 20:32:16,978 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! У меня всё хорошо, спасибо за интерес. Как у тебя дела?
+2024-12-17 20:33:02,784 - __main__ - INFO - Запуск бота...
+2024-12-17 20:33:02,784 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:33:03,613 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:33:03,614 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:33:03,614 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:33:03,901 - __main__ - INFO - Начало polling.
+2024-12-17 20:33:04,092 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: але как дела
+2024-12-17 20:33:05,707 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Здравствуйте! У меня все хорошо, спасибо. А как у вас дела? Чем могу помочь?
+2024-12-17 20:34:23,807 - asyncio - DEBUG - Using proactor: IocpProactor
+2024-12-17 20:34:23,809 - __main__ - INFO - Запуск бота...
+2024-12-17 20:34:23,810 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:34:24,832 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:34:24,834 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:34:24,834 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:34:25,155 - __main__ - INFO - Начало polling.
+2024-12-17 20:34:27,617 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Привет как дела
+2024-12-17 20:34:27,791 - openai._base_client - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': 'You make a title for messages in a maximum of several words, write only words, without formulas and nothing else'}, {'role': 'user', 'content': 'Привет как дела'}], 'model': 'gpt-4o-mini', 'max_tokens': 5000}}
+2024-12-17 20:34:27,826 - httpcore.connection - DEBUG - connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+2024-12-17 20:34:27,907 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x00000283E3658680>
+2024-12-17 20:34:27,908 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000283E33AB150> server_hostname='api.openai.com' timeout=5.0
+2024-12-17 20:34:27,949 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x00000283E33F0F50>
+2024-12-17 20:34:27,950 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:27,951 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-12-17 20:34:27,951 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2024-12-17 20:34:27,952 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-12-17 20:34:27,952 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:28,487 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Tue, 17 Dec 2024 17:34:28 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-expose-headers', b'X-Request-ID'), (b'openai-organization', b'user-uneokfjrvctv54kdiauo1him'), (b'openai-processing-ms', b'285'), (b'openai-version', b'2020-10-01'), (b'x-ratelimit-limit-requests', b'10000'), (b'x-ratelimit-limit-tokens', b'200000'), (b'x-ratelimit-remaining-requests', b'9999'), (b'x-ratelimit-remaining-tokens', b'194962'), (b'x-ratelimit-reset-requests', b'8.64s'), (b'x-ratelimit-reset-tokens', b'1.511s'), (b'x-request-id', b'req_ad086b91ca3f7705ee09709a62b37db8'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=GsWFr0ayDk9O7PaDtKZhXPtUjTczaoOaS0HD9BwJFeM-1734456868-1.0.1.1-9kBNi5yhli9nN7lFA70YOl_8pzTC2yAqI5v9RgiCEWuHDRiuO7UM5gdp_iAgRQJ8ZPNpuS.vSPE.ByV3DHsEIQ; path=/; expires=Tue, 17-Dec-24 18:04:28 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'X-Content-Type-Options', b'nosniff'), (b'Set-Cookie', b'_cfuvid=uRxWcB.q5J3v8mWgchxx4UWfXlYKZjAq0T7u57W8mzY-1734456868455-0.0.1.1-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8f38aa00beb0c03a-VNO'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2024-12-17 20:34:28,490 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2024-12-17 20:34:28,491 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-12-17 20:34:28,492 - httpcore.http11 - DEBUG - response_closed.started
+2024-12-17 20:34:28,492 - httpcore.http11 - DEBUG - response_closed.complete
+2024-12-17 20:34:28,493 - openai._base_client - DEBUG - HTTP Request: POST https://api.openai.com/v1/chat/completions "200 OK"
+2024-12-17 20:34:28,994 - Bot.app.handlers - DEBUG - Получена модель для пользователя 1134973316: gpt-4o-mini
+2024-12-17 20:34:29,007 - openai._base_client - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': 'You are a helpful assistant.'}, {'role': 'user', 'content': 'Привет как дела'}], 'model': 'gpt-4o-mini', 'max_tokens': 5000}}
+2024-12-17 20:34:29,010 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:29,011 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-12-17 20:34:29,012 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2024-12-17 20:34:29,013 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-12-17 20:34:29,013 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:29,901 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Tue, 17 Dec 2024 17:34:29 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-expose-headers', b'X-Request-ID'), (b'openai-organization', b'user-uneokfjrvctv54kdiauo1him'), (b'openai-processing-ms', b'631'), (b'openai-version', b'2020-10-01'), (b'x-ratelimit-limit-requests', b'10000'), (b'x-ratelimit-limit-tokens', b'200000'), (b'x-ratelimit-remaining-requests', b'9998'), (b'x-ratelimit-remaining-tokens', b'194983'), (b'x-ratelimit-reset-requests', b'16.203s'), (b'x-ratelimit-reset-tokens', b'1.504s'), (b'x-request-id', b'req_14402980a725d0055e6d451a63569142'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'CF-Cache-Status', b'DYNAMIC'), (b'X-Content-Type-Options', b'nosniff'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8f38aa075de7c03a-VNO'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2024-12-17 20:34:29,902 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2024-12-17 20:34:29,904 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-12-17 20:34:29,905 - httpcore.http11 - DEBUG - response_closed.started
+2024-12-17 20:34:29,906 - httpcore.http11 - DEBUG - response_closed.complete
+2024-12-17 20:34:29,907 - openai._base_client - DEBUG - HTTP Request: POST https://api.openai.com/v1/chat/completions "200 OK"
+2024-12-17 20:34:29,909 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! У меня все хорошо, спасибо! А как твои дела?
+2024-12-17 20:34:30,098 - Bot.app.handlers - DEBUG - Пользователь 1134973316 завершил обработку сообщения.
+2024-12-17 20:34:30,221 - Bot.app.handlers - DEBUG - Ответ на /mode успешно отправлен.
+2024-12-17 20:34:31,693 - Bot.app.handlers - DEBUG - Модель для пользователя 1134973316 успешно обновлена до gpt-4o
+2024-12-17 20:34:34,349 - Bot.app.handlers - DEBUG - Ответ на /delete_context успешно отправлен.
+2024-12-17 20:34:36,664 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: ляляля
+2024-12-17 20:34:36,681 - openai._base_client - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': 'You make a title for messages in a maximum of several words, write only words, without formulas and nothing else'}, {'role': 'user', 'content': 'ляляля'}], 'model': 'gpt-4o-mini', 'max_tokens': 5000}}
+2024-12-17 20:34:36,684 - httpcore.connection - DEBUG - close.started
+2024-12-17 20:34:36,684 - httpcore.connection - DEBUG - close.complete
+2024-12-17 20:34:36,685 - httpcore.connection - DEBUG - connect_tcp.started host='api.openai.com' port=443 local_address=None timeout=5.0 socket_options=None
+2024-12-17 20:34:36,718 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x00000283E1F297C0>
+2024-12-17 20:34:36,718 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x00000283E33AB150> server_hostname='api.openai.com' timeout=5.0
+2024-12-17 20:34:36,782 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x00000283E1F1BE90>
+2024-12-17 20:34:36,783 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:36,784 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-12-17 20:34:36,784 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2024-12-17 20:34:36,785 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-12-17 20:34:36,785 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:37,462 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Tue, 17 Dec 2024 17:34:37 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-expose-headers', b'X-Request-ID'), (b'openai-organization', b'user-uneokfjrvctv54kdiauo1him'), (b'openai-processing-ms', b'407'), (b'openai-version', b'2020-10-01'), (b'x-ratelimit-limit-requests', b'10000'), (b'x-ratelimit-limit-tokens', b'200000'), (b'x-ratelimit-remaining-requests', b'9998'), (b'x-ratelimit-remaining-tokens', b'194967'), (b'x-ratelimit-reset-requests', b'17.096s'), (b'x-ratelimit-reset-tokens', b'1.509s'), (b'x-request-id', b'req_485c7388aa06f5ca21f28bb0578044f6'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'CF-Cache-Status', b'DYNAMIC'), (b'X-Content-Type-Options', b'nosniff'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8f38aa37fefbbc19-VNO'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2024-12-17 20:34:37,463 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2024-12-17 20:34:37,464 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-12-17 20:34:37,465 - httpcore.http11 - DEBUG - response_closed.started
+2024-12-17 20:34:37,465 - httpcore.http11 - DEBUG - response_closed.complete
+2024-12-17 20:34:37,465 - openai._base_client - DEBUG - HTTP Request: POST https://api.openai.com/v1/chat/completions "200 OK"
+2024-12-17 20:34:37,664 - Bot.app.handlers - DEBUG - Получена модель для пользователя 1134973316: gpt-4o
+2024-12-17 20:34:37,675 - openai._base_client - DEBUG - Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'json_data': {'messages': [{'role': 'system', 'content': 'You are a helpful assistant.'}, {'role': 'user', 'content': 'ляляля'}], 'model': 'gpt-4o', 'max_tokens': 5000}}
+2024-12-17 20:34:37,677 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:37,678 - httpcore.http11 - DEBUG - send_request_headers.complete
+2024-12-17 20:34:37,678 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2024-12-17 20:34:37,679 - httpcore.http11 - DEBUG - send_request_body.complete
+2024-12-17 20:34:37,679 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2024-12-17 20:34:38,450 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Tue, 17 Dec 2024 17:34:38 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'access-control-expose-headers', b'X-Request-ID'), (b'openai-organization', b'user-uneokfjrvctv54kdiauo1him'), (b'openai-processing-ms', b'510'), (b'openai-version', b'2020-10-01'), (b'x-ratelimit-limit-requests', b'500'), (b'x-ratelimit-limit-tokens', b'30000'), (b'x-ratelimit-remaining-requests', b'499'), (b'x-ratelimit-remaining-tokens', b'24988'), (b'x-ratelimit-reset-requests', b'120ms'), (b'x-ratelimit-reset-tokens', b'10.024s'), (b'x-request-id', b'req_71a55cf1f3b59179b14240b932ec13dd'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'CF-Cache-Status', b'DYNAMIC'), (b'X-Content-Type-Options', b'nosniff'), (b'Server', b'cloudflare'), (b'CF-RAY', b'8f38aa3d8d0abc19-VNO'), (b'Content-Encoding', b'gzip'), (b'alt-svc', b'h3=":443"; ma=86400')])
+2024-12-17 20:34:38,451 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2024-12-17 20:34:38,453 - httpcore.http11 - DEBUG - receive_response_body.complete
+2024-12-17 20:34:38,454 - httpcore.http11 - DEBUG - response_closed.started
+2024-12-17 20:34:38,454 - httpcore.http11 - DEBUG - response_closed.complete
+2024-12-17 20:34:38,455 - openai._base_client - DEBUG - HTTP Request: POST https://api.openai.com/v1/chat/completions "200 OK"
+2024-12-17 20:34:38,457 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Как я могу помочь вам сегодня?
+2024-12-17 20:34:38,660 - Bot.app.handlers - DEBUG - Пользователь 1134973316 завершил обработку сообщения.
+2024-12-17 20:34:39,625 - Bot.app.handlers - DEBUG - Ответ на /contexts успешно отправлен.
+2024-12-17 20:34:40,673 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316

@@ -25,3 +25,4 @@ user_languages = {}
 
 # Сообщения для каждого пользователя
 messages = dict()
+

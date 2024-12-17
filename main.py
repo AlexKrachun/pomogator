@@ -13,6 +13,7 @@ from logging.handlers import RotatingFileHandler
 load_dotenv()
 bot_token = os.environ.get('BOT_TOKEN')
 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

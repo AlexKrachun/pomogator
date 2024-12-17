@@ -127,6 +127,7 @@ async def profile_command(message: Message):
         await message.answer("Произошла ошибка при обработке команды /profile.")
 
 
+
 @router.message(Command('help'))
 async def help_cmd(message: Message):
     try:

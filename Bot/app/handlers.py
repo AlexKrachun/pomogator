@@ -139,7 +139,7 @@ async def help_cmd(message: Message):
         await message.answer("Произошла ошибка при обработке команды /help.")
 
 
-@router.message(Command('delete_context'))
+@router.message(Command('new_context'))
 async def new_context(message: Message):
     try:
         curr_users_context[message.from_user.id] = ''
@@ -165,7 +165,10 @@ async def handle_context_switch(callback: types.CallbackQuery):
         context_history = make_context_history(all_contexts, context_id, us_name)
         logger.info(f'Выведена context_history для пользователя {us_id}')
 
-        await callback.message.answer(context_history)
+        try:
+            await callback.message.answer(context_history, parse_mode="Markdown")
+        except Exception as e:
+            await callback.message.answer(context_history)
     except Exception as e:
         logger.exception(f"Ошибка в обработчике handle_context_switch: {e}")
         await callback.answer("Произошла ошибка при переключении контекста.")
@@ -238,7 +241,10 @@ async def echo_msg(message: Message):
         )
         logger.info(f"Получен ответ от OpenAI для пользователя {us_id}: {response}")
 
-        await message.answer(response)
+        try:
+            await message.answer(response, parse_mode="Markdown")
+        except Exception as e:
+            await message.answer(response)
         all_contexts[curr_context_id].append({"role": "assistant", "content": response})
 
         await message.bot.delete_message(

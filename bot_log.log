@@ -228,3 +228,256 @@ connector: <aiohttp.connector.TCPConnector object at 0x130649590>
 2024-12-18 11:06:20,265 - asyncio - ERROR - Unclosed connector
 connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x121dff4d0>, 643457.836)]']
 connector: <aiohttp.connector.TCPConnector object at 0x121e456d0>
+2024-12-18 11:30:37,718 - __main__ - INFO - Запуск бота...
+2024-12-18 11:30:37,718 - __main__ - INFO - Инициализация бота.
+2024-12-18 11:30:37,722 - __main__ - INFO - Создание диспетчера.
+2024-12-18 11:30:37,722 - __main__ - INFO - Подключение роутера.
+2024-12-18 11:30:37,722 - __main__ - INFO - Установка команд бота.
+2024-12-18 11:30:38,189 - __main__ - INFO - Начало polling.
+2024-12-18 11:30:47,251 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет, красный
+2024-12-18 11:30:47,541 - Bot.app.handlers - ERROR - Ошибка в обработчике echo_msg для пользователя 1127302258: Error code: 403 - {'error': {'code': 'unsupported_country_region_territory', 'message': 'Country, region, or territory not supported', 'param': None, 'type': 'request_forbidden'}}
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/Bot/app/handlers.py", line 217, in echo_msg
+    from_context_id_get_topic[new_hash] = await request_get_topic(user_message)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/Bot/app/openai_api.py", line 37, in request_get_topic
+    completion = await client.chat.completions.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/resources/chat/completions.py", line 1661, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<41 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/_base_client.py", line 1839, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/_base_client.py", line 1533, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/_base_client.py", line 1634, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.PermissionDeniedError: Error code: 403 - {'error': {'code': 'unsupported_country_region_territory', 'message': 'Country, region, or territory not supported', 'param': None, 'type': 'request_forbidden'}}
+2024-12-18 11:31:56,644 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-18 11:31:56,898 - __main__ - INFO - Завершение работы бота.
+2024-12-18 11:31:57,130 - __main__ - ERROR - Ошибка при закрытии бота: Telegram server says - Flood control exceeded on method 'Close'. Retry in 520 seconds.
+Original description: Too Many Requests: retry after 520
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/main.py", line 67, in main
+    await bot.close()
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/bot.py", line 822, in close
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/aiohttp.py", line 189, in make_request
+    response = self.check_response(
+        bot=bot, method=method, status_code=resp.status, content=raw_result
+    )
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/base.py", line 110, in check_response
+    raise TelegramRetryAfter(
+        method=method, message=description, retry_after=parameters.retry_after
+    )
+aiogram.exceptions.TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'Close'. Retry in 520 seconds.
+Original description: Too Many Requests: retry after 520
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2024-12-18 11:33:04,608 - __main__ - INFO - Запуск бота...
+2024-12-18 11:33:04,608 - __main__ - INFO - Инициализация бота.
+2024-12-18 11:33:04,613 - __main__ - INFO - Создание диспетчера.
+2024-12-18 11:33:04,613 - __main__ - INFO - Подключение роутера.
+2024-12-18 11:33:04,613 - __main__ - INFO - Установка команд бота.
+2024-12-18 11:33:04,942 - __main__ - INFO - Начало polling.
+2024-12-18 11:33:09,117 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет
+2024-12-18 11:33:09,281 - Bot.app.handlers - ERROR - Ошибка в обработчике echo_msg для пользователя 1127302258: Error code: 403 - {'error': {'code': 'unsupported_country_region_territory', 'message': 'Country, region, or territory not supported', 'param': None, 'type': 'request_forbidden'}}
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/Bot/app/handlers.py", line 220, in echo_msg
+    from_context_id_get_topic[new_hash] = await request_get_topic(user_message)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/Bot/app/openai_api.py", line 37, in request_get_topic
+    completion = await client.chat.completions.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/resources/chat/completions.py", line 1661, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<41 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/_base_client.py", line 1839, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/_base_client.py", line 1533, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/openai/_base_client.py", line 1634, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.PermissionDeniedError: Error code: 403 - {'error': {'code': 'unsupported_country_region_territory', 'message': 'Country, region, or territory not supported', 'param': None, 'type': 'request_forbidden'}}
+2024-12-18 11:33:30,404 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-18 11:33:30,658 - __main__ - INFO - Завершение работы бота.
+2024-12-18 11:34:00,662 - __main__ - ERROR - Ошибка при закрытии бота: HTTP Client says - ClientConnectorDNSError: Cannot connect to host api.telegram.org:443 ssl:default [nodename nor servname provided, or not known]
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1317, in _create_direct_connection
+    hosts = await self._resolve_host(host, port, traces=traces)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 971, in _resolve_host
+    return await asyncio.shield(resolved_host_task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1002, in _resolve_host_with_throttle
+    addrs = await self._resolver.resolve(host, port, family=self._family)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/resolver.py", line 38, in resolve
+    infos = await self._loop.getaddrinfo(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "uvloop/loop.pyx", line 1529, in getaddrinfo
+socket.gaierror: [Errno 8] nodename nor servname provided, or not known
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/aiohttp.py", line 181, in make_request
+    async with session.post(
+               ~~~~~~~~~~~~^
+        url, data=form, timeout=self.timeout if timeout is None else timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ) as resp:
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/client.py", line 1359, in __aenter__
+    self._resp: _RetType = await self._coro
+                           ^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/client.py", line 663, in _request
+    conn = await self._connector.connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        req, traces=traces, timeout=real_timeout
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 563, in connect
+    proto = await self._create_connection(req, traces, timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1032, in _create_connection
+    _, proto = await self._create_direct_connection(req, traces, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiohttp/connector.py", line 1323, in _create_direct_connection
+    raise ClientConnectorDNSError(req.connection_key, exc) from exc
+aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host api.telegram.org:443 ssl:default [nodename nor servname provided, or not known]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/main.py", line 67, in main
+    await bot.close()
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/bot.py", line 822, in close
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/aiohttp.py", line 188, in make_request
+    raise TelegramNetworkError(method=method, message=f"{type(e).__name__}: {e}")
+aiogram.exceptions.TelegramNetworkError: HTTP Client says - ClientConnectorDNSError: Cannot connect to host api.telegram.org:443 ssl:default [nodename nor servname provided, or not known]
+2024-12-18 11:34:18,813 - __main__ - INFO - Запуск бота...
+2024-12-18 11:34:18,813 - __main__ - INFO - Инициализация бота.
+2024-12-18 11:34:18,818 - __main__ - INFO - Создание диспетчера.
+2024-12-18 11:34:18,818 - __main__ - INFO - Подключение роутера.
+2024-12-18 11:34:18,818 - __main__ - INFO - Установка команд бота.
+2024-12-18 11:34:38,002 - __main__ - INFO - Начало polling.
+2024-12-18 11:34:38,197 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет
+2024-12-18 11:34:38,203 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет, красный цвет
+2024-12-18 11:34:40,268 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет! Как я могу помочь тебе сегодня?
+2024-12-18 11:34:43,790 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Как дела
+2024-12-18 11:34:45,565 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: У меня все хорошо, спасибо! А как у вас дела? Чем могу помочь?
+2024-12-18 11:34:47,249 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: красный цвет
+2024-12-18 11:34:50,748 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Красный цвет — это один из основных цветов в цветовой модели. Он ассоциируется с различными эмоциями и символами. Например:
+
+1. **Эмоции**: Красный цвет часто ассоциируется с энергией, страстью, любовью, а также гневом и опасностью.
+2. **Символика**: В разных культурах он может символизировать всё, начиная от любви (например, красные розы) и заканчивая предупреждениями о опасности (например, красный сигнал светофора).
+
+Хотите узнать о красном цвете больше в каком-то конкретном контексте?
+2024-12-18 11:34:52,315 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Я геюга драная
+2024-12-18 11:34:54,239 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Кажется, у вас есть на душе что-то важное. Если захотите обсудить или поделиться своими мыслями, я здесь, чтобы поддержать вас.
+2024-12-18 11:34:57,079 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-18 11:34:59,716 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: такс, теперь зеленый
+2024-12-18 11:35:02,813 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Нарисуй зайчика
+2024-12-18 11:35:08,102 - openai._base_client - INFO - Retrying request to /chat/completions in 0.411100 seconds
+2024-12-18 11:35:09,299 - Bot.app.handlers - ERROR - Ошибка в обработчике /contexts: '55de6b25-bf03-43ec-a03f-bf1b4766e63a'
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/Bot/app/handlers.py", line 50, in language_cmd
+    reply_markup = await inline_contexts(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/Bot/app/keyboard.py", line 11, in inline_contexts
+    keyboard.add(InlineKeyboardButton(text=from_context_id_get_topic[context_id],
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: '55de6b25-bf03-43ec-a03f-bf1b4766e63a'
+2024-12-18 11:35:13,611 - openai._base_client - INFO - Retrying request to /chat/completions in 0.873156 seconds
+2024-12-18 11:35:13,924 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Я, к сожалению, не могу рисовать изображения, но могу описать, как можно нарисовать зайчика:
+
+1. **Голова**: Начните с овала для головы.
+2. **Уши**: Добавьте два длинных овала сверху головы для ушей. Уши могут быть немного наклонены в стороны.
+3. **Глаза**: Нарисуйте два маленьких круга для глаз и добавьте черные точки внутри для зрачков.
+4. **Нос**: Нарисуйте маленький треугольник для носика чуть ниже глаз.
+5. **Рот**: Используйте мягкую линию, чтобы нарисовать улыбку под носом.
+6. **Тело**: Нарисуйте большой овал или круг под головой для тела.
+7. **Лапки**: Добавьте короткие ноги снизу тела и маленькие руки по бокам.
+8. **Хвостик**: Нарисуйте небольшой кружок сзади для хвоста.
+
+Вы можете раскрасить зайчика в серый, белый или коричневый цвет и добавить ему задний фон, например, траву или цветы. 
+
+Если вам нужно что-то конкретное, дайте знать!
+2024-12-18 11:35:17,614 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет! Как я могу помочь тебе с «зеленым»? Нужно обсудить что-то конкретное, связанное с цветом, природой, устойчивым развитием или чем-то другим?
+2024-12-18 11:35:19,924 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-18 11:35:23,023 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-18 11:35:30,461 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1127302258
+2024-12-18 11:35:36,100 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1127302258
+2024-12-18 11:35:38,944 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-18 11:35:39,197 - __main__ - INFO - Завершение работы бота.
+2024-12-18 11:35:42,808 - __main__ - ERROR - Ошибка при закрытии бота: Telegram server says - Flood control exceeded on method 'Close'. Retry in 295 seconds.
+Original description: Too Many Requests: retry after 295
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+Traceback (most recent call last):
+  File "/Users/alexkarachun/Documents/DEV/pomogator/main.py", line 67, in main
+    await bot.close()
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/bot.py", line 822, in close
+    return await self(call, request_timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/bot.py", line 487, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/aiohttp.py", line 189, in make_request
+    response = self.check_response(
+        bot=bot, method=method, status_code=resp.status, content=raw_result
+    )
+  File "/Users/alexkarachun/Documents/DEV/pomogator/venv/lib/python3.13/site-packages/aiogram/client/session/base.py", line 110, in check_response
+    raise TelegramRetryAfter(
+        method=method, message=description, retry_after=parameters.retry_after
+    )
+aiogram.exceptions.TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'Close'. Retry in 295 seconds.
+Original description: Too Many Requests: retry after 295
+(background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)

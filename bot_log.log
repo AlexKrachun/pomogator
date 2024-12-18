@@ -213,3 +213,18 @@ connector: <aiohttp.connector.TCPConnector object at 0x130649590>
 2024-12-17 20:51:12,705 - __main__ - INFO - Завершение работы бота.
 2024-12-17 20:51:12,855 - __main__ - ERROR - Ошибка при закрытии бота: Telegram server says - Flood control exceeded on method 'Close'. Retry in 483 seconds.
 
+2024-12-18 11:06:06,362 - __main__ - INFO - Запуск бота...
+2024-12-18 11:06:06,363 - __main__ - INFO - Инициализация бота.
+2024-12-18 11:06:06,367 - __main__ - INFO - Создание диспетчера.
+2024-12-18 11:06:06,367 - __main__ - INFO - Подключение роутера.
+2024-12-18 11:06:06,367 - __main__ - INFO - Установка команд бота.
+2024-12-18 11:06:06,889 - __main__ - INFO - Начало polling.
+2024-12-18 11:06:11,304 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-18 11:06:11,304 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7618816734)
+2024-12-18 11:06:16,463 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-18 11:06:16,464 - aiogram.dispatcher - WARNING - Sleep for 1.159845 seconds and try again... (tryings = 1, bot id = 7618816734)
+2024-12-18 11:06:19,674 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-18 11:06:19,927 - __main__ - INFO - Завершение работы бота.
+2024-12-18 11:06:20,265 - asyncio - ERROR - Unclosed connector
+connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x121dff4d0>, 643457.836)]']
+connector: <aiohttp.connector.TCPConnector object at 0x121e456d0>

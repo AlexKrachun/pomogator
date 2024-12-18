@@ -162,3 +162,54 @@
 2024-12-17 20:34:38,660 - Bot.app.handlers - DEBUG - Пользователь 1134973316 завершил обработку сообщения.
 2024-12-17 20:34:39,625 - Bot.app.handlers - DEBUG - Ответ на /contexts успешно отправлен.
 2024-12-17 20:34:40,673 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-17 20:48:37,372 - __main__ - INFO - Запуск бота...
+2024-12-17 20:48:37,372 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:48:37,376 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:48:37,377 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:48:37,377 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:48:37,698 - __main__ - INFO - Начало polling.
+2024-12-17 20:48:41,963 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-17 20:48:41,964 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7618816734)
+2024-12-17 20:48:47,307 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-17 20:48:47,308 - aiogram.dispatcher - WARNING - Sleep for 1.318250 seconds and try again... (tryings = 1, bot id = 7618816734)
+2024-12-17 20:48:53,140 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-17 20:48:53,140 - aiogram.dispatcher - WARNING - Sleep for 1.720168 seconds and try again... (tryings = 2, bot id = 7618816734)
+2024-12-17 20:48:59,701 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-17 20:48:59,701 - aiogram.dispatcher - WARNING - Sleep for 2.223469 seconds and try again... (tryings = 3, bot id = 7618816734)
+2024-12-17 20:49:07,234 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+2024-12-17 20:49:07,234 - aiogram.dispatcher - WARNING - Sleep for 2.960108 seconds and try again... (tryings = 4, bot id = 7618816734)
+2024-12-17 20:49:08,506 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-17 20:49:08,759 - __main__ - INFO - Завершение работы бота.
+2024-12-17 20:49:09,106 - asyncio - ERROR - Unclosed connector
+connections: ['[(<aiohttp.client_proto.ResponseHandler object at 0x1305ff410>, 592026.56)]']
+connector: <aiohttp.connector.TCPConnector object at 0x130649590>
+2024-12-17 20:49:15,708 - __main__ - INFO - Запуск бота...
+2024-12-17 20:49:15,709 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:49:15,713 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:49:15,713 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:49:15,713 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:49:15,921 - __main__ - INFO - Начало polling.
+2024-12-17 20:49:29,427 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет, я свинка пеппа
+2024-12-17 20:49:31,618 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет, Свинка Пеппа! Как дела? Что нового в твоем мире?
+2024-12-17 20:49:32,402 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: мяу мяу мяу
+2024-12-17 20:49:37,074 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Мяу! Как я могу помочь? Вы хотите поговорить о кошках или чем-то другом?
+2024-12-17 20:49:44,587 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: а это мой младший братик Джордж
+2024-12-17 20:49:45,931 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет, Джордж! Как ты сегодня? Ты играл со своими игрушками?
+2024-12-17 20:49:49,717 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: продолжи
+2024-12-17 20:49:52,016 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Конечно! Джордж, расскажи, что ты сегодня сделал? Может, катался на своем динозавре или играл с Пеппой в песочнице? А может, вы вместе строили что-то интересное?
+2024-12-17 20:50:17,814 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: йоу, дрил, шаришь за хайповар
+2024-12-17 20:50:20,291 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Йоу! Да, хайповар — это популярный тренд, особенно в молодежной культуре и на социальных сетях. В основном, это связано с обсуждением актуальных тем, мемов и других трендов, которые быстро становятся популярными. Что конкретно интересует?
+2024-12-17 20:50:28,298 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1127302258
+2024-12-17 20:50:31,824 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-17 20:50:32,075 - __main__ - INFO - Завершение работы бота.
+2024-12-17 20:50:32,312 - __main__ - ERROR - Ошибка при закрытии бота: Telegram server says - Flood control exceeded on method 'Close'. Retry in 523 seconds.
+2024-12-17 20:51:00,980 - __main__ - INFO - Запуск бота...
+2024-12-17 20:51:00,980 - __main__ - INFO - Инициализация бота.
+2024-12-17 20:51:00,984 - __main__ - INFO - Создание диспетчера.
+2024-12-17 20:51:00,984 - __main__ - INFO - Подключение роутера.
+2024-12-17 20:51:00,984 - __main__ - INFO - Установка команд бота.
+2024-12-17 20:51:01,338 - __main__ - INFO - Начало polling.
+2024-12-17 20:51:12,453 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-17 20:51:12,705 - __main__ - INFO - Завершение работы бота.
+2024-12-17 20:51:12,855 - __main__ - ERROR - Ошибка при закрытии бота: Telegram server says - Flood control exceeded on method 'Close'. Retry in 483 seconds.
+

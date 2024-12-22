@@ -11,7 +11,7 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
-    pk = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     tg_id = Column(Integer, nullable=True)
     site_id = Column(Integer, nullable=True)
     name = Column(String(250), nullable=False)

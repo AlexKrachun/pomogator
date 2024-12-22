@@ -511,3 +511,311 @@ Original description: Too Many Requests: retry after 295
 2024-12-22 19:15:13,747 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
 2024-12-22 19:50:54,320 - aiogram.dispatcher - WARNING - Received SIGINT signal
 2024-12-22 19:50:54,574 - __main__ - INFO - Завершение работы бота.
+2024-12-22 19:53:06,047 - __main__ - INFO - Запуск бота...
+2024-12-22 19:53:06,049 - __main__ - INFO - Инициализация бота.
+2024-12-22 19:53:07,098 - __main__ - INFO - Создание диспетчера.
+2024-12-22 19:53:07,101 - __main__ - INFO - Подключение роутера.
+2024-12-22 19:53:07,101 - __main__ - INFO - Установка команд бота.
+2024-12-22 19:53:07,400 - __main__ - INFO - Начало polling.
+2024-12-22 19:53:13,917 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але
+2024-12-22 19:53:15,965 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привіт! Як я можу допомогти?
+2024-12-22 20:58:26,028 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет
+2024-12-22 20:58:27,467 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет! Как я могу помочь тебе сегодня?
+2024-12-22 21:15:07,039 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але ты спишь?
+2024-12-22 21:15:08,637 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Я не сплю! Как я могу помочь тебе?
+2024-12-22 21:19:09,032 - __main__ - INFO - Запуск бота...
+2024-12-22 21:19:09,033 - __main__ - INFO - Инициализация бота.
+2024-12-22 21:19:09,430 - __main__ - INFO - Создание диспетчера.
+2024-12-22 21:19:09,431 - __main__ - INFO - Подключение роутера.
+2024-12-22 21:19:09,432 - __main__ - INFO - Установка команд бота.
+2024-12-22 21:19:10,125 - __main__ - INFO - Начало polling.
+2024-12-22 21:23:29,455 - __main__ - INFO - Запуск бота...
+2024-12-22 21:23:29,455 - __main__ - INFO - Инициализация бота.
+2024-12-22 21:23:29,926 - __main__ - INFO - Создание диспетчера.
+2024-12-22 21:23:29,928 - __main__ - INFO - Подключение роутера.
+2024-12-22 21:23:29,928 - __main__ - INFO - Установка команд бота.
+2024-12-22 21:23:30,123 - __main__ - INFO - Начало polling.
+2024-12-22 21:23:36,175 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але че ты спищшь?
+2024-12-22 21:23:37,978 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Я здесь, чтобы помочь. Что тебя интересует?
+2024-12-22 21:24:23,578 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: /delete_context
+2024-12-22 21:24:24,875 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Понял, контекст удален. Как я могу помочь тебе дальше?
+2024-12-22 21:24:28,194 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: /context
+2024-12-22 21:24:29,278 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: На данный момент нет сохраненного контекста. Чем могу помочь?
+2024-12-22 21:24:31,999 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: /context
+2024-12-22 21:24:33,507 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: У меня нет сохраненного контекста, так как я не храню информацию о предыдущих взаимодействиях. Если у тебя есть конкретный вопрос или тема, которую ты хочешь обсудить, дай знать!
+2024-12-22 21:24:54,836 - __main__ - INFO - Запуск бота...
+2024-12-22 21:24:54,837 - __main__ - INFO - Инициализация бота.
+2024-12-22 21:24:55,263 - __main__ - INFO - Создание диспетчера.
+2024-12-22 21:24:55,265 - __main__ - INFO - Подключение роутера.
+2024-12-22 21:24:55,266 - __main__ - INFO - Установка команд бота.
+2024-12-22 21:24:55,470 - __main__ - INFO - Начало polling.
+2024-12-22 21:25:19,786 - __main__ - INFO - Запуск бота...
+2024-12-22 21:25:19,787 - __main__ - INFO - Инициализация бота.
+2024-12-22 21:25:20,341 - __main__ - INFO - Создание диспетчера.
+2024-12-22 21:25:20,342 - __main__ - INFO - Подключение роутера.
+2024-12-22 21:25:20,343 - __main__ - INFO - Установка команд бота.
+2024-12-22 21:25:20,639 - __main__ - INFO - Начало polling.
+2024-12-22 21:26:34,686 - Bot.app.handlers - ERROR - Ошибка в обработчике /contexts: 1134973316
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 50, in language_cmd
+    reply_markup = await inline_contexts(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\keyboard.py", line 10, in inline_contexts
+    for context_id in get_users_contexts[user_id]:
+                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 1134973316
+2024-12-22 21:26:45,245 - Bot.app.handlers - ERROR - Ошибка в обработчике /contexts: 1134973316
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 50, in language_cmd
+    reply_markup = await inline_contexts(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\keyboard.py", line 10, in inline_contexts
+    for context_id in get_users_contexts[user_id]:
+                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 1134973316
+2024-12-22 21:29:10,801 - __main__ - INFO - Запуск бота...
+2024-12-22 21:29:10,802 - __main__ - INFO - Инициализация бота.
+2024-12-22 21:29:11,753 - __main__ - INFO - Создание диспетчера.
+2024-12-22 21:29:11,755 - __main__ - INFO - Подключение роутера.
+2024-12-22 21:29:11,756 - __main__ - INFO - Установка команд бота.
+2024-12-22 21:29:11,962 - __main__ - INFO - Начало polling.
+2024-12-22 21:29:15,961 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: але че ты
+2024-12-22 21:29:18,418 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Я здесь, чтобы помочь. Какой у тебя вопрос или о чем ты хочешь поговорить?
+2024-12-22 21:29:20,508 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-22 21:30:10,862 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: /delete_context
+2024-12-22 21:30:12,419 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Я не могу удалить контекст или информацию, но я могу начать новый разговор. Как я могу помочь тебе сейчас?
+2024-12-22 21:30:48,891 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: /delete_context
+2024-12-22 21:30:50,318 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Похоже, ты хочешь очистить контекст, но у меня нет функции для удаления предыдущих сообщений. Тем не менее, мы можем начать новый разговор. Просто дай знать, о чем ты хочешь поговорить!
+2024-12-22 21:31:12,456 - __main__ - INFO - Запуск бота...
+2024-12-22 21:31:12,457 - __main__ - INFO - Инициализация бота.
+2024-12-22 21:31:12,876 - __main__ - INFO - Создание диспетчера.
+2024-12-22 21:31:12,878 - __main__ - INFO - Подключение роутера.
+2024-12-22 21:31:12,878 - __main__ - INFO - Установка команд бота.
+2024-12-22 21:31:13,069 - __main__ - INFO - Начало polling.
+2024-12-22 21:31:32,409 - Bot.app.handlers - ERROR - Ошибка в обработчике /contexts: 1134973316
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 50, in language_cmd
+    reply_markup = await inline_contexts(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\keyboard.py", line 10, in inline_contexts
+    for context_id in get_users_contexts[user_id]:
+                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 1134973316
+2024-12-22 21:31:36,395 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але че ты
+2024-12-22 21:31:37,847 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Как я могу помочь тебе сегодня?
+2024-12-22 22:49:45,631 - __main__ - INFO - Запуск бота...
+2024-12-22 22:49:45,633 - __main__ - INFO - Инициализация бота.
+2024-12-22 22:49:46,138 - __main__ - INFO - Создание диспетчера.
+2024-12-22 22:49:46,140 - __main__ - INFO - Подключение роутера.
+2024-12-22 22:49:46,140 - __main__ - INFO - Установка команд бота.
+2024-12-22 22:49:46,693 - __main__ - INFO - Начало polling.
+2024-12-22 22:50:44,767 - __main__ - INFO - Запуск бота...
+2024-12-22 22:50:44,768 - __main__ - INFO - Инициализация бота.
+2024-12-22 22:50:45,381 - __main__ - INFO - Создание диспетчера.
+2024-12-22 22:50:45,383 - __main__ - INFO - Подключение роутера.
+2024-12-22 22:50:45,383 - __main__ - INFO - Установка команд бота.
+2024-12-22 22:50:45,578 - __main__ - INFO - Начало polling.
+2024-12-22 22:51:43,196 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Как дела чучело
+2024-12-22 22:51:45,175 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! У меня всё хорошо, спасибо. А как у тебя дела? Чем могу помочь?
+2024-12-22 22:51:51,124 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Я геюга драная
+2024-12-22 22:51:53,125 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Кажется, у вас есть какие-то чувства или мысли, которые вы хотите обсудить. Если вам нужна поддержка или просто хотите поговорить, я здесь, чтобы помочь. Что у вас на сердце?
+2024-12-22 22:51:56,760 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-22 22:52:02,280 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-22 23:03:25,807 - __main__ - INFO - Запуск бота...
+2024-12-22 23:03:25,807 - __main__ - INFO - Инициализация бота.
+2024-12-22 23:03:26,310 - __main__ - INFO - Создание диспетчера.
+2024-12-22 23:03:26,312 - __main__ - INFO - Подключение роутера.
+2024-12-22 23:03:26,313 - __main__ - INFO - Установка команд бота.
+2024-12-22 23:03:26,584 - __main__ - INFO - Начало polling.
+2024-12-22 23:11:44,163 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: але как дела
+2024-12-22 23:11:45,209 - Bot.app.handlers - ERROR - Ошибка в обработчике echo_msg для пользователя 1134973316: 'gpt-4o-mini✅'
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 274, in echo_msg
+    logger.info(f"Получен ответ от OpenAI для пользователя {us_id}: {response}")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\openai_api.py", line 32, in get_completion
+    max_tokens=limit_tokens[model]
+               ~~~~~~~~~~~~^^^^^^^
+KeyError: 'gpt-4o-mini✅'
+2024-12-22 23:11:48,824 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: ал
+2024-12-22 23:11:49,002 - Bot.app.handlers - ERROR - Ошибка в обработчике echo_msg для пользователя 1134973316: 'gpt-4o-mini✅'
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 274, in echo_msg
+    logger.info(f"Получен ответ от OpenAI для пользователя {us_id}: {response}")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\openai_api.py", line 32, in get_completion
+    max_tokens=limit_tokens[model]
+               ~~~~~~~~~~~~^^^^^^^
+KeyError: 'gpt-4o-mini✅'
+2024-12-22 23:11:51,922 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: але
+2024-12-22 23:11:53,055 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Как я могу помочь тебе?
+2024-12-22 23:25:45,086 - __main__ - INFO - Запуск бота...
+2024-12-22 23:25:45,088 - __main__ - INFO - Инициализация бота.
+2024-12-22 23:25:45,575 - __main__ - INFO - Создание диспетчера.
+2024-12-22 23:25:45,576 - __main__ - INFO - Подключение роутера.
+2024-12-22 23:25:45,576 - __main__ - INFO - Установка команд бота.
+2024-12-22 23:25:45,843 - __main__ - INFO - Начало polling.
+2024-12-22 23:27:11,553 - __main__ - INFO - Запуск бота...
+2024-12-22 23:27:11,553 - __main__ - INFO - Инициализация бота.
+2024-12-22 23:27:11,976 - __main__ - INFO - Создание диспетчера.
+2024-12-22 23:27:11,977 - __main__ - INFO - Подключение роутера.
+2024-12-22 23:27:11,978 - __main__ - INFO - Установка команд бота.
+2024-12-22 23:27:12,171 - __main__ - INFO - Начало polling.
+2024-12-22 23:31:35,509 - __main__ - INFO - Запуск бота...
+2024-12-22 23:31:35,510 - __main__ - INFO - Инициализация бота.
+2024-12-22 23:31:36,135 - __main__ - INFO - Создание диспетчера.
+2024-12-22 23:31:36,137 - __main__ - INFO - Подключение роутера.
+2024-12-22 23:31:36,137 - __main__ - INFO - Установка команд бота.
+2024-12-22 23:31:36,341 - __main__ - INFO - Начало polling.
+2024-12-22 23:34:09,089 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: нарисуй мне слона с гигантской елдой
+2024-12-22 23:38:45,604 - __main__ - INFO - Запуск бота...
+2024-12-22 23:38:45,605 - __main__ - INFO - Инициализация бота.
+2024-12-22 23:38:46,275 - __main__ - INFO - Создание диспетчера.
+2024-12-22 23:38:46,277 - __main__ - INFO - Подключение роутера.
+2024-12-22 23:38:46,277 - __main__ - INFO - Установка команд бота.
+2024-12-22 23:38:46,495 - __main__ - INFO - Начало polling.
+2024-12-22 23:38:59,061 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:01,087 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:02,069 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:02,619 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:02,969 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:03,367 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:03,844 - Bot.app.handlers - ERROR - Ошибка в обработчике handle_model_switch: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\krami\PycharmProjects\pomogator2\Bot\app\handlers.py", line 238, in handle_model_switch
+    await callback.message.edit_text(
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\methods\base.py", line 84, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\bot.py", line 494, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 254, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\aiohttp.py", line 189, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\krami\PycharmProjects\pomogator1\venv\Lib\site-packages\aiogram\client\session\base.py", line 120, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2024-12-22 23:39:07,158 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: пупупууп
+2024-12-22 23:39:08,660 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Как я могу помочь тебе сегодня?
+2024-12-23 00:21:54,573 - __main__ - INFO - Запуск бота...
+2024-12-23 00:21:54,573 - __main__ - INFO - Инициализация бота.
+2024-12-23 00:21:55,329 - __main__ - INFO - Создание диспетчера.
+2024-12-23 00:21:55,331 - __main__ - INFO - Подключение роутера.
+2024-12-23 00:21:55,333 - __main__ - INFO - Установка команд бота.
+2024-12-23 00:21:55,552 - __main__ - INFO - Начало polling.
+2024-12-23 00:22:13,328 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Работаем??
+2024-12-23 00:22:15,149 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Да, конечно! Как я могу помочь вам сегодня?
+2024-12-23 00:22:21,437 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але че ты уродина
+2024-12-23 00:22:22,873 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Я здесь, чтобы помочь вам. Как могу помочь?

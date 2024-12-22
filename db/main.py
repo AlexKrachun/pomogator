@@ -1,22 +1,67 @@
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 import logging
-import json
 
-# Настройка логирования
+
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Базовый класс
+
 Base = declarative_base()
 
 class User(Base):
-    __tablename__ = 'users'
+    __tablename__ = 'table_users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     tg_id = Column(Integer, nullable=True)
     site_id = Column(Integer, nullable=True)
     name = Column(String(250), nullable=False)
     sub_status = Column(String(50), nullable=False)
     token_has = Column(Integer, nullable=False)
+    last_used_model = Column(String(500), nullable=False, default='gpt-4o-mini')
+    
+    chats = relationship('Chat', back_populates='user', cascade='all')
+
+
+    def __repr__(self):
+        return f'<User: id = {self.id}, name = {self.name}, sub_status = {self.sub_status}, token_has = {self.token_has}>'
+    
+    
+    
+class Chat(Base):
+    __tablename__ = 'table_chats'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(250), nullable=False)
+    time = Column(Integer, nullable=False)  # время в секундах для сортировки 
+
+    
+    user_id = Column(Integer, ForeignKey('table_users.id', ondelete='CASCADE'), nullable=False)
+    user = relationship('User', back_populates='chats')
+
+    messages = relationship('Message', back_populates='chat', cascade='all')
+
+    
+    def __repr__(self):
+        return f'<Chat: id = {self.id}, user_id = {self.user_id}>'
+    
+    
+    
+class Message(Base):
+    __tablename__ = 'table_messages'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    text = Column(String, nullable=False)
+    author = Column(String(100), nullable=False)
+    time = Column(Integer, nullable=False)  # время в секундах для сортировки 
+    
+    chat_id = Column(Integer, ForeignKey('table_chats.id', ondelete='CASCADE'), nullable=False)
+    chat = relationship('Chat', back_populates='messages')
+    
+    def __repr__(self):
+        print(len(self.text))
+        return f'<Message: id = {self.id}, author = {self.author}, chat_id = {self.chat_id}, text = {self.text[:min(30, len(self.text))]}>'
+    
+    
+
     
     
 
@@ -54,6 +99,8 @@ class WorkWithDB:
     def _get_session(self):
         """Получение новой сессии."""
         return self.Session()
+    
+    
     
     def add_user(self, **kwargs):
         """Добавляет пользователя с переданными параметрами."""

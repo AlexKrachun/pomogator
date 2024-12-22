@@ -481,3 +481,33 @@ Traceback (most recent call last):
 aiogram.exceptions.TelegramRetryAfter: Telegram server says - Flood control exceeded on method 'Close'. Retry in 295 seconds.
 Original description: Too Many Requests: retry after 295
 (background on this error at: https://core.telegram.org/bots/faq#my-bot-is-hitting-limits-how-do-i-avoid-this)
+2024-12-22 18:53:45,030 - __main__ - INFO - Запуск бота...
+2024-12-22 18:53:45,030 - __main__ - INFO - Инициализация бота.
+2024-12-22 18:53:45,035 - __main__ - INFO - Создание диспетчера.
+2024-12-22 18:53:45,035 - __main__ - INFO - Подключение роутера.
+2024-12-22 18:53:45,035 - __main__ - INFO - Установка команд бота.
+2024-12-22 18:53:45,241 - __main__ - INFO - Начало polling.
+2024-12-22 18:53:45,412 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: пупупу
+2024-12-22 18:53:45,417 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але
+2024-12-22 18:53:45,418 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Прив
+2024-12-22 18:53:45,418 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: Але че ты
+2024-12-22 18:53:47,635 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Привет! Как я могу помочь тебе сегодня?
+2024-12-22 18:54:09,652 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-22 18:54:09,905 - __main__ - INFO - Завершение работы бота.
+2024-12-22 19:05:24,112 - __main__ - INFO - Запуск бота...
+2024-12-22 19:05:24,113 - __main__ - INFO - Инициализация бота.
+2024-12-22 19:05:24,117 - __main__ - INFO - Создание диспетчера.
+2024-12-22 19:05:24,117 - __main__ - INFO - Подключение роутера.
+2024-12-22 19:05:24,117 - __main__ - INFO - Установка команд бота.
+2024-12-22 19:05:24,547 - __main__ - INFO - Начало polling.
+2024-12-22 19:05:24,760 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1127302258: привет
+2024-12-22 19:05:24,767 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: dfhh
+2024-12-22 19:05:26,445 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1127302258: Привет! Как я могу помочь тебе сегодня?
+2024-12-22 19:05:26,978 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: It seems like your message was cut off or might be a typo. How can I assist you today? If you have a question or need help with something specific, feel free to let me know!
+2024-12-22 19:05:33,377 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: пупупу
+2024-12-22 19:05:34,466 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Здравствуйте! Как я могу помочь вам сегодня? Если у вас есть вопросы или темы для обсуждения, не стесняйтесь делиться!
+2024-12-22 19:05:39,177 - Bot.app.handlers - INFO - Получено сообщение от пользователя 1134973316: ляляля
+2024-12-22 19:05:40,619 - Bot.app.handlers - INFO - Получен ответ от OpenAI для пользователя 1134973316: Здравствуйте! Как я могу вам помочь?
+2024-12-22 19:15:13,747 - Bot.app.handlers - INFO - Выведена context_history для пользователя 1134973316
+2024-12-22 19:50:54,320 - aiogram.dispatcher - WARNING - Received SIGINT signal
+2024-12-22 19:50:54,574 - __main__ - INFO - Завершение работы бота.

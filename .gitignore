@@ -1,13 +1,12 @@
 .env
 venv
 own.py
-
 Bot/__pycache__
 Bot/app/__pycache__
 Bot/additional/__pycache__
-bot/app/utils/__pycache__
+Bot/app/utils/__pycache__
+db/todo.py
 .pytest_cache
 .idea
 bot_log.log
 db/__pycache__
-

@@ -1,7 +1,7 @@
 .env
 venv
 own.py
-# db/own.py
+
 Bot/__pycache__
 Bot/app/__pycache__
 Bot/additional/__pycache__

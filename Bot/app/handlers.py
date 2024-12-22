@@ -2,11 +2,13 @@ import logging
 from aiogram import types
 from aiogram.types import Message
 from aiogram import Router, F
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.context import FSMContext
 
 from aiogram.filters import Command
 from Bot.additioanl.message_templates import message_templates, get_changed_context_line
 from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay
-from Bot.app.openai_api import get_completion, request_get_topic
+from Bot.app.openai_api import get_completion, request_get_topic, generate_image
 
 import uuid
 
@@ -42,6 +44,63 @@ def make_context_history(all_contexts_dict, context_id, us_name):
 
 
 router = Router()
+
+
+class DalleGeneration(StatesGroup):
+    promt = State()
+
+
+@router.message(Command('img'))
+async def get_promt(message: types.Message, state: FSMContext):
+    await state.set_state(DalleGeneration.promt)
+    await message.answer('Введите ваш запрос для генерации изображения:')
+
+
+@router.message(DalleGeneration.promt)
+async def ret_dalle_img(message: types.Message, state: FSMContext):
+    await state.update_data(promt=message.text)
+    data = await state.get_data()
+    # await message.answer(f'Ваш промт: {data}')
+    await state.clear()
+
+    dalle_promt = data['promt']
+
+    us_id = message.from_user.id
+    if us_id in id_in_processing:
+        # logger.warning(f"Пользователь {us_id} пытается отправить сообщение во время обработки.")
+        await message.answer(message_templates['ru']['id_in_procces'])
+        return
+
+    try:
+        id_in_processing.add(us_id)
+        processing_message = await message.answer(message_templates['ru']['processing'])
+
+        await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+
+
+        ans = await generate_image(dalle_promt)
+
+        if ans.startswith("http://") or ans.startswith("https://"):
+            try:
+                await message.answer_photo(ans, caption="Вот ваше сгенерированное изображение!")
+                await message.bot.delete_message(
+                    chat_id=processing_message.chat.id,
+                    message_id=processing_message.message_id
+                )
+            except Exception as e:
+                await message.answer(f"Не удалось отправить изображение: {e}")
+        else:
+            # Если ответ openai API содержит сообщение об ошибке
+            await message.answer(ans)
+
+    except Exception as e:
+        logger.exception(f"Ошибка в обработчике ret_dalle_img для пользователя {us_id}: {e}")
+        await message.answer("Произошла ошибка при обработке вашего сообщения.")
+
+    finally:
+        if us_id in id_in_processing:
+            id_in_processing.remove(us_id)
+            logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
 
 
 @router.message(Command('contexts'))
@@ -127,7 +186,6 @@ async def profile_command(message: Message):
         await message.answer("Произошла ошибка при обработке команды /profile.")
 
 
-
 @router.message(Command('help'))
 async def help_cmd(message: Message):
     try:
@@ -181,7 +239,8 @@ async def handle_model_switch(callback: types.CallbackQuery):
         us_id = callback.from_user.id
 
         # Сохраняем выбранную модель для пользователя
-        curr_users_models[us_id] = model_name
+        if model_name in ['gpt-4o-mini', 'gpt-4o']:
+            curr_users_models[us_id] = model_name
 
         await callback.answer()
         await callback.message.edit_text(

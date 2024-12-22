@@ -1,6 +1,7 @@
 import os
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
+import openai
 import asyncio
 
 load_dotenv()
@@ -41,3 +42,17 @@ async def request_get_topic(message):
     )
     print(f'Модель - {model}')
     return completion.choices[0].message.content
+
+
+async def generate_image(prompt, model="dall-e-2", size="256x256", n=1):
+    try:
+        response = await client.images.generate(
+            model=model,
+            prompt=prompt,
+            size=size,
+            n=n
+        )
+        return response.data[0].url
+    except Exception as e:
+        return f"Ошибка при генерации изображения: {e}"
+

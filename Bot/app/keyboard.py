@@ -1,4 +1,3 @@
- 
 from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardMarkup, InlineKeyboardButton)
 
@@ -21,6 +20,7 @@ def get_user_model(user_id, curr_users_models):
 
 
 chatgpt_models = ['gpt-4o-mini', 'gpt-4o']
+img_generation_models = ['dall-e-2']
 
 
 async def inline_modes(user_id, curr_users_models):
@@ -35,8 +35,12 @@ async def inline_modes(user_id, curr_users_models):
 
         keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{curr_mode}'))
 
-    # keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
-    # keyboard.add(InlineKeyboardButton(text='o1-mini', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
+    keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
+    keyboard.add(InlineKeyboardButton(text='o1-mini', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
+    for mode in img_generation_models:
+        curr_mode = mode + '✅'
+
+        keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{curr_mode}'))
 
     return keyboard.adjust(2).as_markup()
 

@@ -10,6 +10,8 @@ from Bot.additioanl.message_templates import message_templates, get_changed_cont
 from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay
 from Bot.app.openai_api import get_completion, request_get_topic, generate_image
 
+# from db.main import db_client
+
 import uuid
 
 from Bot.app.utils.state import *

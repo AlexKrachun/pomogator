@@ -417,3 +417,9 @@ class WorkWithDB:
     #         except Exception as e:
     #             session.rollback()
     #             logging.error(f"Error updating token_has: {e}")
+
+
+
+
+
+db_client = WorkWithDB()

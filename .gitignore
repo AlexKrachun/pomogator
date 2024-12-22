@@ -2,6 +2,7 @@
 .env
 venv
 own.py
+bot_log.log
 
 Bot/__pycache__
 Bot/app/__pycache__

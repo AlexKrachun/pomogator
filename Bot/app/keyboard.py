@@ -13,7 +13,7 @@ async def inline_contexts(user_id):
     # return keyboard.adjust(1).as_markup()
     
     for context in db_client.get_users_contexts_by_tg_id(user_id):
-        keyboard.add(InlineKeyboardButton(text=context['name'], callback_data=f'context:{str(context['id'])}'))
+        keyboard.add(InlineKeyboardButton(text=context['name'], callback_data=f'context:{str(context["id"])}'))
     return keyboard.adjust(1).as_markup()
 
 

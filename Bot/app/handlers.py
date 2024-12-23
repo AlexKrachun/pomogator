@@ -40,6 +40,11 @@ async def ret_dalle_img(message: types.Message, state: FSMContext):
     await state.clear()
 
     dalle_promt = data['promt']
+    if dalle_promt == '/start':
+        await message.answer(message_templates['ru']['start'])
+        return None
+
+
 
     us_id = message.from_user.id
     if us_id in id_in_processing:

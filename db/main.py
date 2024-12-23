@@ -14,7 +14,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     tg_id = Column(Integer, nullable=True)
     site_id = Column(Integer, nullable=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(250), nullable=True)
     sub_status = Column(String(50), default='not subscribed', nullable=False)
     token_has = Column(Integer, default=1000, nullable=False)
     last_used_model = Column(String(500), default='gpt-4o-mini', nullable=False)
@@ -39,7 +39,7 @@ class Chat(Base):
     __tablename__ = 'table_chats'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(250), default='Пустой чат', nullable=False)
     time = Column(Integer, nullable=False)  # время в секундах для сортировки 
 
     user_id = Column(Integer, ForeignKey('table_users.id', ondelete='CASCADE'), nullable=False)
@@ -51,6 +51,11 @@ class Chat(Base):
     
     messages = relationship('Message', back_populates='chat', cascade='all')
 
+
+    def to_list_of_roled_messages(self):
+        mes = sorted(self.messages.copy(), key=lambda x: x.time)
+        return [m.to_dict() for m in mes]
+            
     
     def __repr__(self):
         return f'<Chat: id = {self.id}, user_id = {self.user_id}>'
@@ -68,8 +73,11 @@ class Message(Base):
     chat_id = Column(Integer, ForeignKey('table_chats.id', ondelete='CASCADE'), nullable=False)
     chat = relationship('Chat', back_populates='messages')
     
+    
+    def to_dict(self):
+        return {'role': self.author, "content": self.text}
+    
     def __repr__(self):
-        print(len(self.text))
         return f'<Message: id = {self.id}, author = {self.author}, chat_id = {self.chat_id}, text = {self.text[:min(30, len(self.text))]}>'
     
     
@@ -101,14 +109,21 @@ class WorkWithDB:
         '''нет пользователя с таким tg_id'''
         with self._get_session() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
-            return bool(user)
+            return not bool(user)
 
     
-    def user_has_no_contexts_by_tg_id(self, tg_id):
+    # def user_has_no_contexts_by_tg_id(self, tg_id):
+    #     with self._get_session() as session:
+    #         user = session.query(User).filter(User.tg_id == tg_id).first()
+    #         print('u' * 100, user.chats)
+    #         return len(user.chats) == 0
+    
+    
+    def user_has_empty_curr_context_by_tg_id(self, us_id):
         with self._get_session() as session:
-            user = session.query(User).filter(User.tg_id == tg_id).first()
-            return len(user.chats) == 0
-
+            curr_context_id = session.query(User).filter(User.tg_id == us_id).first().current_chat_id
+            user_curr_context_messages = session.query(Chat).filter(Chat.id == curr_context_id).first().messages
+            return len(user_curr_context_messages) == 0
     
     def add_message(self, chat_id, role, text):
         with self._get_session() as session:
@@ -145,7 +160,6 @@ class WorkWithDB:
             
             
 
-
     def get_current_context_by_tg_id(self, tg_id) -> Chat:
         with self._get_session() as session:
             chat_id = session.query(User).filter(User.tg_id == tg_id).first().current_chat_id
@@ -174,9 +188,18 @@ class WorkWithDB:
     #         except Exception as e:
     #             session.rollback()
     #             logging.error(f"Error adding by site_id Chat {dialog_name}, {e}")
-                
+
+    def update_dialog_neame(self, chat_id, dialog_name):
+        with self._get_session() as session:
+            chat = session.query(Chat).filter(Chat.id == chat_id).first()
+            try:
+                chat.name = dialog_name
+                session.commit()
+                logging.info(f'Переименовали диалог успешно')
+            except Exception as ex:
+                logging.error(f'Ошибка при переименовании диалога на {chat_id=}, {dialog_name=}, error: {ex}')
     
-    def create_new_context_by_tg_id(self, tg_id, dialog_name):
+    def create_new_context_by_tg_id(self, tg_id):
         '''добавить новый диалог с названием'''
         with self._get_session() as session:
             try:
@@ -187,17 +210,18 @@ class WorkWithDB:
                     logging.error(f'Ппри попытки создания нового контекста, пользователь с tg_id={tg_id} не найден')
                     return
                 
+                curr_time=int(time.time())
                 new_chat = Chat(
-                    name=dialog_name,
-                    time=int(time.time()),
+                    time=curr_time,
                     user_id=user_id,
                 )
                 session.add(new_chat)
                 session.commit()
-                logging.info(f"Chat {dialog_name} added successfully.")
+                logging.info(f"Chat {new_chat.id} added successfully.")
+                return new_chat.id
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error adding by tg_id Chat {dialog_name}, {e}")
+                logging.error(f"Error adding by tg_id Chat by {tg_id}, {e}")
     
     # def switch_user_model_by_site_id(self, site_id, new_model_name):
     #     '''
@@ -231,6 +255,24 @@ class WorkWithDB:
                     logging.error(f'Ошибка {e} при обновлении last_used_model у {user} на {new_model_name}')
 
     
+    def get_full_dialog(self, chat_id) -> list[Message]:
+        '''
+        [
+            {'role': "user", "content": user_message}, 
+            {'role': "assistant", "content": user_message}, 
+            ...
+        ]
+        '''
+        with self._get_session() as session:
+            # messages = (session.query(Message)
+            #                    .filter(Message.chat_id == chat_id)
+            #                    .order_by(asc(Message.time))).all() 
+            chat = session.query(Chat).filter(Chat.id == chat_id).first() 
+            messages = chat.to_list_of_roled_messages()
+            
+        return messages
+        
+    
     def make_context_history(self, chat_id):
         '''
         по чату, вернуть его содержимое
@@ -262,16 +304,19 @@ class WorkWithDB:
             return session.query(Chat.name).filter(Chat.id == context_id).scalar()
 
 
-    def get_users_contexts_by_tg_id(self, tg_id):
+    def get_users_contexts_by_tg_id(self, tg_id) -> list[dict[str: int, str: str]]:
         '''
         Cписок контекстов, посорченый по дате создания
         '''
         with self._get_session() as session:
-            return (session.query(Chat)
+            chats = (session.query(Chat)
                            .join(User)
                            .filter(User.tg_id == tg_id)
                            .order_by(Chat.time)
                            .all())
+            contextst = [{'id': ch.id, 'name': ch.name} for ch in chats]
+        return contextst
+            
         
     # def get_users_contexts_by_site_id(self, site_id):
     #     '''

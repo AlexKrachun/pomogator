@@ -17,11 +17,11 @@ async def inline_contexts(user_id):
     return keyboard.adjust(1).as_markup()
 
 
-def get_user_model(user_id, curr_users_models):
-    if user_id not in curr_users_models:
-        return 'gpt-4o-mini'
+# def get_user_model(user_id, curr_users_models):
+#     if user_id not in curr_users_models:
+#         return 'gpt-4o-mini'
 
-    return curr_users_models.get(user_id, 'gpt-4o-mini')
+#     return curr_users_models.get(user_id, 'gpt-4o-mini')
 
 
 chatgpt_models = ['gpt-4o-mini', 'gpt-4o']
@@ -46,7 +46,7 @@ async def inline_modes(user_id, model):
     for mode in img_generation_models:
         curr_mode = mode + '✅'
 
-        keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{curr_mode}'))
+        keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{mode}'))
 
     return keyboard.adjust(2).as_markup()
 

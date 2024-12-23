@@ -75,7 +75,7 @@ class Message(Base):
     
     
     def to_dict(self):
-        return {'role': self.author, "content": self.text}
+        return {'role': self.author, 'content': self.text}
     
     def __repr__(self):
         return f'<Message: id = {self.id}, author = {self.author}, chat_id = {self.chat_id}, text = {self.text[:min(30, len(self.text))]}>'
@@ -136,10 +136,10 @@ class WorkWithDB:
                 )
                 session.add(msg)
                 session.commit()
-                logging.info(f"Message {msg} added successfully.")
+                logging.info(f'Message {msg} added successfully.')
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error adding message: {e}")
+                logging.error(f'Error adding message: {e}')
     
     def get_user_by_tg_id(self, tg_id):
         with self._get_session() as session:
@@ -153,10 +153,10 @@ class WorkWithDB:
             try:
                 user.current_chat_id = another_context_id
                 session.commit()
-                logging.info(f"User current_chat_id changed successfully to {another_context_id}")
+                logging.info(f'User current_chat_id changed successfully to {another_context_id}')
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error User current_chat_id changin to {another_context_id}, {e}")
+                logging.error(f'Error User current_chat_id changin to {another_context_id}, {e}')
             
             
 
@@ -184,10 +184,10 @@ class WorkWithDB:
     #             )
     #             session.add(new_chat)
     #             session.commit()
-    #             logging.info(f"Chat {dialog_name} added successfully.")
+    #             logging.info(f'Chat {dialog_name} added successfully.')
     #         except Exception as e:
     #             session.rollback()
-    #             logging.error(f"Error adding by site_id Chat {dialog_name}, {e}")
+    #             logging.error(f'Error adding by site_id Chat {dialog_name}, {e}')
 
     def update_dialog_neame(self, chat_id, dialog_name):
         with self._get_session() as session:
@@ -199,7 +199,7 @@ class WorkWithDB:
             except Exception as ex:
                 logging.error(f'Ошибка при переименовании диалога на {chat_id=}, {dialog_name=}, error: {ex}')
     
-    def create_new_context_by_tg_id(self, tg_id):
+    def create_new_context_by_tg_id(self, tg_id) -> int:
         '''добавить новый диалог с названием'''
         with self._get_session() as session:
             try:
@@ -217,11 +217,11 @@ class WorkWithDB:
                 )
                 session.add(new_chat)
                 session.commit()
-                logging.info(f"Chat {new_chat.id} added successfully.")
+                logging.info(f'Chat {new_chat.id} added successfully.')
                 return new_chat.id
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error adding by tg_id Chat by {tg_id}, {e}")
+                logging.error(f'Error adding by tg_id Chat by {tg_id}, {e}')
     
     # def switch_user_model_by_site_id(self, site_id, new_model_name):
     #     '''
@@ -258,8 +258,8 @@ class WorkWithDB:
     def get_full_dialog(self, chat_id) -> list[Message]:
         '''
         [
-            {'role': "user", "content": user_message}, 
-            {'role': "assistant", "content": user_message}, 
+            {'role': 'user', 'content': user_message}, 
+            {'role': 'assistant', 'content': user_message}, 
             ...
         ]
         '''
@@ -341,19 +341,18 @@ class WorkWithDB:
 
     
     def add_user(self, **kwargs):
-        """
+        '''
         Добавляет пользователя с переданными параметрами.
-        обязательный аргумент: name: str
-        """
+        '''
         with self._get_session() as session:
             try:
                 user = User(**kwargs)
                 session.add(user)
                 session.commit()
-                logging.info(f"User {user.name} added successfully.")
+                logging.info(f'User {user.name} added successfully.')
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error adding user: {e}")
+                logging.error(f'Error adding user: {e}')
     
     def get_user_by_tg_id(self, tg_id):
         with self._get_session() as session:
@@ -392,12 +391,12 @@ class WorkWithDB:
                 if user:
                     user.sub_status = new_status
                     session.commit()
-                    logging.info(f"Updated sub_status to {new_status} for tg_id {tg_id}.")
+                    logging.info(f'Updated sub_status to {new_status} for tg_id {tg_id}.')
                 else:
-                    logging.warning(f"User with tg_id {tg_id} not found.")
+                    logging.warning(f'User with tg_id {tg_id} not found.')
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error updating sub_status: {e}")
+                logging.error(f'Error updating sub_status: {e}')
                 
     # def update_sub_status_by_site_id(self, site_id, new_status):
     #     with self._get_session() as session:
@@ -406,10 +405,10 @@ class WorkWithDB:
     #             if user:
     #                 user.sub_status = new_status
     #                 session.commit()
-    #                 logging.info(f"Updated sub_status to {new_status} for site_id {site_id}.")
+    #                 logging.info(f'Updated sub_status to {new_status} for site_id {site_id}.')
     #         except Exception as e:
     #             session.rollback()
-    #             logging.error(f"Error updating sub_status: {e}")
+    #             logging.error(f'Error updating sub_status: {e}')
 
 
 
@@ -420,10 +419,10 @@ class WorkWithDB:
                 if user:
                     user.site_id = new_site_id
                     session.commit()
-                    logging.info(f"Updated site_id to {new_site_id} for tg_id {tg_id}.")
+                    logging.info(f'Updated site_id to {new_site_id} for tg_id {tg_id}.')
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error updating site_id: {e}")
+                logging.error(f'Error updating site_id: {e}')
                 
     # def update_tg_id_by_site_id(self, site_id, new_tg_id):
     #     with self._get_session() as session:
@@ -432,10 +431,10 @@ class WorkWithDB:
     #             if user:
     #                 user.tg_id = new_tg_id
     #                 session.commit()
-    #                 logging.info(f"Updated tg_id to {new_tg_id} for site_id {site_id}.")
+    #                 logging.info(f'Updated tg_id to {new_tg_id} for site_id {site_id}.')
     #         except Exception as e:
     #             session.rollback()
-    #             logging.error(f"Error updating tg_id: {e}")
+    #             logging.error(f'Error updating tg_id: {e}')
 
 
 
@@ -446,10 +445,10 @@ class WorkWithDB:
                 if user:
                     user.token_has = token_amount
                     session.commit()
-                    logging.info(f"Updated token_has to {token_amount} for tg_id {tg_id}.")
+                    logging.info(f'Updated token_has to {token_amount} for tg_id {tg_id}.')
             except Exception as e:
                 session.rollback()
-                logging.error(f"Error updating token_has: {e}")
+                logging.error(f'Error updating token_has: {e}')
 
     # def update_token_has_by_site_id(self, site_id, token_amount):
     #     with self._get_session() as session:
@@ -458,13 +457,16 @@ class WorkWithDB:
     #             if user:
     #                 user.token_has = token_amount
     #                 session.commit()
-    #                 logging.info(f"Updated token_has to {token_amount} for site_id {site_id}.")
+    #                 logging.info(f'Updated token_has to {token_amount} for site_id {site_id}.')
     #         except Exception as e:
     #             session.rollback()
-    #             logging.error(f"Error updating token_has: {e}")
+    #             logging.error(f'Error updating token_has: {e}')
 
 
 
 
 
 db_client = WorkWithDB()
+
+
+# db_client = WorkWithDB(db_path='sqlite:///:memory:')

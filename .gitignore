@@ -4,14 +4,16 @@ venv
 own.py
 bot_log.log
 
+__pycache__
+
 Bot/__pycache__
 Bot/app/__pycache__
 Bot/app/utils/__pycache__
 
-
 Bot/additioanl/__pycache__
-
 Bot/tests/__pycache__
+
+db/orm.db 
 db/todo.py
 db/__pycache__
 

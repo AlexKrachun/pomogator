@@ -220,18 +220,20 @@ async def handle_model_switch(callback: types.CallbackQuery):
     try:
         model_name = callback.data.removeprefix("model:")
         us_id = callback.from_user.id
-
-        if db_client.get_user_model_by_tg_id(us_id) != model_name:
+        if model_name != 'dall-e-2' and db_client.get_user_model_by_tg_id(us_id) != model_name:
 
             if model_name in ['gpt-4o-mini', 'gpt-4o']:
                 db_client.switch_user_model_by_tg_id(tg_id=us_id, new_model_name=model_name)
 
-            await callback.answer()
             await callback.message.edit_text(
                 'Выберите подходящую вам модель gpt.',
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
+            await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {model_name}")
+        else:
+            await callback.answer()
+
     except Exception as e:
         logger.exception(f"Ошибка в обработчике handle_model_switch: {e}")
         await callback.answer("Произошла ошибка при смене модели.")

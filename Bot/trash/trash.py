@@ -30,7 +30,6 @@ os.makedirs(SAVE_DIR, exist_ok=True)
 
 async def handle_text_and_photo(message: Message, bot: Bot):
     if message.text:
-
         await message.answer(f"Вы отправили текст: {message.text}")
     elif message.photo:
 

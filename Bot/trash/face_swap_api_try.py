@@ -11,10 +11,11 @@ payload = json.dumps({
    }
 })
 headers = {
-   'x-api-key': 'a6622b15868f57f6de5133d4c57d09724eaf6724023beed9ff5dcd51538f7122',
+   'x-api-key': '',
    'Content-Type': 'application/json'
 }
 conn.request("POST", "/api/v1/task", payload, headers)
 res = conn.getresponse()
 data = res.read()
 print(data.decode("utf-8"))
+

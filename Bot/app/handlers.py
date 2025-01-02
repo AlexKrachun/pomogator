@@ -1,5 +1,5 @@
 import logging
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.types import Message
 from aiogram import Router, F
 from aiogram.fsm.state import StatesGroup, State
@@ -9,15 +9,27 @@ from aiogram.filters import Command
 from Bot.additioanl.message_templates import message_templates, get_changed_context_line
 from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay, dalle_3_settings
 from Bot.app.openai_api import get_completion, request_get_topic, generate_image, get_common_gpt_complection
+from Bot.app.faceswap_api import run_face_swap
 
 from db.main import db_client
 
 from Bot.app.utils.state import id_in_processing
 
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+
+
 logger = logging.getLogger(__name__)
 
 router = Router()
 
+
+# class FaceSwap(StatesGroup):
+#      = State()
 
 # class DalleGeneration(StatesGroup):
 #     promt = State()
@@ -233,9 +245,8 @@ async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
 
             await callback.message.edit_text(
                 'Выберите подходящие вам разрешение.',
-                reply_markup=await dalle_3_settings(us_id, db_client.get_dalle_shape_by_tg_id(us_id), curr_resolution)
+                reply_markup=await dalle_3_settings(user_id=us_id, quality=db_client.get_dalle_quality_by_tg_id(us_id), resolution=curr_resolution)
             )
-
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {curr_resolution}")
         else:
@@ -246,7 +257,7 @@ async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
         await callback.answer("Произошла ошибка при смене разрешения.")
 
 
-async def openai_gpt_handler(message: Message):
+async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text}")
     us_id = message.from_user.id
     user_message = message.text
@@ -297,7 +308,7 @@ async def openai_gpt_handler(message: Message):
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения в openai_gpt_handler.")
 
 
-async def dall_e_3_handler(message: Message):
+async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text} для генерации изображение")
 
     us_id = message.from_user.id
@@ -348,17 +359,102 @@ async def dall_e_3_handler(message: Message):
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
 
 
+
+
+# async def face_swap_handler(message: Message, bot: Bot):
+    # file = await bot.get_file(file_id)
+    # file_url = f"https://api.telegram.org/file/bot{API_TOKEN}/{file.file_path}"
+    # await file.download_to('downloaded_photo.jpg')
+    #  await message.answer(f"Пришлите фотографию, которую будем менять")
+
+        
+
+
+
+# class DalleGeneration(StatesGroup):
+#     promt = State()
+#
+#
+# @router.message(Command('img'))
+# async def get_promt(message: types.Message, state: FSMContext):
+#     await state.set_state(DalleGeneration.promt)
+#     await message.answer('Введите ваш запрос для генерации изображения:')
+
+#
+# @router.message(DalleGeneration.promt)
+# async def ret_dalle_img(message: types.Message, state: FSMContext):
+#     await state.update_data(promt=message.text)
+#     data = await state.get_data()
+#     # await message.answer(f'Ваш промт: {data}')
+#     await state.clear()
+#
+#     dalle_promt = data['promt']
+#     if dalle_promt == '/start':
+#         await message.answer(message_templates['ru']['start'])
+#         return None
+
+
+
+class FaceSwap(StatesGroup):
+    photo_1_done = State()
+    
+# async def get_promt(message: types.Message, state: FSMContext):
+#     await state.set_state(DalleGeneration.promt)
+#     await message.answer('Введите ваш запрос для генерации изображения:')
+
+
+async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMContext):
+    
+    photo = message.photo[-1]
+    file_id = photo.file_id
+
+    file = await bot.get_file(file_id)
+    file_path = file.file_path
+
+    img_1_url = f'https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}'
+    await state.set_state(FaceSwap.photo_1_done)
+    await state.update_data(photo_1_done=img_1_url)
+    await message.answer('Пришлите фотографию с желаемым лицом')
+    
+    
+@router.message(FaceSwap.photo_1_done)
+async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMContext):
+    photo = message.photo[-1]
+    file_id = photo.file_id
+
+    file = await bot.get_file(file_id)
+    file_path = file.file_path
+
+    img_2_url = f'https://api.telegram.org/file/bot{BOT_TOKEN}/{file_path}'
+    
+    data = await state.get_data()
+    img_1_url = data['photo_1_done']
+
+    swapped_img_url = await run_face_swap(main_img_url=img_1_url, face_img_url=img_2_url)
+    
+    await message.answer(f'{swapped_img_url=}')
+
+    
+# async def face_swap_handler(message: Message, bot: Bot, state: FSMContext):
+#     print('+' * 1000)
+
+    # print(file_url)
+    # await message.answer(f'Ссылка на ваше изображение: {file_url}')
+
+
+
 model_handler = {  # для нейронки храним хендлер
     'gpt-4o-mini': openai_gpt_handler,
     'gpt-4o': openai_gpt_handler,
     'o1-mini': openai_gpt_handler,
     'o1-preview': openai_gpt_handler,
     'dall-e-3': dall_e_3_handler,
+    'face-swap': face_swap_handler_first_photo
 }
 
 
 @router.message()
-async def echo_msg(message: Message):
+async def echo_msg(message: Message, bot: Bot, state: FSMContext):
     
     # try:
     #     # регистрация
@@ -376,16 +472,17 @@ async def echo_msg(message: Message):
     #     await message.answer("Произошла ошибка при обработке команды /start.")
 
     
-    
     us_id = message.from_user.id
     user_message = message.text
 
+    print('1' * 100)
     if us_id in id_in_processing:
         await message.answer(message_templates['ru']['id_in_procces'])
         return
-    if not user_message:
-        return
+    
+    print('2' * 100)
 
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
     print(f'Дебаг - {last_used_model}')
-    await model_handler[last_used_model](message)
+
+    await model_handler[last_used_model](message, bot, state)

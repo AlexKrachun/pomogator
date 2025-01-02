@@ -25,7 +25,7 @@ async def inline_contexts(user_id):
 #     return curr_users_models.get(user_id, 'gpt-4o-mini')
 
 
-ai_models = ['gpt-4o-mini', 'gpt-4o', 'o1-mini', 'o1-preview', 'dall-e-3']
+ai_models = ['gpt-4o-mini', 'gpt-4o', 'o1-mini', 'o1-preview', 'dall-e-3', 'face-swap']
 
 
 async def inline_modes(user_id, model):

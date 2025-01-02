@@ -19,6 +19,9 @@ class User(Base):
     token_has = Column(Integer, default=1000, nullable=False)
     last_used_model = Column(String(500), nullable=False)
     
+    dalle_shape = Column(String(100), default='1024x1024', nullable=False)
+    dalle_quality = Column(String(100), default='standard', nullable=False)  # 'standard'/'hd'
+    
 
     current_chat_id = Column(Integer, nullable=True)
 
@@ -104,6 +107,39 @@ class WorkWithDB:
     def _get_session(self):
         return self.Session()
     
+    def get_dalle_quality_by_tg_id(self, tg_id) -> str:
+        with self._get_session() as session:
+            return session.query(User).filter_by(tg_id=tg_id).first().dalle_quality
+
+    def get_dalle_shape_by_tg_id(self, tg_id) -> str:
+        with self._get_session() as session:
+            return session.query(User).filter_by(tg_id=tg_id).first().dalle_shape
+    
+    
+    def set_dalle_quality_by_tg_id(self, tg_id, dalle_quality: str):
+        with self._get_session() as session:
+            user = session.query(User).filter(User.tg_id == tg_id).first()
+            
+            try:
+                user.dalle_quality = dalle_quality
+                session.commit()
+                logging.info(f'User dalle_quality changed successfully to {dalle_quality}')
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error User dalle_quality changin to {dalle_quality}, {e}')
+    
+    def set_dalle_shape_by_tg_id(self, tg_id, dalle_shape: str):
+        with self._get_session() as session:
+            user = session.query(User).filter(User.tg_id == tg_id).first()
+            
+            try:
+                user.dalle_shape = dalle_shape
+                session.commit()
+                logging.info(f'User dalle_shape changed successfully to {dalle_shape}')
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error User dalle_shape changin to {dalle_shape}, {e}')
+                
     
     def user_is_new_by_tg_id(self, tg_id):
         '''нет пользователя с таким tg_id'''

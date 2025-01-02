@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 
 from aiogram.filters import Command
 from Bot.additioanl.message_templates import message_templates, get_changed_context_line
-from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay
+from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay, dalle_3_settings
 from Bot.app.openai_api import get_completion, request_get_topic, generate_image
 
 from db.main import db_client
@@ -16,70 +16,31 @@ from Bot.app.utils.state import id_in_processing
 
 logger = logging.getLogger(__name__)
 
-
 router = Router()
 
 
-class DalleGeneration(StatesGroup):
-    promt = State()
+# class DalleGeneration(StatesGroup):
+#     promt = State()
+#
+#
+# @router.message(Command('img'))
+# async def get_promt(message: types.Message, state: FSMContext):
+#     await state.set_state(DalleGeneration.promt)
+#     await message.answer('Введите ваш запрос для генерации изображения:')
 
+#
+# @router.message(DalleGeneration.promt)
+# async def ret_dalle_img(message: types.Message, state: FSMContext):
+#     await state.update_data(promt=message.text)
+#     data = await state.get_data()
+#     # await message.answer(f'Ваш промт: {data}')
+#     await state.clear()
+#
+#     dalle_promt = data['promt']
+#     if dalle_promt == '/start':
+#         await message.answer(message_templates['ru']['start'])
+#         return None
 
-@router.message(Command('img'))
-async def get_promt(message: types.Message, state: FSMContext):
-    await state.set_state(DalleGeneration.promt)
-    await message.answer('Введите ваш запрос для генерации изображения:')
-
-
-@router.message(DalleGeneration.promt)
-async def ret_dalle_img(message: types.Message, state: FSMContext):
-    await state.update_data(promt=message.text)
-    data = await state.get_data()
-    # await message.answer(f'Ваш промт: {data}')
-    await state.clear()
-
-    dalle_promt = data['promt']
-    if dalle_promt == '/start':
-        await message.answer(message_templates['ru']['start'])
-        return None
-
-
-
-    us_id = message.from_user.id
-    if us_id in id_in_processing:
-        # logger.warning(f"Пользователь {us_id} пытается отправить сообщение во время обработки.")
-        await message.answer(message_templates['ru']['id_in_procces'])
-        return
-
-    try:
-        id_in_processing.add(us_id)
-        processing_message = await message.answer(message_templates['ru']['processing'])
-
-        await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
-
-
-        ans = await generate_image(dalle_promt)
-
-        if ans.startswith("http://") or ans.startswith("https://"):
-            try:
-                await message.answer_photo(ans, caption="Вот ваше сгенерированное изображение!")
-                await message.bot.delete_message(
-                    chat_id=processing_message.chat.id,
-                    message_id=processing_message.message_id
-                )
-            except Exception as e:
-                await message.answer(f"Не удалось отправить изображение: {e}")
-        else:
-            # Если ответ openai API содержит сообщение об ошибке
-            await message.answer(ans)
-
-    except Exception as e:
-        logger.exception(f"Ошибка в обработчике ret_dalle_img для пользователя {us_id}: {e}")
-        await message.answer("Произошла ошибка при обработке вашего сообщения.")
-
-    finally:
-        if us_id in id_in_processing:
-            id_in_processing.remove(us_id)
-            logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
 
 
 @router.message(Command('contexts'))
@@ -115,7 +76,7 @@ async def mode_cmd(message: types.Message):
         reply_markup = await inline_modes(
             message.from_user.id,
             # curr_users_models
-            db_client.get_user_model_by_tg_id(tg_id=message.from_user.id,),
+            db_client.get_user_model_by_tg_id(tg_id=message.from_user.id, ),
         )
         await message.answer(
             'Выберите подходящую вам модель gpt.',
@@ -133,12 +94,11 @@ async def start_cmd(message: types.Message):
         # регистрация
         us_id = message.from_user.id
         if db_client.user_is_new_by_tg_id(us_id):
-
-            db_client.add_user(name=message.from_user.full_name, tg_id=us_id, last_used_model='gpt-4o-mini')  # возможно full_name пустой
+            db_client.add_user(name=message.from_user.full_name, tg_id=us_id,
+                               last_used_model='gpt-4o-mini')  # возможно full_name пустой
             chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)  # новый чат с названием 'Пустой чат'
             db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=chat_id)
-            
-            
+
         await message.answer(message_templates['ru']['start'])
         logger.debug("Ответ на /start успешно отправлен.")
     except Exception as e:
@@ -202,6 +162,8 @@ async def handle_context_switch(callback: types.CallbackQuery):
         await callback.answer()
         await callback.message.answer(get_changed_context_line(topic))
 
+
+
         context_history = db_client.make_context_history(chat_id=context_id)
         logger.info(f'Выведена context_history для пользователя {us_id}')
 
@@ -226,6 +188,10 @@ async def handle_model_switch(callback: types.CallbackQuery):
                 'Выберите подходящую вам модель.',
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
+            if model_name in ['dall-e-3']:
+                await callback.message.answer(message_templates['ru']['dall_e_3_handler'],
+                reply_markup=await dalle_3_settings(us_id))
+
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {model_name}")
         else:
@@ -236,29 +202,23 @@ async def handle_model_switch(callback: types.CallbackQuery):
         await callback.answer("Произошла ошибка при смене модели.")
 
 
-
 async def openai_gpt_handler(message: Message):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text}")
     us_id = message.from_user.id
     user_message = message.text
     id_in_processing.add(us_id)
 
-
-
     try:
         if db_client.user_has_empty_curr_context_by_tg_id(us_id):
-            
             chat_id = db_client.get_current_context_id_by_tg_id(tg_id=us_id)
-            
-            dialog_name = await request_get_topic(user_message)
-            
-            db_client.update_dialog_neame(chat_id=chat_id, dialog_name=dialog_name)
-            
-            
-        curr_context_id = db_client.get_current_context_by_tg_id(us_id).id
-        
-        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message)
 
+            dialog_name = await request_get_topic(user_message)
+
+            db_client.update_dialog_neame(chat_id=chat_id, dialog_name=dialog_name)
+
+        curr_context_id = db_client.get_current_context_by_tg_id(us_id).id
+
+        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message)
 
         processing_message = await message.answer(message_templates['ru']['processing'])
 
@@ -271,12 +231,11 @@ async def openai_gpt_handler(message: Message):
 
         logger.info(f"Получен ответ от OpenAI для пользователя {us_id}: {response}")
 
-
         await message.bot.delete_message(
             chat_id=processing_message.chat.id,
             message_id=processing_message.message_id
         )
-        
+
         try:
             await message.answer(response, parse_mode="Markdown")
         except Exception as e:
@@ -294,16 +253,56 @@ async def openai_gpt_handler(message: Message):
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения в openai_gpt_handler.")
 
 
+
 async def dall_e_3_handler(message: Message):
-    pass
+    logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text} для генерации изображение")
+
+    us_id = message.from_user.id
+    if us_id in id_in_processing:
+        logger.warning(f"Пользователь {us_id} пытается отправить сообщение во время обработки.")
+        await message.answer(message_templates['ru']['id_in_procces'])
+        return
+
+    try:
+        id_in_processing.add(us_id)
+
+        processing_message = await message.answer(message_templates['ru']['processing'])
+        await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+
+        ans = await generate_image(message.text)
+
+        if ans.startswith("http://") or ans.startswith("https://"):
+            try:
+                await message.answer_photo(ans, caption="Вот ваше сгенерированное изображение!")
+                await message.bot.delete_message(
+                    chat_id=processing_message.chat.id,
+                    message_id=processing_message.message_id
+                )
+            except Exception as e:
+                await message.answer(f"Не удалось отправить изображение: {e}")
+        else:
+            # Если ответ openai API содержит сообщение об ошибке
+            await message.answer(ans)
+
+    except Exception as e:
+        logger.exception(f"Ошибка в обработчике ret_dalle_img для пользователя {us_id}: {e}")
+        await message.answer("Произошла ошибка при обработке вашего сообщения.")
+
+    finally:
+        if us_id in id_in_processing:
+            id_in_processing.remove(us_id)
+            logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+
+
 
 
 model_handler = {  # для нейронки храним хендлер
     'gpt-4o-mini': openai_gpt_handler,
     'gpt-4o': openai_gpt_handler,
     'dall-e-3': dall_e_3_handler,
-    
+
 }
+
 
 @router.message()
 async def echo_msg(message: Message):
@@ -317,4 +316,6 @@ async def echo_msg(message: Message):
         return
 
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
+    print(f'Дебаг - {last_used_model}')
     await model_handler[last_used_model](message)
+

@@ -25,7 +25,7 @@ async def inline_contexts(user_id):
 #     return curr_users_models.get(user_id, 'gpt-4o-mini')
 
 
-ai_models = ['gpt-4o-mini', 'gpt-4o', 'dall-e-3']
+ai_models = ['gpt-4o-mini', 'gpt-4o', 'o1-mini', 'o1-preview', 'dall-e-3']
 
 
 async def inline_modes(user_id, model):
@@ -41,10 +41,10 @@ async def inline_modes(user_id, model):
 
         keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{mode}'))
 
-    keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
+    # keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
     # keyboard.add(InlineKeyboardButton(text='o1-mini', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
 
-    return keyboard.adjust(2).as_markup()
+    return keyboard.adjust(2, 2, 1).as_markup()
 
 
 quality_settings = ['standard', 'hd']

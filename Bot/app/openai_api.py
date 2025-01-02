@@ -21,12 +21,31 @@ base_for_topic_request = [{"role": "system",
                                       " without formulas and nothing else"}]
 
 
+async def get_common_gpt_complection(messages_array, model):
+    if model in ['gpt-4o', 'gpt-4o-mini']:
+        response = await get_completion(messages_array, model)
+    elif model in ['o1-mini', 'o1-preview']:
+        response = await get_gpt_o1_completion(messages_array, model)
+    else:
+        response = 'Ошибка при генерации'
+    return response
+
+
 async def get_completion(messages_array, model):
     messages_array = base_for_request + messages_array
     completion = await client.chat.completions.create(
         model=model,
         messages=messages_array,
         max_tokens=limit_tokens[model]
+    )
+    print(f'Модель - {model}')
+    return completion.choices[0].message.content
+
+
+async def get_gpt_o1_completion(messages_array, model):
+    completion = await client.chat.completions.create(
+        model=model,
+        messages=messages_array,
     )
     print(f'Модель - {model}')
     return completion.choices[0].message.content
@@ -50,7 +69,7 @@ async def generate_image(prompt, model="dall-e-3", size="1024x1024", quality="st
             model=model,
             prompt=prompt,
             size=size,
-            quality="standard",
+            quality=quality,
             n=n
         )
         return response.data[0].url

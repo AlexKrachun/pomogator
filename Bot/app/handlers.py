@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from Bot.additioanl.message_templates import message_templates, get_changed_context_line
 from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay, dalle_3_settings
-from Bot.app.openai_api import get_completion, request_get_topic, generate_image
+from Bot.app.openai_api import get_completion, request_get_topic, generate_image, get_common_gpt_complection
 
 from db.main import db_client
 
@@ -268,7 +268,7 @@ async def openai_gpt_handler(message: Message):
 
         await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
 
-        response = await get_completion(
+        response = await get_common_gpt_complection(
             db_client.get_full_dialog(curr_context_id)[-15:],
             db_client.get_user_model_by_tg_id(us_id)
         )
@@ -351,8 +351,9 @@ async def dall_e_3_handler(message: Message):
 model_handler = {  # для нейронки храним хендлер
     'gpt-4o-mini': openai_gpt_handler,
     'gpt-4o': openai_gpt_handler,
+    'o1-mini': openai_gpt_handler,
+    'o1-preview': openai_gpt_handler,
     'dall-e-3': dall_e_3_handler,
-
 }
 
 

@@ -327,7 +327,9 @@ async def dall_e_3_handler(message: Message):
                 await message.answer(f"Не удалось отправить изображение: {e}")
         else:
             # Если ответ openai API содержит сообщение об ошибке
-            await message.answer("Слишком пошлый запрос")
+            # await message.answer("Слишком пошлый запрос")
+                await message.answer("Слишком пошлый запрос")
+
 
         curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
         curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
@@ -356,6 +358,24 @@ model_handler = {  # для нейронки храним хендлер
 
 @router.message()
 async def echo_msg(message: Message):
+    
+    # try:
+    #     # регистрация
+    #     us_id = message.from_user.id
+    #     if db_client.user_is_new_by_tg_id(us_id):
+    #         db_client.add_user(name=message.from_user.full_name, tg_id=us_id,
+    #                            last_used_model='gpt-4o-mini')  # возможно full_name пустой
+    #         chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)  # новый чат с названием 'Пустой чат'
+    #         db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=chat_id)
+
+    #     await message.answer(message_templates['ru']['start'])
+    #     logger.debug("Ответ на /start успешно отправлен.")
+    # except Exception as e:
+    #     logger.exception(f'Ошибка в обработчике /start: {e}')
+    #     await message.answer("Произошла ошибка при обработке команды /start.")
+
+    
+    
     us_id = message.from_user.id
     user_message = message.text
 

@@ -17,7 +17,7 @@ class User(Base):
     name = Column(String(250), nullable=True)
     sub_status = Column(String(50), default='not subscribed', nullable=False)
     token_has = Column(Integer, default=1000, nullable=False)
-    last_used_model = Column(String(500), default='gpt-4o-mini', nullable=False)
+    last_used_model = Column(String(500), nullable=False)
     
 
     current_chat_id = Column(Integer, nullable=True)
@@ -146,17 +146,17 @@ class WorkWithDB:
             return session.query(User).filter_by(tg_id=tg_id).first()
     
     
-    def set_current_context_by_tg_id(self, tg_id, another_context_id):
+    def set_current_context_by_tg_id(self, tg_id, context_id):
         with self._get_session() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
             
             try:
-                user.current_chat_id = another_context_id
+                user.current_chat_id = context_id
                 session.commit()
-                logging.info(f'User current_chat_id changed successfully to {another_context_id}')
+                logging.info(f'User current_chat_id changed successfully to {context_id}')
             except Exception as e:
                 session.rollback()
-                logging.error(f'Error User current_chat_id changin to {another_context_id}, {e}')
+                logging.error(f'Error User current_chat_id changin to {context_id}, {e}')
             
             
 
@@ -165,6 +165,13 @@ class WorkWithDB:
             chat_id = session.query(User).filter(User.tg_id == tg_id).first().current_chat_id
             
             return session.query(Chat).filter(Chat.id == chat_id).first()
+        
+        
+    def get_current_context_id_by_tg_id(self, tg_id) -> int:
+        with self._get_session() as session:
+            chat_id = session.query(User).filter(User.tg_id == tg_id).first().current_chat_id
+            
+            return session.query(Chat).filter(Chat.id == chat_id).first().id
             
 
     # def create_new_context_by_site_id(self, site_id, dialog_name):
@@ -200,7 +207,7 @@ class WorkWithDB:
                 logging.error(f'Ошибка при переименовании диалога на {chat_id=}, {dialog_name=}, error: {ex}')
     
     def create_new_context_by_tg_id(self, tg_id) -> int:
-        '''добавить новый диалог с названием'''
+        '''добавить новый диалог'''
         with self._get_session() as session:
             try:
                 user_id = session.query(User.id).filter(User.tg_id == tg_id).scalar()

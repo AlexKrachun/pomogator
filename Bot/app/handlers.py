@@ -12,9 +12,7 @@ from Bot.app.openai_api import get_completion, request_get_topic, generate_image
 
 from db.main import db_client
 
-import uuid
-
-from Bot.app.utils.state import *
+from Bot.app.utils.state import id_in_processing
 
 logger = logging.getLogger(__name__)
 
@@ -132,9 +130,15 @@ async def mode_cmd(message: types.Message):
 @router.message(Command('start'))
 async def start_cmd(message: types.Message):
     try:
-        # username = message.from_user.username
-        # messages[username] = []
-        # language = user_languages.get(message.from_user.id, 'ru')
+        # регистрация
+        us_id = message.from_user.id
+        if db_client.user_is_new_by_tg_id(us_id):
+
+            db_client.add_user(name=message.from_user.full_name, tg_id=us_id, last_used_model='gpt-4o-mini')  # возможно full_name пустой
+            chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)  # новый чат с названием 'Пустой чат'
+            db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=chat_id)
+            
+            
         await message.answer(message_templates['ru']['start'])
         logger.debug("Ответ на /start успешно отправлен.")
     except Exception as e:
@@ -167,7 +171,6 @@ async def profile_command(message: Message):
 @router.message(Command('help'))
 async def help_cmd(message: Message):
     try:
-        # language = user_languages.get(message.from_user.id, 'ru')
         await message.answer(message_templates['ru']['help'])
         logger.debug("Ответ на /help успешно отправлен.")
     except Exception as e:
@@ -178,9 +181,8 @@ async def help_cmd(message: Message):
 @router.message(Command('new_context'))
 async def new_context(message: Message):
     try:
-        # curr_users_context[message.from_user.id] = ''
         chat_id = db_client.create_new_context_by_tg_id(tg_id=message.from_user.id)
-        db_client.set_current_context_by_tg_id(tg_id=message.from_user.id, another_context_id=chat_id)
+        db_client.set_current_context_by_tg_id(tg_id=message.from_user.id, context_id=chat_id)
         await message.answer(message_templates['ru']['delete_context'])
         logger.debug("Ответ на /delete_context успешно отправлен.")
     except Exception as e:
@@ -193,16 +195,13 @@ async def handle_context_switch(callback: types.CallbackQuery):
     try:
         context_id = callback.data.removeprefix("context:")
         us_id = callback.from_user.id
-        us_name = callback.from_user.username or "неизвестен"
-        # topic = from_context_id_get_topic.get(context_id, "Неизвестная тема")
+
         topic = db_client.get_current_context_by_tg_id(tg_id=us_id).name
-        # curr_users_context[us_id] = context_id
-        db_client.set_current_context_by_tg_id(tg_id=us_id, another_context_id=context_id)
+        db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=context_id)
 
         await callback.answer()
         await callback.message.answer(get_changed_context_line(topic))
 
-        # context_history = make_context_history(all_contexts, context_id, us_name)
         context_history = db_client.make_context_history(chat_id=context_id)
         logger.info(f'Выведена context_history для пользователя {us_id}')
 
@@ -220,13 +219,11 @@ async def handle_model_switch(callback: types.CallbackQuery):
     try:
         model_name = callback.data.removeprefix("model:")
         us_id = callback.from_user.id
-        if model_name != 'dall-e-2' and db_client.get_user_model_by_tg_id(us_id) != model_name:
-
-            if model_name in ['gpt-4o-mini', 'gpt-4o']:
-                db_client.switch_user_model_by_tg_id(tg_id=us_id, new_model_name=model_name)
+        if db_client.get_user_model_by_tg_id(us_id) != model_name:
+            db_client.switch_user_model_by_tg_id(tg_id=us_id, new_model_name=model_name)
 
             await callback.message.edit_text(
-                'Выберите подходящую вам модель gpt.',
+                'Выберите подходящую вам модель.',
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
             await callback.answer()
@@ -239,90 +236,85 @@ async def handle_model_switch(callback: types.CallbackQuery):
         await callback.answer("Произошла ошибка при смене модели.")
 
 
-@router.message()
-async def echo_msg(message: Message):
+
+async def openai_gpt_handler(message: Message):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text}")
     us_id = message.from_user.id
     user_message = message.text
+    id_in_processing.add(us_id)
 
-    if us_id in id_in_processing:
-        # logger.warning(f"Пользователь {us_id} пытается отправить сообщение во время обработки.")
-        await message.answer(message_templates['ru']['id_in_procces'])
-        return
-    if not user_message:
-        # logger.warning(f"Пользователь {us_id} отправил пустое сообщение.")
-        return
 
 
     try:
-        id_in_processing.add(us_id)
-
-        # if us_id not in id_not_new_users:
-        # print("n" * 100, db_client.user_is_new_by_tg_id(us_id))
-        # print(db_client.get_user_by_tg_id(us_id))
-        if db_client.user_is_new_by_tg_id(us_id):
-
-            # id_not_new_users.add(us_id)
-            db_client.add_user(name=message.from_user.full_name, tg_id=us_id)  # возможно full_name пустой
-            # new_hash = generate_unique_number()
-
-            # get_users_contexts[us_id] = [new_hash]
-            # curr_users_context[us_id] = new_hash
+        if db_client.user_has_empty_curr_context_by_tg_id(us_id):
             
-            dialog_name = await request_get_topic(user_message)
-            chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)
-            db_client.update_dialog_neame(chat_id=chat_id, dialog_name=dialog_name)
-            db_client.set_current_context_by_tg_id(tg_id=us_id, another_context_id=chat_id)
-
-            # all_contexts[new_hash] = [{"role": "user", "content": user_message}]
-            db_client.add_message(chat_id=chat_id, role='user', text=user_message)
-
-        # elif curr_users_context.get(us_id) == '':
-        elif db_client.user_has_empty_curr_context_by_tg_id(us_id):
+            chat_id = db_client.get_current_context_id_by_tg_id(tg_id=us_id)
             
             dialog_name = await request_get_topic(user_message)
             
-            chat_id = db_client.get_current_context_by_tg_id(tg_id=us_id).id
-            
             db_client.update_dialog_neame(chat_id=chat_id, dialog_name=dialog_name)
             
-            db_client.add_message(chat_id=chat_id, role='user', text=user_message)
-
-        else:
-            # all_contexts[curr_users_context[us_id]].append({"role": "user", "content": user_message})
-            curr_context_id = db_client.get_current_context_by_tg_id(us_id).id
-            db_client.add_message(chat_id=curr_context_id, role='user', text=user_message)
-
+            
         curr_context_id = db_client.get_current_context_by_tg_id(us_id).id
+        
+        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message)
+
 
         processing_message = await message.answer(message_templates['ru']['processing'])
 
         await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
 
         response = await get_completion(
-            db_client.get_full_dialog(curr_context_id)[-10:],
-            # get_user_model(us_id, curr_users_models)
+            db_client.get_full_dialog(curr_context_id)[-15:],
             db_client.get_user_model_by_tg_id(us_id)
         )
 
         logger.info(f"Получен ответ от OpenAI для пользователя {us_id}: {response}")
 
-        try:
-            await message.answer(response, parse_mode="Markdown")
-        except Exception as e:
-            await message.answer(response)
-        # all_contexts[curr_context_id].append({"role": "assistant", "content": response})
-        db_client.add_message(chat_id=curr_context_id, role='assistant', text=response)
 
         await message.bot.delete_message(
             chat_id=processing_message.chat.id,
             message_id=processing_message.message_id
         )
+        
+        try:
+            await message.answer(response, parse_mode="Markdown")
+        except Exception as e:
+            await message.answer(response)
+
+        db_client.add_message(chat_id=curr_context_id, role='assistant', text=response)
+
 
     except Exception as e:
-        logger.exception(f"Ошибка в обработчике echo_msg для пользователя {us_id}: {e}")
+        logger.exception(f"Ошибка в обработчике openai_gpt_handler для пользователя {us_id}: {e}")
         await message.answer("Произошла ошибка при обработке вашего сообщения.")
     finally:
         if us_id in id_in_processing:
             id_in_processing.remove(us_id)
-            logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+            logger.debug(f"Пользователь {us_id} завершил обработку сообщения в openai_gpt_handler.")
+
+
+async def dall_e_3_handler(message: Message):
+    pass
+
+
+model_handler = {  # для нейронки храним хендлер
+    'gpt-4o-mini': openai_gpt_handler,
+    'gpt-4o': openai_gpt_handler,
+    'dall-e-3': dall_e_3_handler,
+    
+}
+
+@router.message()
+async def echo_msg(message: Message):
+    us_id = message.from_user.id
+    user_message = message.text
+
+    if us_id in id_in_processing:
+        await message.answer(message_templates['ru']['id_in_procces'])
+        return
+    if not user_message:
+        return
+
+    last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
+    await model_handler[last_used_model](message)

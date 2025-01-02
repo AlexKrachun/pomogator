@@ -39,6 +39,8 @@ async def handle_text_and_photo(message: Message, bot: Bot):
 
 
         photo = message.photo[-1]
+        print(message.photo)
+        
 
 
         file_info = await bot.get_file(photo.file_id)

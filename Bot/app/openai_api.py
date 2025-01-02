@@ -44,15 +44,15 @@ async def request_get_topic(message):
     return completion.choices[0].message.content
 
 
-async def generate_image(prompt, model="dall-e-2", size="256x256", n=1):
+async def generate_image(prompt, model="dall-e-3", size="1024x1024", quality="standard", n=1):
     try:
         response = await client.images.generate(
             model=model,
             prompt=prompt,
             size=size,
+            quality="standard",
             n=n
         )
         return response.data[0].url
     except Exception as e:
         return f"Ошибка при генерации изображения: {e}"
-

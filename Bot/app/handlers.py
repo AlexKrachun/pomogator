@@ -42,7 +42,6 @@ router = Router()
 #         return None
 
 
-
 @router.message(Command('contexts'))
 async def language_cmd(message: types.Message):
     try:
@@ -162,8 +161,6 @@ async def handle_context_switch(callback: types.CallbackQuery):
         await callback.answer()
         await callback.message.answer(get_changed_context_line(topic))
 
-
-
         context_history = db_client.make_context_history(chat_id=context_id)
         logger.info(f'Выведена context_history для пользователя {us_id}')
 
@@ -189,8 +186,10 @@ async def handle_model_switch(callback: types.CallbackQuery):
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
             if model_name in ['dall-e-3']:
+                curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
+                curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
                 await callback.message.answer(message_templates['ru']['dall_e_3_handler'],
-                reply_markup=await dalle_3_settings(us_id))
+                                              reply_markup=await dalle_3_settings(us_id, curr_resolution,curr_size))
 
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {model_name}")
@@ -200,6 +199,51 @@ async def handle_model_switch(callback: types.CallbackQuery):
     except Exception as e:
         logger.exception(f"Ошибка в обработчике handle_model_switch: {e}")
         await callback.answer("Произошла ошибка при смене модели.")
+
+
+@router.callback_query(F.data.startswith('quality:'))
+async def handle_dalle_3_quality_switch(callback: types.CallbackQuery):
+    try:
+        curr_quality = callback.data.removeprefix("quality:")
+        us_id = callback.from_user.id
+        if db_client.get_dalle_quality_by_tg_id(us_id) != curr_quality:
+            db_client.set_dalle_quality_by_tg_id(tg_id=us_id, dalle_quality=curr_quality)
+
+            await callback.message.edit_text(
+                'Выберите подходящие вам параметры.',
+                reply_markup=await dalle_3_settings(us_id, curr_quality, db_client.get_dalle_shape_by_tg_id(us_id))
+            )
+            await callback.answer()
+            logger.debug(f"Качество для пользователя {us_id} успешно обновлена до {curr_quality}")
+        else:
+            await callback.answer()
+
+    except Exception as e:
+        logger.exception(f"Ошибка в обработчике handle_dalle_3_quality_switch: {e}")
+        await callback.answer("Произошла ошибка при смене dalle_3_quality.")
+
+
+@router.callback_query(F.data.startswith('resolution:'))
+async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
+    try:
+        curr_resolution = callback.data.removeprefix("resolution:")
+        us_id = callback.from_user.id
+        if db_client.get_dalle_shape_by_tg_id(us_id) != curr_resolution:
+            db_client.set_dalle_shape_by_tg_id(us_id, dalle_shape=curr_resolution)
+
+            await callback.message.edit_text(
+                'Выберите подходящие вам разрешение.',
+                reply_markup=await dalle_3_settings(us_id, db_client.get_dalle_shape_by_tg_id(us_id), curr_resolution)
+            )
+
+            await callback.answer()
+            logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {curr_resolution}")
+        else:
+            await callback.answer()
+
+    except Exception as e:
+        logger.exception(f"Ошибка в обработчике handle_dalle_3_resolution_switch: {e}")
+        await callback.answer("Произошла ошибка при смене разрешения.")
 
 
 async def openai_gpt_handler(message: Message):
@@ -253,7 +297,6 @@ async def openai_gpt_handler(message: Message):
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения в openai_gpt_handler.")
 
 
-
 async def dall_e_3_handler(message: Message):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text} для генерации изображение")
 
@@ -269,7 +312,9 @@ async def dall_e_3_handler(message: Message):
         processing_message = await message.answer(message_templates['ru']['processing'])
         await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
 
-        ans = await generate_image(message.text)
+        curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
+        curr_quality = db_client.get_dalle_quality_by_tg_id(us_id)
+        ans = await generate_image(message.text, model="dall-e-3", size=curr_size, quality=curr_quality)
 
         if ans.startswith("http://") or ans.startswith("https://"):
             try:
@@ -282,7 +327,14 @@ async def dall_e_3_handler(message: Message):
                 await message.answer(f"Не удалось отправить изображение: {e}")
         else:
             # Если ответ openai API содержит сообщение об ошибке
-            await message.answer(ans)
+            await message.answer("Слишком пошлый запрос")
+
+        curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
+        curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
+        await message.answer(message_templates['ru']['dall_e_3_handler'],
+                                      reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
+
+
 
     except Exception as e:
         logger.exception(f"Ошибка в обработчике ret_dalle_img для пользователя {us_id}: {e}")
@@ -292,8 +344,6 @@ async def dall_e_3_handler(message: Message):
         if us_id in id_in_processing:
             id_in_processing.remove(us_id)
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
-
-
 
 
 model_handler = {  # для нейронки храним хендлер
@@ -318,4 +368,3 @@ async def echo_msg(message: Message):
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
     print(f'Дебаг - {last_used_model}')
     await model_handler[last_used_model](message)
-

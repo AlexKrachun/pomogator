@@ -56,18 +56,17 @@ async def dalle_3_settings(user_id, quality='standard', resolution='1024x1024'):
 
     for qual in quality_settings:
         curr_quality = qual
-        # if get_user_model(user_id, curr_users_models) == mode:
         if quality == qual:
             curr_quality += '✅'
 
-        keyboard.add(InlineKeyboardButton(text=curr_quality, callback_data=f'dalle_3_sett:{qual}'))
+        keyboard.add(InlineKeyboardButton(text=curr_quality, callback_data=f'quality:{qual}'))
 
     for resol in resolution_settings:
         curr_resolution = resol
         if resolution == resol:
             curr_resolution += '✅'
 
-        keyboard.add(InlineKeyboardButton(text=curr_resolution, callback_data=f'dalle_3_sett:{resol}'))
+        keyboard.add(InlineKeyboardButton(text=curr_resolution, callback_data=f'resolution:{resol}'))
 
     return keyboard.adjust(2, 3).as_markup()
 

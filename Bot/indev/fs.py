@@ -11,8 +11,8 @@ payload = json.dumps({
    "model": "Qubico/image-toolkit",
    "task_type": "face-swap",
    "input": {
-      "target_image": "https://i.ibb.co/LnLYwhR/66f41e64b1922.jpg",
-      "swap_image": "https://i.ibb.co/m9BFL9J/ad61a39afd9079e57a5908c0bd9dd995.jpg"
+      "target_image": "https://api.telegram.org/file/bot7618816734:AAGKGYh_-wCZqTKlDyGY2GLHLoPZWoWJey4/photos/file_17.jpg",
+      "swap_image": "https://api.telegram.org/file/bot7618816734:AAGKGYh_-wCZqTKlDyGY2GLHLoPZWoWJey4/photos/file_16.jpg"
    }
 })
 headers = {

@@ -25,26 +25,43 @@ async def inline_contexts(user_id):
 #     return curr_users_models.get(user_id, 'gpt-4o-mini')
 
 
-ai_models = ['gpt-4o-mini', 'gpt-4o', 'o1-mini', 'o1-preview', 'dall-e-3', 'face-swap']
+ai_models = ['gpt-4o-mini', 
+             'gpt-4o', 
+             'o1-mini', 
+             'o1-preview', 
+             'claude-3-5-sonnet-latest', 
+             'claude-3-5-haiku-latest',
+             'dall-e-3', 
+             'face-swap'
+]
+
+
+button_names = {
+'gpt-4o-mini': 'gpt-4o-mini',
+'gpt-4o': 'gpt-4o', 
+'o1-mini': 'o1-mini',
+'o1-preview': 'o1-preview',
+'claude-3-5-sonnet-latest': 'claude 3.5-sonnet',
+'claude-3-5-haiku-latest': 'claude 3.5-haiku',
+'dall-e-3': 'dall-e-3', 
+'face-swap': 'face-swap',
+}
 
 
 async def inline_modes(user_id, model):
     print(model)
-    # print(user_id, get_user_model(user_id, model))
     keyboard = InlineKeyboardBuilder()
 
     for mode in ai_models:
-        curr_mode = mode
-        # if get_user_model(user_id, curr_users_models) == mode:
+        curr_mode = button_names[mode]
         if model == mode:
             curr_mode += '✅'
 
         keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{mode}'))
 
     # keyboard.add(InlineKeyboardButton(text='o1-preview', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
-    # keyboard.add(InlineKeyboardButton(text='o1-mini', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'))
 
-    return keyboard.adjust(2, 2, 1).as_markup()
+    return keyboard.adjust(2, 2, 2, 1, 1).as_markup()
 
 
 quality_settings = ['standard', 'hd']

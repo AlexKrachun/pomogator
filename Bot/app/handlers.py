@@ -11,6 +11,7 @@ from Bot.app.keyboard import inline_contexts, inline_modes, inline_pay, dalle_3_
 from Bot.app.openai_api import request_get_topic, generate_image, get_common_gpt_complection
 from Bot.app.faceswap_api import run_face_swap
 from Bot.app.anthropic_api import get_claude_text_response
+from Bot.app.utils.decorators import processing_guard
 
 from db.main import db_client
 
@@ -21,18 +22,17 @@ import aiohttp
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
-
 
 logger = logging.getLogger(__name__)
 
 router = Router()
 
 
-
-
 @router.message(Command('contexts'))
+@processing_guard
 async def language_cmd(message: types.Message):
     try:
         reply_markup = await inline_contexts(message.from_user.id)
@@ -60,6 +60,7 @@ async def pay_cmd(message: types.Message):
 
 
 @router.message(Command('mode'))
+@processing_guard
 async def mode_cmd(message: types.Message):
     try:
         reply_markup = await inline_modes(
@@ -128,6 +129,7 @@ async def help_cmd(message: Message):
 
 
 @router.message(Command('new_context'))
+@processing_guard
 async def new_context(message: Message):
     try:
         chat_id = db_client.create_new_context_by_tg_id(tg_id=message.from_user.id)
@@ -179,7 +181,7 @@ async def handle_model_switch(callback: types.CallbackQuery):
                 curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
                 curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
                 await callback.message.answer(message_templates['ru']['dall_e_3_handler'],
-                                              reply_markup=await dalle_3_settings(us_id, curr_resolution,curr_size))
+                                              reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
 
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {model_name}")
@@ -223,7 +225,8 @@ async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
 
             await callback.message.edit_text(
                 'Выберите подходящие вам разрешение.',
-                reply_markup=await dalle_3_settings(user_id=us_id, quality=db_client.get_dalle_quality_by_tg_id(us_id), resolution=curr_resolution)
+                reply_markup=await dalle_3_settings(user_id=us_id, quality=db_client.get_dalle_quality_by_tg_id(us_id),
+                                                    resolution=curr_resolution)
             )
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {curr_resolution}")
@@ -284,9 +287,8 @@ async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
         if us_id in id_in_processing:
             id_in_processing.remove(us_id)
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения в openai_gpt_handler.")
-            
-            
-            
+
+
 async def cloude_text_model_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение для anthropic от пользователя {message.from_user.id}: {message.text}")
     us_id = message.from_user.id
@@ -338,7 +340,6 @@ async def cloude_text_model_handler(message: Message, bot: Bot, state: FSMContex
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения в cloude_text_model_handler.")
 
 
-
 async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text} для генерации изображение")
 
@@ -371,11 +372,10 @@ async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
             # Если ответ openai API содержит сообщение об ошибке
             await message.answer(f"Ваш запрос не подходит для генерации")
 
-
         curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
         curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
         await message.answer(message_templates['ru']['dall_e_3_handler'],
-                                      reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
+                             reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
 
 
 
@@ -389,14 +389,15 @@ async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
             logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
 
 
-
-
-
 class FaceSwap(StatesGroup):
     photo_1_done = State()
 
 
 async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMContext):
+    us_id = message.from_user.id
+    id_in_processing.add(us_id)
+
+
     photo = message.photo[-1]
     file_id = photo.file_id
 
@@ -419,8 +420,11 @@ async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMCo
     await state.set_state(FaceSwap.photo_1_done)
 
 
+
 @router.message(FaceSwap.photo_1_done)
 async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMContext):
+    us_id = message.from_user.id
+
     photo = message.photo[-1]
     file_id = photo.file_id
 
@@ -449,7 +453,9 @@ async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMC
     # Очистка состояния FSM
     await state.clear()
 
-
+    if us_id in id_in_processing:
+        id_in_processing.remove(us_id)
+        logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
 
 
 model_handler = {  # для нейронки храним хендлер
@@ -464,9 +470,12 @@ model_handler = {  # для нейронки храним хендлер
 }
 
 
+
+
+
 @router.message()
+@processing_guard
 async def echo_msg(message: Message, bot: Bot, state: FSMContext):
-    
     # try:
     #     # регистрация
     #     us_id = message.from_user.id
@@ -482,15 +491,12 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
     #     logger.exception(f'Ошибка в обработчике /start: {e}')
     #     await message.answer("Произошла ошибка при обработке команды /start.")
 
-    
-    us_id = message.from_user.id
-    user_message = message.text
-
-
-    if us_id in id_in_processing:
-        await message.answer(message_templates['ru']['id_in_procces'])
-        return
-    
+    # us_id = message.from_user.id
+    # user_message = message.text
+    #
+    # if us_id in id_in_processing:
+    #     await message.answer(message_templates['ru']['id_in_procces'])
+    #     return
 
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
     print(f'Дебаг - {last_used_model}')

@@ -25,26 +25,25 @@ async def inline_contexts(user_id):
 #     return curr_users_models.get(user_id, 'gpt-4o-mini')
 
 
-ai_models = ['gpt-4o-mini', 
-             'gpt-4o', 
-             'o1-mini', 
-             'o1-preview', 
-             'claude-3-5-sonnet-latest', 
+ai_models = ['gpt-4o-mini',
+             'gpt-4o',
+             'o1-mini',
+             'o1-preview',
              'claude-3-5-haiku-latest',
-             'dall-e-3', 
+             'claude-3-5-sonnet-latest',
+             'dall-e-3',
              'face-swap'
-]
-
+             ]
 
 button_names = {
-'gpt-4o-mini': 'gpt-4o-mini',
-'gpt-4o': 'gpt-4o', 
-'o1-mini': 'o1-mini',
-'o1-preview': 'o1-preview',
-'claude-3-5-sonnet-latest': 'claude 3.5-sonnet',
-'claude-3-5-haiku-latest': 'claude 3.5-haiku',
-'dall-e-3': 'dall-e-3', 
-'face-swap': 'face-swap',
+    'gpt-4o-mini': 'gpt-4o-mini',
+    'gpt-4o': 'gpt-4o',
+    'o1-mini': 'o1-mini',
+    'o1-preview': 'o1-preview',
+    'claude-3-5-sonnet-latest': 'claude 3.5-sonnet',
+    'claude-3-5-haiku-latest': 'claude 3.5-haiku',
+    'dall-e-3': 'dall-e-3',
+    'face-swap': 'face-swap',
 }
 
 

@@ -4,3 +4,5 @@ pytest==8.3.4
 python-dotenv==1.0.1
 SQLAlchemy==2.0.36
 pytest-asyncio==0.25.0
+requests==2.32.3
+anthropic==0.42.0

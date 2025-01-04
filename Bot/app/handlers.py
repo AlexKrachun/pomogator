@@ -41,8 +41,8 @@ async def print_text_message(text: str, message: Message):
         try:
             await message.answer(text, parse_mode="Markdown")
         except Exception as e:
-            print('1' * 100)
-            print(e)
+            # print('1' * 100)
+            # print(e)
             await message.answer(text)
 
 
@@ -56,8 +56,8 @@ async def print_text_message(text: str, message: Message):
                 try:
                     await message.answer(st, parse_mode="Markdown")
                 except Exception as e:
-                    print('2' * 100)
-                    print(e)
+                    # print('2' * 100)
+                    # print(e)
                     await message.answer(st)
 
                 text = text[len(st):]
@@ -67,8 +67,8 @@ async def print_text_message(text: str, message: Message):
                 try:
                     await message.answer(st + '\n```', parse_mode="Markdown")
                 except Exception as e:
-                    print('3' * 100)
-                    print(e)
+                    # print('3' * 100)
+                    # print(e)
                     await message.answer(st + '\n```')
 
                 if not text:
@@ -118,7 +118,7 @@ async def mode_cmd(message: types.Message):
             db_client.get_user_model_by_tg_id(tg_id=message.from_user.id, ),
         )
         await message.answer(
-            'Выберите подходящую вам модель gpt.',
+            'Выберите нейросеть',
             reply_markup=reply_markup
         )
         logger.debug("Ответ на /mode успешно отправлен.")
@@ -140,15 +140,14 @@ async def start_cmd(message: types.Message, state: FSMContext):
                 id_in_processing.remove(us_id)
                 logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
             return
+        
+        if db_client.get_user_model_by_tg_id(tg_id=us_id) == 'face-swap':
+            await print_text_message("Привет, я бот с нейросетями. *Отправьте фотографию🖼*, на которой надо изменить лицо.\n\nПочитать про функциолан бота и наши нейросети можно в /info", message)
+            return
 
-        # регистрация
-        if db_client.user_is_new_by_tg_id(us_id):
-            db_client.add_user(name=message.from_user.full_name, tg_id=us_id,
-                               last_used_model='gpt-4o-mini')  # возможно full_name пустой
-            chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)  # новый чат с названием 'Пустой чат'
-            db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=chat_id)
 
-        await message.answer(message_templates['ru']['start'])
+        # await message.answer(message_templates['ru']['start'])
+        await print_text_message(message_templates['ru']['start'], message)
         logger.debug("Ответ на /start успешно отправлен.")
 
     except Exception as e:
@@ -166,12 +165,14 @@ async def profile_command(message: Message):
 
         profile_info = (
             f"👤 Профиль пользователя:\n"
-            f"ID: {user_id}\n"
-            f"Имя: {first_name}\n"
-            f"Фамилия: {last_name}\n"
-            f"Логин: @{username}"
+            f"Логин: @{username}\n"
+            f"Счет: <система оплаты в разработке>\n"
+            # f"ID: {user_id}\n"
+            # f"Имя: {first_name}\n"
+            # f"Фамилия: {last_name}\n"
         )
-        await message.answer(profile_info)
+        # await message.answer(profile_info)
+        await print_text_message(profile_info, message)
         logger.debug("Ответ на /profile успешно отправлен.")
     except Exception as e:
         logger.debug(f'Ошибка в обработчике /profile')
@@ -195,7 +196,9 @@ async def new_context(message: Message):
     try:
         chat_id = db_client.create_new_context_by_tg_id(tg_id=message.from_user.id)
         db_client.set_current_context_by_tg_id(tg_id=message.from_user.id, context_id=chat_id)
-        await message.answer(message_templates['ru']['delete_context'])
+        # await message.answer(message_templates['ru']['delete_context'])
+        await print_text_message(message_templates['ru']['delete_context'], message)
+
         logger.debug("Ответ на /delete_context успешно отправлен.")
     except Exception as e:
         logger.debug(f'Ошибка в обработчике /delete_context')
@@ -479,7 +482,8 @@ async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
                 await message.answer(f"Не удалось отправить изображение")
         else:
             # Если ответ openai API содержит сообщение об ошибке
-            await message.answer(f"Ваш запрос не подходит для генерации")
+            await message.answer(f"Запрос не подходит для генерации.")
+            # print(ans)
 
         curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
         curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
@@ -504,6 +508,10 @@ class FaceSwap(StatesGroup):
 
 async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMContext):
     us_id = message.from_user.id
+    if not message.photo:
+        await message.answer("face-swap умеет обрабатывать только фотографии.\n\nПришлите фото")
+        return
+
     try:
         id_in_processing.add(us_id)
         photo = message.photo[-1]
@@ -586,7 +594,7 @@ async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMC
 
     except Exception as e:
         # logger.debug(f"Ошибка в обработчике face_swap_handler_first_photo для пользователя {us_id}")
-        await message.answer("Произошла ошибка при обработке вашей фотографии, отправьте еще раз.")
+        await message.answer("Произошла ошибка при обработке вашей фотографии, отправьте фото еще раз.")
     finally:
         await message.bot.delete_message(
             chat_id=processing_message.chat.id,

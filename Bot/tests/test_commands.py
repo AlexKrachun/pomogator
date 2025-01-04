@@ -14,13 +14,13 @@ async def test_set_commands():
 
     expected_commands = [
         BotCommand(command="/start", description="Перезапустить бота"),
-        BotCommand(command="/mode", description="Выбрать модель"),
+        BotCommand(command="/mode", description="Выбрать нейросеть"),
         BotCommand(command="/new_context", description="Перейти на новый контекст"),
         BotCommand(command="/contexts", description="Выбрать контекст"),
-        BotCommand(command="/img", description="Сгенерировать изображение"),
+        BotCommand(command="/info", description="Почитать про функциолан бота и наши нейросети"),
         BotCommand(command="/profile", description="Показать профиль"),
         BotCommand(command="/pay", description="Купить подписку"),
-        BotCommand(command="/help", description="Показать справку"),
+
     ]
 
     mock_bot.set_my_commands.assert_called_once_with(expected_commands)

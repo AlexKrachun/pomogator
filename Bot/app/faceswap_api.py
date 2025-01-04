@@ -6,8 +6,7 @@ import http.client
 import asyncio
 
 load_dotenv()
-API_KEY = os.environ.get('FACE_SWAP_API_KEY_MURAT')
-# API_KEY = 'a6622b15868f57f6de5133d4c57d09724eaf6724023beed9ff5dcd51538f7122'
+API_KEY = os.environ.get('FACE_SWAP_API_KEY_ALEX_HSE')
 
 
 async def run_face_swap(main_img_base64: str, face_img_url_base64: str) -> str:

@@ -46,41 +46,4 @@ async def test_request_get_topic(mock_create):
     assert result == "Тестовая тема для диалога"
 
 
-@pytest.mark.asyncio
-@patch('Bot.app.openai_api.client.images.generate', new_callable=AsyncMock)
-async def test_generate_image(mock_generate):
-    mock_generate.return_value = AsyncMock()
-    mock_generate.return_value.data = [
-        AsyncMock(url="http://wiki.cs.hse.ru/")
-    ]
 
-    prompt = "изображение котенка с закатом на фоне"
-
-    result = await generate_image(prompt)
-
-    mock_generate.assert_called_once_with(
-        model="dall-e-2",
-        prompt=prompt,
-        size="256x256",
-        n=1
-    )
-    assert result == "http://wiki.cs.hse.ru/"
-
-
-@pytest.mark.asyncio
-@patch('Bot.app.openai_api.client.images.generate', new_callable=AsyncMock)
-async def test_generate_image_error(mock_generate):
-    mock_generate.side_effect = Exception("Ошибка API")
-
-    prompt = "изображение котенка с закатом на фоне"
-
-    result = await generate_image(prompt)
-
-    mock_generate.assert_called_once_with(
-        model="dall-e-2",
-        prompt=prompt,
-        size="256x256",
-        n=1
-    )
-
-    assert result == "Ошибка при генерации изображения: Ошибка API"

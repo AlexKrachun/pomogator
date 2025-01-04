@@ -55,7 +55,7 @@ async def inline_modes(user_id, model):
     for mode in ai_models:
         curr_mode = button_names[mode]
         if model == mode:
-            curr_mode += '✅'
+            curr_mode += ' ✅'
 
         keyboard.add(InlineKeyboardButton(text=curr_mode, callback_data=f'model:{mode}'))
 
@@ -74,14 +74,14 @@ async def dalle_3_settings(user_id, quality='standard', resolution='1024x1024'):
     for resol in resolution_settings:
         curr_resolution = resol
         if resolution == resol:
-            curr_resolution += '✅'
+            curr_resolution += ' ✅'
 
         keyboard.add(InlineKeyboardButton(text=curr_resolution, callback_data=f'resolution:{resol}'))
 
     for qual in quality_settings:
         curr_quality = button_names[qual]
         if quality == qual:
-            curr_quality += '✅'
+            curr_quality += ' ✅'
 
         keyboard.add(InlineKeyboardButton(text=curr_quality, callback_data=f'quality:{qual}'))
 

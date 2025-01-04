@@ -30,7 +30,15 @@ async def test_inline_modes():
 
     result = await inline_modes(user_id, model)
 
-    expected_buttons = {"gpt-4o✅", "gpt-4o-mini", "o1-preview", "o1-mini", "dall-e-2✅"}
+    expected_buttons = {'gpt-4o-mini',
+                        'gpt-4o ✅',
+                        'o1-mini',
+                        'o1-preview',
+                        'claude 3.5-sonnet',
+                        'claude 3.5-haiku',
+                        'dall-e-3',
+                        'face-swap',
+                        }
 
     all_buttons = {button.text for row in result.inline_keyboard for button in row}
     assert all_buttons == expected_buttons

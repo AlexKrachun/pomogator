@@ -24,3 +24,4 @@ bot_log.log
 *.pyc
 
 .DS_Store
+Bot/.DS_Store

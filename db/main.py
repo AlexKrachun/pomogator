@@ -73,6 +73,8 @@ class Message(Base):
     author = Column(String(100), nullable=False)  # user или assistant
     time = Column(Integer, nullable=False)  # время в секундах для сортировки 
     
+    author_name = Column(String(100), nullable=False)
+    
     chat_id = Column(Integer, ForeignKey('table_chats.id', ondelete='CASCADE'), nullable=False)
     chat = relationship('Chat', back_populates='messages')
     
@@ -161,7 +163,7 @@ class WorkWithDB:
             user_curr_context_messages = session.query(Chat).filter(Chat.id == curr_context_id).first().messages
             return len(user_curr_context_messages) == 0
     
-    def add_message(self, chat_id, role, text):
+    def add_message(self, chat_id, role, text, author_name):
         with self._get_session() as session:
             try:
                 msg = Message(
@@ -169,6 +171,7 @@ class WorkWithDB:
                     author=role,
                     time=int(time.time()),
                     chat_id=chat_id,
+                    author_name=author_name,
                 )
                 session.add(msg)
                 session.commit()
@@ -316,7 +319,7 @@ class WorkWithDB:
         return messages
         
     
-    def make_context_history(self, chat_id):
+    def make_context_history(self, chat_id) -> list[str]:
         '''
         по чату, вернуть его содержимое
         '''
@@ -324,18 +327,39 @@ class WorkWithDB:
             messages = (session.query(Message)
                                .filter(Message.chat_id == chat_id)
                                .order_by(asc(Message.time))).all()
-        context_history = ''
+        context_history = ['']
         for m in messages:
+            saying = ''
             if m.author == 'user':
-                context_history += f'😍 you:'
+                saying += f'😍 @{m.author_name.replace('_', '\\_')}:'
             elif m.author == 'assistant':
-                context_history += '🤖ChatGPT:'
+                saying += f'🤖 {m.author_name.replace('_', '\\_')}:'
                 
-            context_history += '\n'
-            context_history += m.text
-            context_history += '\n\n'
-
-        context_history += 'Контекст переключен'
+            saying += '\n'
+            saying += m.text
+            saying += '\n\n'
+            
+            if len(context_history[-1]) + len(saying) < 4096:
+                context_history[-1] += saying
+            else:
+                if len(saying) < 4096:
+                    context_history.append(saying)
+                else:
+                    while saying != '':
+                        st = saying[:min(4093, len(saying))]
+                        
+                        if st.count('```') % 2 == 0:
+                            context_history.append(st)
+                            saying = saying[len(st):]
+                        else:
+                            context_history.append(st + '```')
+                            saying = '```' + saying[len(st):]
+                        
+                            
+                            
+        if context_history[-1] == '':
+            context_history.pop()
+        # context_history.append('Контекст переключен')
         return context_history 
 
 

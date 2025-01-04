@@ -8,15 +8,12 @@ from db.main import db_client
 
 async def inline_contexts(user_id):
     keyboard = InlineKeyboardBuilder()
-    # for context_id in get_users_contexts[user_id]:
-    #     keyboard.add(InlineKeyboardButton(text=from_context_id_get_topic[context_id],
-    #                                       callback_data=f'context:{str(context_id)}'))
-    # return keyboard.adjust(1).as_markup()
 
+    current_context_id = db_client.get_current_context_id_by_tg_id(user_id)
     for context in db_client.get_users_contexts_by_tg_id(user_id):
-        keyboard.add(InlineKeyboardButton(text=context['name'], callback_data=f'context:{str(context["id"])}'))
+        button_text = context['name'] + (' ✅' if context['id'] == current_context_id else '')
+        keyboard.add(InlineKeyboardButton(text=button_text, callback_data=f'context:{str(context["id"])}'))
     return keyboard.adjust(1).as_markup()
-
 
 # def get_user_model(user_id, curr_users_models):
 #     if user_id not in curr_users_models:

@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 router = Router()
 
 
+
 @router.message(Command('contexts'))
 @processing_guard
 async def language_cmd(message: types.Message):
@@ -147,19 +148,36 @@ async def handle_context_switch(callback: types.CallbackQuery):
         context_id = callback.data.removeprefix("context:")
         us_id = callback.from_user.id
 
-        topic = db_client.get_current_context_by_tg_id(tg_id=us_id).name
+        context = db_client.get_current_context_by_tg_id(tg_id=us_id)
+        topic = context.name
         db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=context_id)
 
-        await callback.answer()
-        await callback.message.answer(get_changed_context_line(topic))
+        # await callback.message.answer(get_changed_context_line(topic))
 
         context_history = db_client.make_context_history(chat_id=context_id)
         logger.info(f'Выведена context_history для пользователя {us_id}')
+        
+        if context_id != context.id:
+            await callback.message.edit_text(
+                'Пожалуйста, выберите контекст из списка.',
+                reply_markup= await inline_contexts(us_id),
+            )
+            # await callback.answer()
+        
+        
+        await callback.message.answer('Вот содержимое вашего контекста:')
 
-        try:
-            await callback.message.answer(context_history, parse_mode="Markdown")
-        except Exception as e:
-            await callback.message.answer(context_history)
+
+        for msg in context_history:
+            try:
+                await callback.message.answer(msg, parse_mode="Markdown")
+            except Exception as e:
+                await callback.message.answer(msg)
+                
+        await callback.message.answer(get_changed_context_line(topic))
+
+                
+                
     except Exception as e:
         logger.exception(f"Ошибка в обработчике handle_context_switch: {e}")
         await callback.answer("Произошла ошибка при переключении контекста.")
@@ -254,7 +272,8 @@ async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
 
         curr_context_id = db_client.get_current_context_by_tg_id(us_id).id
 
-        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message)
+        user_teg = message.from_user.username
+        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message, author_name=user_teg)
 
         processing_message = await message.answer(message_templates['ru']['processing'])
 
@@ -271,13 +290,15 @@ async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
             chat_id=processing_message.chat.id,
             message_id=processing_message.message_id
         )
-
+        model_name = db_client.get_user_model_by_tg_id(us_id)
+        db_client.add_message(chat_id=curr_context_id, role='assistant', text=response, author_name=model_name)
+        
         try:
             await message.answer(response, parse_mode="Markdown")
         except Exception as e:
             await message.answer(response)
+            
 
-        db_client.add_message(chat_id=curr_context_id, role='assistant', text=response)
 
 
     except Exception as e:
@@ -305,7 +326,9 @@ async def cloude_text_model_handler(message: Message, bot: Bot, state: FSMContex
 
         curr_context_id = db_client.get_current_context_by_tg_id(us_id).id
 
-        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message)
+        user_teg = message.from_user.username
+
+        db_client.add_message(chat_id=curr_context_id, role='user', text=user_message, author_name=user_teg)
 
         processing_message = await message.answer(message_templates['ru']['processing'])
 
@@ -323,12 +346,14 @@ async def cloude_text_model_handler(message: Message, bot: Bot, state: FSMContex
             message_id=processing_message.message_id
         )
 
+        model_name = db_client.get_user_model_by_tg_id(us_id)
+        db_client.add_message(chat_id=curr_context_id, role='assistant', text=response, author_name=model_name)
+        
         try:
             await message.answer(response, parse_mode="Markdown")
         except Exception as e:
             await message.answer(response)
 
-        db_client.add_message(chat_id=curr_context_id, role='assistant', text=response)
 
 
     except Exception as e:

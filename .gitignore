@@ -22,3 +22,5 @@ db/__pycache__
 .idea
 bot_log.log
 *.pyc
+
+.DS_Store

@@ -36,7 +36,7 @@ router.callback_query.middleware(UserRegistrationMiddleware())
 
 async def print_text_message(text: str, message: Message):
     if len(text) < 4096:
-        
+
         # message.answer(text)
         try:
             await message.answer(text, parse_mode="Markdown")
@@ -45,13 +45,13 @@ async def print_text_message(text: str, message: Message):
             print(e)
             await message.answer(text)
 
-        
+
     else:
         while text != '':
             st = text[:min(4090, len(text))]
-            
+
             if st.count('```') % 2 == 0:
-                
+
                 # message.answer(st)
                 try:
                     await message.answer(st, parse_mode="Markdown")
@@ -59,10 +59,10 @@ async def print_text_message(text: str, message: Message):
                     print('2' * 100)
                     print(e)
                     await message.answer(st)
-                
+
                 text = text[len(st):]
             else:
-                
+
                 # message.answer(st + '```')
                 try:
                     await message.answer(st + '\n```', parse_mode="Markdown")
@@ -70,11 +70,10 @@ async def print_text_message(text: str, message: Message):
                     print('3' * 100)
                     print(e)
                     await message.answer(st + '\n```')
-                
+
                 if not text:
                     break
                 text = '```\n' + text[len(st):]
-    
 
 
 @router.message(Command('contexts'))
@@ -260,6 +259,8 @@ async def handle_model_switch(callback: types.CallbackQuery):
                 curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
                 await callback.message.answer(message_templates['ru']['dall_e_3_handler'],
                                               reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
+            elif model_name in ['face-swap']:
+                await callback.message.answer(message_templates['ru']['face-swap-1'])
 
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {model_name}")
@@ -282,7 +283,7 @@ async def handle_dalle_3_quality_switch(callback: types.CallbackQuery):
             db_client.set_dalle_quality_by_tg_id(tg_id=us_id, dalle_quality=curr_quality)
 
             await callback.message.edit_text(
-                'Выберите подходящие вам параметры.',
+                message_templates['ru']['dall_e_3_handler'],
                 reply_markup=await dalle_3_settings(us_id, curr_quality, db_client.get_dalle_shape_by_tg_id(us_id))
             )
             await callback.answer()
@@ -306,7 +307,7 @@ async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
             db_client.set_dalle_shape_by_tg_id(us_id, dalle_shape=curr_resolution)
 
             await callback.message.edit_text(
-                'Выберите подходящие вам разрешение.',
+                message_templates['ru']['dall_e_3_handler'],
                 reply_markup=await dalle_3_settings(user_id=us_id, quality=db_client.get_dalle_quality_by_tg_id(us_id),
                                                     resolution=curr_resolution)
             )
@@ -323,16 +324,14 @@ async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
 async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение для openai от пользователя {message.from_user.id}: {message.text}")
     us_id = message.from_user.id
-    
+
     if not message.text:
         await message.answer("Пока мы умеем принимать только текст")
         return
-    
-    
+
     try:
         user_message = message.text
         id_in_processing.add(us_id)
-
 
         if db_client.user_has_empty_curr_context_by_tg_id(us_id):
             chat_id = db_client.get_current_context_id_by_tg_id(tg_id=us_id)
@@ -385,14 +384,14 @@ async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
 async def cloude_text_model_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение для anthropic от пользователя {message.from_user.id}: {message.text}")
     us_id = message.from_user.id
-    
+
     if not message.text:
         await message.answer("Пока мы умеем принимать только текст")
         return
-    
+
     try:
         user_message = message.text
-        
+
         id_in_processing.add(us_id)
 
         if db_client.user_has_empty_curr_context_by_tg_id(us_id):
@@ -467,11 +466,11 @@ async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
             chat_id=processing_message.chat.id,
             message_id=processing_message.message_id
         )
-        
+
         if ans.startswith("http://") or ans.startswith("https://"):
             try:
                 await message.answer_photo(ans, caption="Вот ваше сгенерированное изображение!")
-                
+
             except Exception as e:
                 await message.answer(f"Не удалось отправить изображение")
         else:
@@ -523,6 +522,8 @@ async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMCo
                             "воспользуйтесь командой /start.")
         await state.set_state(FaceSwap.photo_1_done)
 
+        await message.answer(message_templates['ru']['face-swap-2'])
+
     except Exception as e:
         # logger.debug(f"Ошибка в обработчике face_swap_handler_first_photo для пользователя {us_id}")
         await message.answer("Произошла ошибка при обработке вашего сообщения, отправьте еще раз.")
@@ -569,6 +570,7 @@ async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMC
             if us_id in id_in_processing:
                 id_in_processing.remove(us_id)
                 logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+                await message.answer(message_templates['ru']['face-swap-1'])
             return
 
         await message.answer_photo(url)
@@ -577,6 +579,8 @@ async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMC
             chat_id=processing_message.chat.id,
             message_id=processing_message.message_id
         )
+
+        await message.answer(message_templates['ru']['face-swap-1'])
 
         if us_id in id_in_processing:
             id_in_processing.remove(us_id)
@@ -615,7 +619,6 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
     except Exception as e:
         logger.debug(f'Ошибка: пользователь не зарегестрирован')
         await message.answer("Произошла ошибка при обработке команды.")
-
 
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
     logging.debug(f'Дебаг - {last_used_model}')

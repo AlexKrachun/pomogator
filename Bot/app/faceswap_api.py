@@ -6,7 +6,7 @@ import http.client
 import asyncio
 
 load_dotenv()
-API_KEY = os.environ.get('FACE_SWAP_API_KEY_KARIM')
+API_KEY = os.environ.get('FACE_SWAP_API_KEY_MURAT')
 # API_KEY = 'a6622b15868f57f6de5133d4c57d09724eaf6724023beed9ff5dcd51538f7122'
 
 

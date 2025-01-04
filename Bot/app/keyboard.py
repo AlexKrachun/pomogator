@@ -4,6 +4,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from db.main import db_client
+import logging
 
 
 async def inline_contexts(user_id):
@@ -45,7 +46,7 @@ button_names = {
 
 
 async def inline_modes(user_id, model):
-    print(model)
+    logging.debug(model)
     keyboard = InlineKeyboardBuilder()
 
     for mode in ai_models:

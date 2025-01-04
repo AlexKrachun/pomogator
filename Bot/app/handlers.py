@@ -26,7 +26,8 @@ import os
 load_dotenv()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
+logger = logging.getLogger('bot_logger')
 
 router = Router()
 
@@ -525,6 +526,6 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
     #     return
 
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
-    print(f'Дебаг - {last_used_model}')
+    logging.debug(f'Дебаг - {last_used_model}')
 
     await model_handler[last_used_model](message, bot, state)

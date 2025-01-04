@@ -156,14 +156,12 @@ async def handle_context_switch(callback: types.CallbackQuery):
 
         context_history = db_client.make_context_history(chat_id=context_id)
         logger.info(f'Выведена context_history для пользователя {us_id}')
-        
-        if context_id != context.id:
+
+        if str(context_id) != str(context.id):
             await callback.message.edit_text(
                 'Пожалуйста, выберите контекст из списка.',
-                reply_markup= await inline_contexts(us_id),
+                reply_markup=await inline_contexts(us_id),
             )
-            # await callback.answer()
-        
         
         await callback.message.answer('Вот содержимое вашего контекста:')
 
@@ -175,6 +173,9 @@ async def handle_context_switch(callback: types.CallbackQuery):
                 await callback.message.answer(msg)
                 
         await callback.message.answer(get_changed_context_line(topic))
+
+        await callback.answer()
+
 
                 
                 

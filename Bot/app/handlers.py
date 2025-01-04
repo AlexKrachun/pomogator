@@ -178,7 +178,7 @@ async def profile_command(message: Message):
 @router.message(Command('info'))
 async def info_cmd(message: Message):
     try:
-        await message.answer(message_templates['ru']['info'])
+        await print_text_message(message_templates['ru']['info'], message)
         logger.debug("Ответ на /info успешно отправлен.")
     except Exception as e:
         logger.debug(f'Ошибка в обработчике /info')

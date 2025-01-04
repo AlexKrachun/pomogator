@@ -345,7 +345,12 @@ class WorkWithDB:
                 if len(saying) < 4096:
                     context_history.append(saying)
                 else:
+                    # print(f'went to while: |{saying}|')
+                    
                     while saying != '':
+                        # print(f'I am in while: |{saying}|')
+                        # if saying == '``` ':
+                        #     break
                         st = saying[:min(4090, len(saying))]
                         
                         if st.count('```') % 2 == 0:
@@ -353,7 +358,9 @@ class WorkWithDB:
                             saying = saying[len(st):]
                         else:
                             context_history.append(st + '```')
-                            saying = '``` ' + saying[len(st):]
+                            saying = saying[len(st):]
+                            if saying.count('```') % 2 != 0:
+                                saying = '``` ' + saying
                         
                             
                             

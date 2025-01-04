@@ -73,7 +73,9 @@ async def print_text_message(text: str, message: Message):
 
                 if not text:
                     break
-                text = '```\n' + text[len(st):]
+                text = text[len(st):]
+                if text.count('```') % 2 != 0:
+                    text = '```\n' + text
 
 
 @router.message(Command('contexts'))
@@ -108,6 +110,7 @@ async def pay_cmd(message: types.Message):
 @router.message(Command('mode'))
 @processing_guard
 async def mode_cmd(message: types.Message):
+    # print("I am in /mode " * 10)
     try:
         reply_markup = await inline_modes(
             message.from_user.id,

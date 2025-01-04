@@ -46,7 +46,7 @@ async def run_face_swap(main_img_base64: str, face_img_url_base64: str) -> str:
         except Exception as e:
             await asyncio.sleep(0.5)
             left_time += 0.5
-            if left_time == 30:
+            if left_time == 20:
                 break
 
     return res_url

@@ -1,0 +1,159 @@
+// Построение суффиксных ссылок (fail-функции)
+void buildFailureLinks(AhoCorasick* ac) {
+    int queue[MAXS];  // Очередь для обхода в ширину (BFS)
+    int front = 0, rear = 0;  // Указатели начала и конца очереди
+    
+    // Инициализация для состояний первого уровня (детей корня)
+    for(int ch = 0; ch < MAXC; ch++) {
+        // Если есть переход из корня по символу ch
+        if(ac->next[0][ch] != -1) {
+            // Суффиксная ссылка ведет в корень
+            ac->fail[ac->next[0][ch]] = 0;
+            // Добавляем состояние в очередь для дальнейшей обработки
+            queue[rear++] = ac->next[0][ch];
+        }
+    }
+    
+    // Обход в ширину для построения остальных суффиксных ссылок
+    while(front < rear) {  // Пока очередь не пуста
+        int state = queue[front++];  // Извлекаем текущее состояние
+        
+        // Перебираем все возможные символы
+        for(int ch = 0; ch < MAXC; ch++) {
+            // Если есть переход из текущего состояния по символу ch
+            if(ac->next[state][ch] != -1) {
+                // Начинаем с суффиксной ссылки текущего состояния
+                int failure = ac->fail[state];
+                
+                // Ищем ближайшее состояние, в которое можно перейти по символу ch
+                while(failure != 0 && ac->next[failure][ch] == -1)
+                    failure = ac->fail[failure];
+                
+                // Если нашли переход - используем его, иначе идем в корень
+                failure = ac->next[failure][ch] != -1 ? ac->next[failure][ch] : 0;
+                
+                // Устанавливаем суффиксную ссылку
+                ac->fail[ac->next[state][ch]] = failure;
+                
+                // Объединяем выходные функции
+                // Если в состоянии failure есть выход, он будет и в текущем
+                ac->output[ac->next[state][ch]] |= ac->output[failure];
+                
+                // Добавляем новое состояние в очередь
+                queue[rear++] = ac->next[state][ch];
+            }
+        }
+    }
+}
+
+// Функция поиска образцов в тексте
+void search(AhoCorasick* ac, char* text) {
+    int currentState = 0;  // Начинаем с корневого состояния
+    int len = strlen(text);
+    
+    // Проходим по каждому символу текста
+    for(int i = 0; i < len; i++) {
+        int ch = text[i] - 'a';  // Преобразуем символ в индекс
+        
+        // Пока нет перехода по текущему символу, 
+        // идем по суффиксным ссылкам
+        while(currentState && ac->next[currentState][ch] == -1)
+            currentState = ac->fail[currentState];
+        
+        // Выполняем переход по символу
+        currentState = ac->next[currentState][ch];
+        // Если перехода нет, возвращаемся в начальное состояние
+        if(currentState == -1) 
+            currentState = 0;
+        
+        // Если достигли выходного состояния - нашли образец
+        if(ac->output[currentState]) {
+            printf("Найден образец на позиции %d\n", i);
+        }
+    }
+}
+
+// Вспомогательная функция для добавления образца в бор
+void addPattern(AhoCorasick* ac, char* pattern) {
+    int currentState = 0;  // Начинаем с корневого состояния
+    int len = strlen(pattern);
+    
+    // Проходим по каждому символу образца
+    for(int i = 0; i < len; i++) {
+        int ch = pattern[i] - 'a';  // Преобразуем символ в индекс
+        
+        // Если перехода нет - создаем новое состояние
+        if(ac->next[currentState][ch] == -1) {
+            ac->next[currentState][ch] = ac->states;
+            ac->states++;  // Увеличиваем счетчик состояний
+        }
+        
+        // Переходим в следующее состояние
+        currentState = ac->next[currentState][ch];
+    }
+    
+    // Помечаем последнее состояние как выходное
+    ac->output[currentState] = 1;
+}
+
+// Функция для визуализации построенного автомата
+void printTrie(AhoCorasick* ac) {
+    printf("Структура автомата:\n");
+    
+    // Проходим по всем состояниям
+    for(int state = 0; state < ac->states; state++) {
+        printf("Состояние %d:\n", state)
+
+        // Показываем все переходы из текущего состояния
+        for(int ch = 0; ch < MAXC; ch++) {
+            if(ac->next[state][ch] != -1) {
+                printf("  Переход по символу '%c' в состояние %d\n", 
+                       ch + 'a', ac->next[state][ch]);
+            }
+        }
+        
+        // Показываем суффиксную ссылку (кроме корня)
+        if(state != 0) {
+            printf("  Суффиксная ссылка ведет в состояние %d\n", 
+                   ac->fail[state]);
+        }
+        
+        // Показываем, является ли состояние выходным
+        if(ac->output[state]) {
+            printf("  Это выходное состояние\n");
+        }
+        printf("\n");
+    }
+}
+
+// Пример использования
+int main() {
+    AhoCorasick ac;
+    init(&ac);
+    
+    // Добавляем образцы для поиска
+    printf("Добавление образцов...\n");
+    addPattern(&ac, "he");
+    addPattern(&ac, "she");
+    addPattern(&ac, "his");
+    addPattern(&ac, "hers");
+    
+    // Показываем структуру бора до построения суффиксных ссылок
+    printf("\nСтруктура бора до построения суффиксных ссылок:\n");
+    printTrie(&ac);
+    
+    // Строим суффиксные ссылки
+    printf("\nПостроение суффиксных ссылок...\n");
+    buildFailureLinks(&ac);
+    
+    // Показываем финальную структуру автомата
+    printf("\nФинальная структура автомата:\n");
+    printTrie(&ac);
+    
+    // Выполняем поиск
+    char* text = "ushers";
+    printf("\nПоиск образцов в тексте '%s':\n", text);
+    search(&ac, text);
+    
+    return 0;
+}

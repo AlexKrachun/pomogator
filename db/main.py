@@ -346,14 +346,14 @@ class WorkWithDB:
                     context_history.append(saying)
                 else:
                     while saying != '':
-                        st = saying[:min(4093, len(saying))]
+                        st = saying[:min(4090, len(saying))]
                         
                         if st.count('```') % 2 == 0:
                             context_history.append(st)
                             saying = saying[len(st):]
                         else:
                             context_history.append(st + '```')
-                            saying = '```' + saying[len(st):]
+                            saying = '``` ' + saying[len(st):]
                         
                             
                             

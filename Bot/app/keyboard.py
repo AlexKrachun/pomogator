@@ -16,6 +16,7 @@ async def inline_contexts(user_id):
         keyboard.add(InlineKeyboardButton(text=button_text, callback_data=f'context:{str(context["id"])}'))
     return keyboard.adjust(1).as_markup()
 
+
 # def get_user_model(user_id, curr_users_models):
 #     if user_id not in curr_users_models:
 #         return 'gpt-4o-mini'
@@ -42,6 +43,8 @@ button_names = {
     'claude-3-5-haiku-latest': 'claude 3.5-haiku',
     'dall-e-3': 'dall-e-3',
     'face-swap': 'face-swap',
+    'standard': 'обычная',
+    'hd': 'высокая'
 }
 
 
@@ -68,13 +71,6 @@ resolution_settings = ['1024x1024', '1024x1792', '1792x1024']
 async def dalle_3_settings(user_id, quality='standard', resolution='1024x1024'):
     keyboard = InlineKeyboardBuilder()
 
-    for qual in quality_settings:
-        curr_quality = qual
-        if quality == qual:
-            curr_quality += '✅'
-
-        keyboard.add(InlineKeyboardButton(text=curr_quality, callback_data=f'quality:{qual}'))
-
     for resol in resolution_settings:
         curr_resolution = resol
         if resolution == resol:
@@ -82,7 +78,14 @@ async def dalle_3_settings(user_id, quality='standard', resolution='1024x1024'):
 
         keyboard.add(InlineKeyboardButton(text=curr_resolution, callback_data=f'resolution:{resol}'))
 
-    return keyboard.adjust(2, 3).as_markup()
+    for qual in quality_settings:
+        curr_quality = button_names[qual]
+        if quality == qual:
+            curr_quality += '✅'
+
+        keyboard.add(InlineKeyboardButton(text=curr_quality, callback_data=f'quality:{qual}'))
+
+    return keyboard.adjust(len(resolution_settings), len(quality_settings)).as_markup()
 
 
 inline_pay = InlineKeyboardMarkup(

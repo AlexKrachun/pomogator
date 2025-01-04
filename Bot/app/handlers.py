@@ -175,14 +175,14 @@ async def profile_command(message: Message):
         await message.answer("Произошла ошибка при обработке команды /profile.")
 
 
-@router.message(Command('help'))
-async def help_cmd(message: Message):
+@router.message(Command('info'))
+async def info_cmd(message: Message):
     try:
-        await message.answer(message_templates['ru']['help'])
-        logger.debug("Ответ на /help успешно отправлен.")
+        await message.answer(message_templates['ru']['info'])
+        logger.debug("Ответ на /info успешно отправлен.")
     except Exception as e:
-        logger.debug(f'Ошибка в обработчике /help')
-        await message.answer("Произошла ошибка при обработке команды /help.")
+        logger.debug(f'Ошибка в обработчике /info')
+        await message.answer("Произошла ошибка при обработке команды /info.")
 
 
 @router.message(Command('new_context'))
@@ -257,10 +257,11 @@ async def handle_model_switch(callback: types.CallbackQuery):
             if model_name in ['dall-e-3']:
                 curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
                 curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
-                await callback.message.answer(message_templates['ru']['dall_e_3_handler'],
+                await callback.message.answer(message_templates['ru']['dall_e_3_handler'], parse_mode="Markdown",
                                               reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
+                # await callback.message.answer('*Введите ваш запрос для генерации изображения:*', parse_mode="Markdown")
             elif model_name in ['face-swap']:
-                await callback.message.answer(message_templates['ru']['face-swap-1'])
+                await callback.message.answer(message_templates['ru']['face-swap-1'], parse_mode="Markdown")
 
             await callback.answer()
             logger.debug(f"Модель для пользователя {us_id} успешно обновлена до {model_name}")
@@ -283,7 +284,7 @@ async def handle_dalle_3_quality_switch(callback: types.CallbackQuery):
             db_client.set_dalle_quality_by_tg_id(tg_id=us_id, dalle_quality=curr_quality)
 
             await callback.message.edit_text(
-                message_templates['ru']['dall_e_3_handler'],
+                message_templates['ru']['dall_e_3_handler'], parse_mode="Markdown",
                 reply_markup=await dalle_3_settings(us_id, curr_quality, db_client.get_dalle_shape_by_tg_id(us_id))
             )
             await callback.answer()
@@ -307,7 +308,7 @@ async def handle_dalle_3_resolution_switch(callback: types.CallbackQuery):
             db_client.set_dalle_shape_by_tg_id(us_id, dalle_shape=curr_resolution)
 
             await callback.message.edit_text(
-                message_templates['ru']['dall_e_3_handler'],
+                message_templates['ru']['dall_e_3_handler'], parse_mode="Markdown",
                 reply_markup=await dalle_3_settings(user_id=us_id, quality=db_client.get_dalle_quality_by_tg_id(us_id),
                                                     resolution=curr_resolution)
             )
@@ -517,16 +518,14 @@ async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMCo
         # Сохранение строки Base64 в состояние FSM
         await state.update_data(photo_1_done=base64_encoded)
 
-        await message.reply("Первая фотография успешно обработана, отправьте фотографию с лицом."
-                            "\nЕсли вы хотите сбросить эту фотографию, "
-                            "воспользуйтесь командой /start.")
+        await message.reply(message_templates['ru']['face-swap-3'], parse_mode="Markdown")
         await state.set_state(FaceSwap.photo_1_done)
 
-        await message.answer(message_templates['ru']['face-swap-2'])
+        # await message.answer(message_templates['ru']['face-swap-2'], parse_mode="Markdown")
 
     except Exception as e:
         # logger.debug(f"Ошибка в обработчике face_swap_handler_first_photo для пользователя {us_id}")
-        await message.answer("Произошла ошибка при обработке вашего сообщения, отправьте еще раз.")
+        await message.answer("Произошла ошибка при обработке вашей фотографии, отправьте еще раз.")
         await state.clear()
         if us_id in id_in_processing:
             id_in_processing.remove(us_id)
@@ -534,15 +533,15 @@ async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMCo
 
 @router.message(FaceSwap.photo_1_done)
 async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMContext):
+    processing_message = await message.reply(message_templates['ru']['processing'])
+    await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
+
     try:
 
         us_id = message.from_user.id
 
         photo = message.photo[-1]
         file_id = photo.file_id
-
-        processing_message = await message.reply(message_templates['ru']['processing'])
-        await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
 
         # Получение информации о файле с сервера Telegram
         file_info = await bot.get_file(file_id)
@@ -563,24 +562,19 @@ async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMC
 
         url = await run_face_swap(img_1_base64, img_2_base64)
         if url == None:
-            await message.answer("Произошла ошибка при генерации изображения,"
-                                 "заново отправьте фото, на котором нужно изменить лицо.")
+            await message.answer("Произошла ошибка при генерации изображения." + '\n\n'
+                                 + message_templates['ru']['face-swap-1'], parse_mode="Markdown")
             # Очистка состояния FSM
             await state.clear()
             if us_id in id_in_processing:
                 id_in_processing.remove(us_id)
                 logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
-                await message.answer(message_templates['ru']['face-swap-1'])
+                # await message.answer(message_templates['ru']['face-swap-1'], parse_mode="Markdown")
             return
 
         await message.answer_photo(url)
 
-        await message.bot.delete_message(
-            chat_id=processing_message.chat.id,
-            message_id=processing_message.message_id
-        )
-
-        await message.answer(message_templates['ru']['face-swap-1'])
+        await message.answer('Следующая генерация:\n\n' + message_templates['ru']['face-swap-1'], parse_mode="Markdown")
 
         if us_id in id_in_processing:
             id_in_processing.remove(us_id)
@@ -589,7 +583,12 @@ async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMC
 
     except Exception as e:
         # logger.debug(f"Ошибка в обработчике face_swap_handler_first_photo для пользователя {us_id}")
-        await message.answer("Произошла ошибка при обработке вашего сообщения, отправьте еще раз.")
+        await message.answer("Произошла ошибка при обработке вашей фотографии, отправьте еще раз.")
+    finally:
+        await message.bot.delete_message(
+            chat_id=processing_message.chat.id,
+            message_id=processing_message.message_id
+        )
 
 
 model_handler = {  # для нейронки храним хендлер

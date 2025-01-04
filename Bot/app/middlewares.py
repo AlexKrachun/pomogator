@@ -1,6 +1,9 @@
+import logging
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 from db.main import db_client
+
+logger = logging.getLogger('bot_logger')
 
 
 class UserRegistrationMiddleware(BaseMiddleware):
@@ -11,7 +14,7 @@ class UserRegistrationMiddleware(BaseMiddleware):
             db_client.add_user(name=event.from_user.full_name, tg_id=us_id, last_used_model='gpt-4o-mini')
             chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)
             db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=chat_id)
-            print("Писюлька пользователь зареган убежище")
+            logger.debug("Пользователь успешно зарегистрирован через Middleware!")
             # await event.answer("Пользователь успешно зарегистрирован! Повторите запрос.")
             # return  # Прерываем обработку события
 

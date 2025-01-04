@@ -22,7 +22,6 @@ import aiohttp
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
@@ -30,7 +29,6 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN')
 logger = logging.getLogger('bot_logger')
 
 router = Router()
-
 
 
 @router.message(Command('contexts'))
@@ -81,10 +79,20 @@ async def mode_cmd(message: types.Message):
 
 
 @router.message(Command('start'))
-async def start_cmd(message: types.Message):
+async def start_cmd(message: types.Message, state: FSMContext):
     try:
-        # регистрация
         us_id = message.from_user.id
+
+        current_state = await state.get_state()
+        if current_state is not None:
+            await state.clear()
+            await message.reply('Фотография cброшена, отправьте заново изображение, на котором нужно заменить лицо.')
+            if us_id in id_in_processing:
+                id_in_processing.remove(us_id)
+                logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+            return
+
+        # регистрация
         if db_client.user_is_new_by_tg_id(us_id):
             db_client.add_user(name=message.from_user.full_name, tg_id=us_id,
                                last_used_model='gpt-4o-mini')  # возможно full_name пустой
@@ -93,6 +101,7 @@ async def start_cmd(message: types.Message):
 
         await message.answer(message_templates['ru']['start'])
         logger.debug("Ответ на /start успешно отправлен.")
+
     except Exception as e:
         logger.exception(f'Ошибка в обработчике /start: {e}')
         await message.answer("Произошла ошибка при обработке команды /start.")
@@ -163,23 +172,22 @@ async def handle_context_switch(callback: types.CallbackQuery):
                 'Пожалуйста, выберите контекст из списка.',
                 reply_markup=await inline_contexts(us_id),
             )
-        
-        await callback.message.answer('Вот содержимое вашего контекста:')
 
+        await callback.message.answer('Вот содержимое вашего контекста:')
 
         for msg in context_history:
             try:
                 await callback.message.answer(msg, parse_mode="Markdown")
             except Exception as e:
                 await callback.message.answer(msg)
-                
+
         await callback.message.answer(get_changed_context_line(topic))
 
         await callback.answer()
 
 
-                
-                
+
+
     except Exception as e:
         logger.exception(f"Ошибка в обработчике handle_context_switch: {e}")
         await callback.answer("Произошла ошибка при переключении контекста.")
@@ -294,12 +302,12 @@ async def openai_gpt_handler(message: Message, bot: Bot, state: FSMContext):
         )
         model_name = db_client.get_user_model_by_tg_id(us_id)
         db_client.add_message(chat_id=curr_context_id, role='assistant', text=response, author_name=model_name)
-        
+
         try:
             await message.answer(response, parse_mode="Markdown")
         except Exception as e:
             await message.answer(response)
-            
+
 
 
 
@@ -350,7 +358,7 @@ async def cloude_text_model_handler(message: Message, bot: Bot, state: FSMContex
 
         model_name = db_client.get_user_model_by_tg_id(us_id)
         db_client.add_message(chat_id=curr_context_id, role='assistant', text=response, author_name=model_name)
-        
+
         try:
             await message.answer(response, parse_mode="Markdown")
         except Exception as e:
@@ -371,10 +379,10 @@ async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
     logger.info(f"Получено сообщение от пользователя {message.from_user.id}: {message.text} для генерации изображение")
 
     us_id = message.from_user.id
-    if us_id in id_in_processing:
-        logger.warning(f"Пользователь {us_id} пытается отправить сообщение во время обработки.")
-        await message.answer(message_templates['ru']['id_in_procces'])
-        return
+    # if us_id in id_in_processing:
+    #     logger.warning(f"Пользователь {us_id} пытается отправить сообщение во время обработки.")
+    #     await message.answer(message_templates['ru']['id_in_procces'])
+    #     return
 
     try:
         id_in_processing.add(us_id)
@@ -422,67 +430,91 @@ class FaceSwap(StatesGroup):
 
 async def face_swap_handler_first_photo(message: Message, bot: Bot, state: FSMContext):
     us_id = message.from_user.id
-    id_in_processing.add(us_id)
+    try:
+        id_in_processing.add(us_id)
+        photo = message.photo[-1]
+        file_id = photo.file_id
 
+        # Получение информации о файле с сервера Telegram
+        file_info = await bot.get_file(file_id)
 
-    photo = message.photo[-1]
-    file_id = photo.file_id
+        # Скачивание файла и преобразование в Base64
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_info.file_path}") as response:
+                if response.status == 200:
+                    base64_encoded = base64.b64encode(await response.read()).decode("utf-8")
 
-    # Получение информации о файле с сервера Telegram
-    file_info = await bot.get_file(file_id)
+        # Сохранение строки Base64 в состояние FSM
+        await state.update_data(photo_1_done=base64_encoded)
 
-    # Скачивание файла и преобразование в Base64
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_info.file_path}") as response:
-            if response.status == 200:
-                base64_encoded = base64.b64encode(await response.read()).decode("utf-8")
-            else:
-                await message.reply("Не удалось обработать фотографию.")
-                return
+        await message.reply("Первая фотография успешно обработана, отправьте фотографию с лицом."
+                            "\nЕсли вы хотите сбросить эту фотографию, "
+                            "воспользуйтесь командой /start.")
+        await state.set_state(FaceSwap.photo_1_done)
 
-    # Сохранение строки Base64 в состояние FSM
-    await state.update_data(photo_1_done=base64_encoded)
-
-    await message.reply("Первая фотография успешно преобразована в Base64 и записана в состояние.")
-    await state.set_state(FaceSwap.photo_1_done)
-
+    except Exception as e:
+        # logger.exception(f"Ошибка в обработчике face_swap_handler_first_photo для пользователя {us_id}: {e}")
+        await message.answer("Произошла ошибка при обработке вашего сообщения, отправьте еще раз.")
+        await state.clear()
+        if us_id in id_in_processing:
+            id_in_processing.remove(us_id)
 
 
 @router.message(FaceSwap.photo_1_done)
 async def face_swap_handler_second_photo(message: Message, bot: Bot, state: FSMContext):
-    us_id = message.from_user.id
+    try:
 
-    photo = message.photo[-1]
-    file_id = photo.file_id
+        us_id = message.from_user.id
 
-    # Получение информации о файле с сервера Telegram
-    file_info = await bot.get_file(file_id)
+        photo = message.photo[-1]
+        file_id = photo.file_id
 
-    # Скачивание файла и преобразование в Base64
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_info.file_path}") as response:
-            if response.status == 200:
-                base64_encoded = base64.b64encode(await response.read()).decode("utf-8")
-            else:
-                await message.reply("Не удалось обработать фотографию.")
-                return
+        processing_message = await message.reply(message_templates['ru']['processing'])
+        await message.bot.send_chat_action(chat_id=message.chat.id, action="typing")
 
-    # Получение первой фотографии из состояния FSM
-    data = await state.get_data()
-    img_1_base64 = data.get('photo_1_done')
-    img_2_base64 = base64_encoded
-    await message.reply("Фотографии успешно обработаны и преобразованы в Base64.")
+        # Получение информации о файле с сервера Telegram
+        file_info = await bot.get_file(file_id)
 
-    url = await run_face_swap(img_1_base64, img_2_base64)
-    await message.reply(url)
-    await message.answer_photo(url)
+        # Скачивание файла и преобразование в Base64
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://api.telegram.org/file/bot{BOT_TOKEN}/{file_info.file_path}") as response:
+                if response.status == 200:
+                    base64_encoded = base64.b64encode(await response.read()).decode("utf-8")
 
-    # Очистка состояния FSM
-    await state.clear()
+        # Получение первой фотографии из состояния FSM
+        data = await state.get_data()
+        img_1_base64 = data.get('photo_1_done')
+        img_2_base64 = base64_encoded
 
-    if us_id in id_in_processing:
-        id_in_processing.remove(us_id)
-        logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+        # Очистка состояния FSM
+        await state.clear()
+
+        url = await run_face_swap(img_1_base64, img_2_base64)
+        if url == None:
+            await message.answer("Произошла ошибка при генерации изображения,"
+                                 "заново отправьте фото, на котором нужно изменить лицо.")
+            # Очистка состояния FSM
+            await state.clear()
+            if us_id in id_in_processing:
+                id_in_processing.remove(us_id)
+                logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+            return
+
+        await message.answer_photo(url)
+
+        await message.bot.delete_message(
+            chat_id=processing_message.chat.id,
+            message_id=processing_message.message_id
+        )
+
+        if us_id in id_in_processing:
+            id_in_processing.remove(us_id)
+            logger.debug(f"Пользователь {us_id} завершил обработку сообщения.")
+
+
+    except Exception as e:
+        # logger.exception(f"Ошибка в обработчике face_swap_handler_first_photo для пользователя {us_id}: {e}")
+        await message.answer("Произошла ошибка при обработке вашего сообщения, отправьте еще раз.")
 
 
 model_handler = {  # для нейронки храним хендлер
@@ -495,9 +527,6 @@ model_handler = {  # для нейронки храним хендлер
     'claude-3-5-sonnet-latest': cloude_text_model_handler,
     'claude-3-5-haiku-latest': cloude_text_model_handler
 }
-
-
-
 
 
 @router.message()
@@ -518,12 +547,6 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
     #     logger.exception(f'Ошибка в обработчике /start: {e}')
     #     await message.answer("Произошла ошибка при обработке команды /start.")
 
-    # us_id = message.from_user.id
-    # user_message = message.text
-    #
-    # if us_id in id_in_processing:
-    #     await message.answer(message_templates['ru']['id_in_procces'])
-    #     return
 
     last_used_model = db_client.get_user_model_by_tg_id(message.from_user.id)
     logging.debug(f'Дебаг - {last_used_model}')

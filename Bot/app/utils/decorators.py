@@ -10,7 +10,8 @@ def processing_guard(handler):
     async def wrapper(message: Message, *args, **kwargs):
         us_id = message.from_user.id
         if us_id in id_in_processing:
-            await message.answer(message_templates['ru']['id_in_procces'])
+            # await message.answer(message_templates['ru']['id_in_procces'])
+            await message.answer('ПИСЯКАКА, еще старый запрос делается, бро')
             return
         return await handler(message, *args, **kwargs)
 

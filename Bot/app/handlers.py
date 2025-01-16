@@ -488,7 +488,8 @@ async def dall_e_3_handler(message: Message, bot: Bot, state: FSMContext):
         curr_size = db_client.get_dalle_shape_by_tg_id(us_id)
         curr_resolution = db_client.get_dalle_quality_by_tg_id(us_id)
         await message.answer(message_templates['ru']['dall_e_3_handler'],
-                             reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size))
+                             reply_markup=await dalle_3_settings(us_id, curr_resolution, curr_size), 
+                             parse_mode="Markdown")
 
 
 

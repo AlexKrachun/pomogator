@@ -17,27 +17,44 @@ async def inline_contexts(user_id):
     return keyboard.adjust(1).as_markup()
 
 
-ai_models = ['gpt-4o-mini',
-             'gpt-4o',
-             'o1-mini',
-             'o1-preview',
+ai_models = [
+             'gpt-4o-mini',
              'claude-3-5-haiku-latest',
-             'claude-3-5-sonnet-latest',
+             'gpt-4o',
+             'o3-mini',
+             'gpt-4o-search-preview',
+             'o1',
+             'gpt-4.5-preview',
+             'claude-3-7-sonnet-latest',
              'dall-e-3',
-             'face-swap'
-             ]
+             'face-swap',
+            ]
+
 
 button_names = {
     'gpt-4o-mini': 'gpt-4o-mini',
-    'gpt-4o': 'gpt-4o',
-    'o1-mini': 'o1-mini',
-    'o1-preview': 'o1-preview',
-    'claude-3-5-sonnet-latest': 'claude 3.5-sonnet',
     'claude-3-5-haiku-latest': 'claude 3.5-haiku',
+    'gpt-4o': 'gpt-4o',
+    'o3-mini': 'o3-mini',
+    'gpt-4o-search-preview': 'gpt-4o-search-preview',
+    'o1': 'o1',
+    'gpt-4.5-preview': 'gpt-4.5-preview',
+    'claude-3-7-sonnet-latest': 'claude 3.7-sonnet',
     'dall-e-3': 'dall-e-3',
     'face-swap': 'face-swap',
     'standard': 'обычная',
-    'hd': 'высокая'
+    'hd': 'высокая',
+
+    # 'gpt-4o-mini': 'gpt-4o-mini',
+    # 'gpt-4o': 'gpt-4o',
+    # 'o1-mini': 'o1-mini',
+    # 'o1-preview': 'o1-preview',
+    # 'claude-3-5-sonnet-latest': 'claude 3.5-sonnet',
+    # 'claude-3-5-haiku-latest': 'claude 3.5-haiku',
+    # 'dall-e-3': 'dall-e-3',
+    # 'face-swap': 'face-swap',
+    # 'standard': 'обычная',
+    # 'hd': 'высокая'
 }
 
 

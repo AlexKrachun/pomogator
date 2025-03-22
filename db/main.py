@@ -1,6 +1,7 @@
 from sqlalchemy import asc, create_engine
 from sqlalchemy.orm import sessionmaker
-from tables import User, Chat, Message, Candy, Base
+from sqlalchemy.schema import Column
+from db.tables import User, Chat, Message, Candy, Base
 import logging
 import time
 
@@ -21,26 +22,26 @@ class WorkWithDB:
     def __init__(self, db_path='sqlite:///db/orm.db'):
         self.engine = create_engine(db_path)
         self.Session = sessionmaker(bind=self.engine)
-        
+
         # Создание таблиц
         Base.metadata.create_all(self.engine)
-    
+
     def _get_session(self):
         return self.Session()
-    
-    def get_dalle_quality_by_tg_id(self, tg_id) -> str:
+
+    def get_dalle_quality_by_tg_id(self, tg_id) -> Column[str]:
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first().dalle_quality
 
     def get_dalle_shape_by_tg_id(self, tg_id) -> str:
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first().dalle_shape
-    
-    
+
+
     def set_dalle_quality_by_tg_id(self, tg_id, dalle_quality: str):
         with self._get_session() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
-            
+
             try:
                 user.dalle_quality = dalle_quality
                 session.commit()
@@ -48,11 +49,11 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error User dalle_quality changin to {dalle_quality}, {e}')
-    
+
     def set_dalle_shape_by_tg_id(self, tg_id, dalle_shape: str):
         with self._get_session() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
-            
+
             try:
                 user.dalle_shape = dalle_shape
                 session.commit()
@@ -60,28 +61,23 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error User dalle_shape changin to {dalle_shape}, {e}')
-                
-    
+
+
     def user_is_new_by_tg_id(self, tg_id):
         '''нет пользователя с таким tg_id'''
         with self._get_session() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
             return not bool(user)
 
-    
-    # def user_has_no_contexts_by_tg_id(self, tg_id):
-    #     with self._get_session() as session:
-    #         user = session.query(User).filter(User.tg_id == tg_id).first()
-    #         print('u' * 100, user.chats)
-    #         return len(user.chats) == 0
-    
-    
+
+
+
     def user_has_empty_curr_context_by_tg_id(self, us_id):
         with self._get_session() as session:
             curr_context_id = session.query(User).filter(User.tg_id == us_id).first().current_chat_id
             user_curr_context_messages = session.query(Chat).filter(Chat.id == curr_context_id).first().messages
             return len(user_curr_context_messages) == 0
-    
+
     def add_message(self, chat_id, role, text, author_name):
         with self._get_session() as session:
             try:
@@ -98,16 +94,16 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error adding message: {e}')
-    
+
     def get_user_by_tg_id(self, tg_id):
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first()
-    
-    
+
+
     def set_current_context_by_tg_id(self, tg_id, context_id):
         with self._get_session() as session:
             user = session.query(User).filter(User.tg_id == tg_id).first()
-            
+
             try:
                 user.current_chat_id = context_id
                 session.commit()
@@ -115,44 +111,24 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error User current_chat_id changin to {context_id}, {e}')
-            
-            
+
+
 
     def get_current_context_by_tg_id(self, tg_id) -> Chat:
         with self._get_session() as session:
             chat_id = session.query(User).filter(User.tg_id == tg_id).first().current_chat_id
-            
+
             return session.query(Chat).filter(Chat.id == chat_id).first()
-        
-        
+
+
     def get_current_context_id_by_tg_id(self, tg_id) -> int:
         with self._get_session() as session:
             chat_id = session.query(User).filter(User.tg_id == tg_id).first().current_chat_id
-            
-            return session.query(Chat).filter(Chat.id == chat_id).first().id
-            
 
-    # def create_new_context_by_site_id(self, site_id, dialog_name):
-    #     '''добавить новый диалог с названием'''
-    #     with self._get_session() as session:
-    #         try:
-    #             user_id = session.query(User).filter_by(User.site_id == site_id).id
-                
-    #             if not user_id:
-    #                 logging.error(f'Ппри попытки создания нового контекста, пользователь с site_id={site_id} не найден')
-    #                 return
-                
-    #             new_chat = Chat(
-    #                 name=dialog_name,
-    #                 time=int(time.time()),
-    #                 user_id=user_id,
-    #             )
-    #             session.add(new_chat)
-    #             session.commit()
-    #             logging.info(f'Chat {dialog_name} added successfully.')
-    #         except Exception as e:
-    #             session.rollback()
-    #             logging.error(f'Error adding by site_id Chat {dialog_name}, {e}')
+            return session.query(Chat).filter(Chat.id == chat_id).first().id
+
+
+
 
     def update_dialog_neame(self, chat_id, dialog_name):
         with self._get_session() as session:
@@ -163,18 +139,18 @@ class WorkWithDB:
                 logging.info(f'Переименовали диалог успешно')
             except Exception as ex:
                 logging.error(f'Ошибка при переименовании диалога на {chat_id=}, {dialog_name=}, error: {ex}')
-    
+
     def create_new_context_by_tg_id(self, tg_id) -> int:
         '''добавить новый диалог'''
         with self._get_session() as session:
             try:
                 user_id = session.query(User.id).filter(User.tg_id == tg_id).scalar()
 
-                
+
                 if not user_id:
                     logging.error(f'Ппри попытки создания нового контекста, пользователь с tg_id={tg_id} не найден')
                     return
-                
+
                 curr_time=int(time.time())
                 new_chat = Chat(
                     time=curr_time,
@@ -187,21 +163,6 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error adding by tg_id Chat by {tg_id}, {e}')
-    
-    # def switch_user_model_by_site_id(self, site_id, new_model_name):
-    #     '''
-    #     поменять в бд последнюю используемую нейронку на указанную
-    #     '''
-    #     with self._get_session() as session:
-    #         user = session.query(User).filter_by(User.site_id == site_id).first()
-    #         if user:
-    #             try:
-    #                 user.last_used_model = new_model_name
-    #                 session.commit()
-    #                 logging.info(f'У {user} успешно обновлена last_used_model на {new_model_name}')
-    #             except Exception as e:
-    #                 session.rollback()
-    #                 logging.error(f'Ошибка {e} при обновлении last_used_model у {user} на {new_model_name}')
 
 
 
@@ -219,25 +180,25 @@ class WorkWithDB:
                     session.rollback()
                     logging.error(f'Ошибка {e} при обновлении last_used_model у {user} на {new_model_name}')
 
-    
+
     def get_full_dialog(self, chat_id) -> list[Message]:
         '''
         [
-            {'role': 'user', 'content': user_message}, 
-            {'role': 'assistant', 'content': user_message}, 
+            {'role': 'user', 'content': user_message},
+            {'role': 'assistant', 'content': user_message},
             ...
         ]
         '''
         with self._get_session() as session:
             # messages = (session.query(Message)
             #                    .filter(Message.chat_id == chat_id)
-            #                    .order_by(asc(Message.time))).all() 
-            chat = session.query(Chat).filter(Chat.id == chat_id).first() 
+            #                    .order_by(asc(Message.time))).all()
+            chat = session.query(Chat).filter(Chat.id == chat_id).first()
             messages = chat.to_list_of_roled_messages()
-            
+
         return messages
-        
-    
+
+
     def make_context_history(self, chat_id) -> list[str]:
         '''
         по чату, вернуть его содержимое
@@ -253,11 +214,11 @@ class WorkWithDB:
                 saying += f'😍 @{m.author_name.replace('_', '\\_')}:'
             elif m.author == 'assistant':
                 saying += f'🤖 {m.author_name.replace('_', '\\_')}:'
-                
+
             saying += '\n'
             saying += m.text
             saying += '\n\n'
-            
+
             if len(context_history[-1]) + len(saying) < 4096:
                 context_history[-1] += saying
             else:
@@ -265,13 +226,13 @@ class WorkWithDB:
                     context_history.append(saying)
                 else:
                     # print(f'went to while: |{saying}|')
-                    
+
                     while saying != '':
                         # print(f'I am in while: |{saying}|')
                         # if saying == '``` ':
                         #     break
                         st = saying[:min(4090, len(saying))]
-                        
+
                         if st.count('```') % 2 == 0:
                             context_history.append(st)
                             saying = saying[len(st):]
@@ -280,13 +241,13 @@ class WorkWithDB:
                             saying = saying[len(st):]
                             if saying.count('```') % 2 != 0:
                                 saying = '``` ' + saying
-                        
-                            
-                            
+
+
+
         if context_history[-1] == '':
             context_history.pop()
         # context_history.append('Контекст переключен')
-        return context_history 
+        return context_history
 
 
     def from_context_id_get_topic(self, context_id):
@@ -309,72 +270,40 @@ class WorkWithDB:
                            .all())
             contextst = [{'id': ch.id, 'name': ch.name} for ch in chats]
         return contextst
-            
-        
-    # def get_users_contexts_by_site_id(self, site_id):
-    #     '''
-    #     Cписок контекстов, посорченый по дате создания
-    #     '''
-    #     with self._get_session() as session:
-    #         return (session.query(Chat)
-    #                        .join(User)
-    #                        .filter_by(User.site_id == site_id)
-    #                        .order_by(Chat.time)
-    #                        .all())
-    
-    
-    
+
+
     def get_user_model_by_tg_id(self, tg_id):
         with self._get_session() as session:
             return session.query(User).filter(User.tg_id == tg_id).first().last_used_model
-        
-    # def get_user_model_by_site_id(self, site_id):
-    #     with self._get_session() as session:
-    #         return session.query(User).filter_by(User.site_id == site_id).first().last_used_model
 
-    
-    def add_user(self, **kwargs):
+
+    def add_user(self, name, tg_id, last_used_model):
         '''
         Добавляет пользователя с переданными параметрами.
         '''
         with self._get_session() as session:
             try:
-                user = User(**kwargs)
+                user = User(tg_id=tg_id, last_used_model=last_used_model)
                 session.add(user)
                 session.commit()
-                logging.info(f'User {user.name} added successfully.')
+                logging.info(f'User {name} added successfully.')
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error adding user: {e}')
-    
+
     def get_user_by_tg_id(self, tg_id):
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first()
-    
-    # def get_user_by_site_id(self, site_id):
-    #     with self._get_session() as session:
-    #         return session.query(User).filter_by(site_id=site_id).first()
-    
-    
-        
+
+
     def get_sub_status_by_tg_id(self, tg_id):
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first().sub_status
-    
-    # def get_sub_status_by_site_id(self, site_id):
-    #     with self._get_session() as session:
-    #         return session.query(User).filter_by(site_id=site_id).first().sub_status
-    
-        
-        
+
+
     def get_token_has_by_tg_id(self, tg_id):
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first().token_has
-    
-    # def get_token_has_by_site_id(self, site_id):
-    #     with self._get_session() as session:
-    #         return session.query(User).filter_by(site_id=site_id).first().token_has
-
 
 
     def update_sub_status_by_tg_id(self, tg_id, new_status):
@@ -390,19 +319,6 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error updating sub_status: {e}')
-                
-    # def update_sub_status_by_site_id(self, site_id, new_status):
-    #     with self._get_session() as session:
-    #         try:
-    #             user = session.query(User).filter_by(site_id=site_id).first()
-    #             if user:
-    #                 user.sub_status = new_status
-    #                 session.commit()
-    #                 logging.info(f'Updated sub_status to {new_status} for site_id {site_id}.')
-    #         except Exception as e:
-    #             session.rollback()
-    #             logging.error(f'Error updating sub_status: {e}')
-
 
 
     def update_site_id_by_tg_id(self, tg_id, new_site_id):
@@ -416,18 +332,6 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error updating site_id: {e}')
-                
-    # def update_tg_id_by_site_id(self, site_id, new_tg_id):
-    #     with self._get_session() as session:
-    #         try:
-    #             user = session.query(User).filter_by(site_id=site_id).first()
-    #             if user:
-    #                 user.tg_id = new_tg_id
-    #                 session.commit()
-    #                 logging.info(f'Updated tg_id to {new_tg_id} for site_id {site_id}.')
-    #         except Exception as e:
-    #             session.rollback()
-    #             logging.error(f'Error updating tg_id: {e}')
 
 
 
@@ -443,17 +347,6 @@ class WorkWithDB:
                 session.rollback()
                 logging.error(f'Error updating token_has: {e}')
 
-    # def update_token_has_by_site_id(self, site_id, token_amount):
-    #     with self._get_session() as session:
-    #         try:
-    #             user = session.query(User).filter_by(site_id=site_id).first()
-    #             if user:
-    #                 user.token_has = token_amount
-    #                 session.commit()
-    #                 logging.info(f'Updated token_has to {token_amount} for site_id {site_id}.')
-    #         except Exception as e:
-    #             session.rollback()
-    #             logging.error(f'Error updating token_has: {e}')
 
     def update_candy_by_tg_id(self, tg_id):
 

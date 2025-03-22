@@ -22,8 +22,8 @@ class User(Base):
     current_chat_id = Column(Integer, nullable=True)
 
     # Конец подписки
-    sub_end: Mapped[DateTime] = mapped_column(DateTime)
-    
+    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
+
     # Последний запрос
     last_request: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False)
 

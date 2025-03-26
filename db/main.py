@@ -1,9 +1,13 @@
+import logging
+import time
+from datetime import datetime
+
 from sqlalchemy import asc, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import Column
-from db.tables import User, Chat, Message, Candy, Base
-import logging
-import time
+
+from db.tables import User, Chat, Message, Base
+
 
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -95,7 +99,7 @@ class WorkWithDB:
                 session.rollback()
                 logging.error(f'Error adding message: {e}')
 
-    def get_user_by_tg_id(self, tg_id):
+    def get_user_by_tg_id(self, tg_id) -> User:
         with self._get_session() as session:
             return session.query(User).filter_by(tg_id=tg_id).first()
 
@@ -296,16 +300,6 @@ class WorkWithDB:
             return session.query(User).filter_by(tg_id=tg_id).first()
 
 
-    def get_sub_status_by_tg_id(self, tg_id):
-        with self._get_session() as session:
-            return session.query(User).filter_by(tg_id=tg_id).first().sub_status
-
-
-    def get_token_has_by_tg_id(self, tg_id):
-        with self._get_session() as session:
-            return session.query(User).filter_by(tg_id=tg_id).first().token_has
-
-
     def update_sub_status_by_tg_id(self, tg_id, new_status):
         with self._get_session() as session:
             try:
@@ -348,9 +342,79 @@ class WorkWithDB:
                 logging.error(f'Error updating token_has: {e}')
 
 
-    def update_candy_by_tg_id(self, tg_id):
+    def update_sub_by_tg_id(self, tg_id):
+        with self._get_session() as session:
+            try:
+                user = session.query(User).filter_by(tg_id=tg_id).first()
+                if user:
+                    if user.sub_end and user.sub_end.date() < datetime.now().date():
+                        default = User.__table__.c.daily_candy.default.arg
+                        user.daily_candy = default
+                        session.commit()
+                        logging.info(f'Updated daily_candy to {default} for tg_id {tg_id}.')
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error updating sub: {e}')
 
-        pass
+    def update_candy_by_tg_id(self, tg_id):
+        with self._get_session() as session:
+            try:
+                user = session.query(User).filter_by(tg_id=tg_id).first()
+                if user:
+                    if user.last_request.date() != datetime.now().date():
+                        user.daily_candy_left = user.daily_candy
+                        user.last_request = datetime.now()
+                        session.commit()
+                    print(f'Updated daily_candy_left to {user.daily_candy} for tg_id {tg_id}.')
+
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error updating candy: {e}')
+
+    def get_candy_left_by_tg_id(self, tg_id):
+        with self._get_session() as session:
+            try:
+                user = session.query(User).filter_by(tg_id=tg_id).first()
+                if user:
+                    logging.info(f'User with tg_id {tg_id} has {user.daily_candy_left} daily candies and {user.paid_candy_left} paid candies.')
+                    return (user.daily_candy_left, user.paid_candy_left)
+
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error getting candy: {e}')
+                # return (0, 0)
+            return (0, 0)
+
+    def get_daily_candy_by_tg_id(self, tg_id):
+        with self._get_session() as session:
+            try:
+                user = session.query(User).filter_by(tg_id=tg_id).first()
+                if user:
+                    return user.daily_candy
+
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error getting candy: {e}')
+                # return 0
+            return 0
+
+    def decrease_candy_by_tg_id(self, tg_id, amount):
+        with self._get_session() as session:
+            try:
+                user = session.query(User).filter_by(tg_id=tg_id).first()
+                if user:
+                    daily_left = user.daily_candy_left
+                    paid_left = user.paid_candy_left
+                    if amount > daily_left:
+                        user.daily_candy_left = 0
+                        user.paid_candy_left = paid_left - (amount - daily_left)
+                    else:
+                        user.daily_candy_left -= amount
+                    session.commit()
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error getting candy: {e}')
+
 
 
 

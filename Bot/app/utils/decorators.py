@@ -2,7 +2,7 @@ from functools import wraps
 from aiogram.types import Message
 
 from Bot.app.utils.state import id_in_processing
-from Bot.additioanl.message_templates import message_templates
+from Bot.additional.message_templates import message_templates
 
 from db.main import db_client
 

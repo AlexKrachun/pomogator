@@ -1,4 +1,5 @@
 import logging
+from operator import imod
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 from db.main import db_client
@@ -19,4 +20,4 @@ class UserRegistrationMiddleware(BaseMiddleware):
             # return  # Прерываем обработку события
 
         # Если пользователь зарегистрирован, передаем управление дальше
-        return await handler(event, data)
+        await handler(event, data)

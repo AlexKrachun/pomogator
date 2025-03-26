@@ -1,10 +1,11 @@
+import logging
+
 from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardMarkup, InlineKeyboardButton)
-
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from db.main import db_client
-import logging
+from prices import prices_for_users_in_fantiks
 
 
 async def inline_contexts(user_id):
@@ -27,35 +28,25 @@ ai_models = [
              'gpt-4.5-preview',
              'claude-3-7-sonnet-latest',
              'dall-e-3',
-             'face-swap',
+            #  'face-swap',
             ]
 
-
+candy = '🍬'
 button_names = {
-    'gpt-4o-mini': 'gpt-4o-mini',
-    'claude-3-5-haiku-latest': 'claude 3.5-haiku',
-    'gpt-4o': 'gpt-4o',
-    'o3-mini': 'o3-mini',
-    'gpt-4o-search-preview': 'gpt-4o-search-preview',
-    'o1': 'o1',
-    'gpt-4.5-preview': 'gpt-4.5-preview',
-    'claude-3-7-sonnet-latest': 'claude 3.7-sonnet',
-    'dall-e-3': 'dall-e-3',
-    'face-swap': 'face-swap',
+    'gpt-4o-mini': f'gpt-4o-mini ({prices_for_users_in_fantiks['gpt-4o-mini']}{candy})',
+    'claude-3-5-haiku-latest': f'claude 3.5-haiku ({prices_for_users_in_fantiks['claude-3-5-haiku-latest']}{candy})',
+    'gpt-4o': f'gpt-4o ({prices_for_users_in_fantiks['gpt-4o']}{candy})',
+    'o3-mini': f'o3-mini ({prices_for_users_in_fantiks['o3-mini']}{candy})',
+    'gpt-4o-search-preview': f'gpt-4o-search-preview ({prices_for_users_in_fantiks['gpt-4o-search-preview']}{candy})',
+    'o1': f'o1 ({prices_for_users_in_fantiks['o1']}{candy})',
+    'gpt-4.5-preview': f'gpt-4.5-preview ({prices_for_users_in_fantiks['gpt-4.5-preview']}{candy})',
+    'claude-3-7-sonnet-latest': f'claude 3.7-sonnet ({prices_for_users_in_fantiks['claude-3-7-sonnet-latest']}{candy})',
+    'dall-e-3': f'dall-e-3 ({prices_for_users_in_fantiks['dall-e-3']}{candy})',
+    # 'face-swap': 'face-swap',
     'standard': 'обычная',
     'hd': 'высокая',
-
-    # 'gpt-4o-mini': 'gpt-4o-mini',
-    # 'gpt-4o': 'gpt-4o',
-    # 'o1-mini': 'o1-mini',
-    # 'o1-preview': 'o1-preview',
-    # 'claude-3-5-sonnet-latest': 'claude 3.5-sonnet',
-    # 'claude-3-5-haiku-latest': 'claude 3.5-haiku',
-    # 'dall-e-3': 'dall-e-3',
-    # 'face-swap': 'face-swap',
-    # 'standard': 'обычная',
-    # 'hd': 'высокая'
 }
+
 
 
 async def inline_modes(user_id, model):

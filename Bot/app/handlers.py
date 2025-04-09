@@ -22,6 +22,8 @@ from Bot.app.utils.state import id_in_processing
 from Bot.app.utils.utils import print_text_message
 
 from prices import prices_for_users_in_fantiks, price_of_1_token_in_usd, fantik_to_usd, usd_to_fantik
+from Bot.app.consts import candy
+
 
 import base64
 import aiohttp
@@ -81,8 +83,13 @@ async def mode_cmd(message: types.Message):
             # curr_users_models
             db_client.get_user_model_by_tg_id(tg_id=message.from_user.id, ),
         )
+        
+        tg_id = message.from_user.id
+        daily_candy_left, paid_candy_left = db_client.get_candy_left_by_tg_id(tg_id)
+        daily_candy = db_client.get_daily_candy_by_tg_id(tg_id)
+
         await message.answer(
-            'Выберите подходящую вам модель.',
+            f"Выберите подходящую вам модель.\nУ вас есть: {daily_candy_left}/{daily_candy} {candy} (ежедневных)",
             reply_markup=reply_markup
         )
         logger.debug("Ответ на /mode успешно отправлен.")
@@ -134,7 +141,7 @@ async def profile_command(message: Message):
         profile_info = (
             f"👤 Профиль пользователя:\n"
             f"Логин: @{username}\n"
-            f"Счет: {daily_candy_left}/{daily_candy} 🍬 + {paid_candy_left} 🍭\n"
+            f"Счет: {daily_candy_left}/{daily_candy} {candy} (ежедневных) + {paid_candy_left} {candy} (штучно купленных)\n"
             # f"ID: {user_id}\n"
             # f"Имя: {first_name}\n"
             # f"Фамилия: {last_name}\n"
@@ -236,8 +243,14 @@ async def handle_model_switch(callback: types.CallbackQuery):
         if db_client.get_user_model_by_tg_id(us_id) != model_name:
             db_client.switch_user_model_by_tg_id(tg_id=us_id, new_model_name=model_name)
 
+
+            tg_id = us_id
+            daily_candy_left, paid_candy_left = db_client.get_candy_left_by_tg_id(tg_id)
+            daily_candy = db_client.get_daily_candy_by_tg_id(tg_id)
+
+
             await callback.message.edit_text(
-                'Выберите подходящую вам модель.',
+                f"Выберите подходящую вам модель.\nУ вас есть: {daily_candy_left}/{daily_candy} {candy} (ежедневных)",
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
             if model_name in ['dall-e-3']:

@@ -6,7 +6,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from db.main import db_client
 from prices import prices_for_users_in_fantiks
-
+from Bot.app.consts import candy
 
 async def inline_contexts(user_id):
     keyboard = InlineKeyboardBuilder()
@@ -31,7 +31,8 @@ ai_models = [
             #  'face-swap',
             ]
 
-candy = '🍬'
+
+
 button_names = {
     'gpt-4o-mini': f'gpt-4o-mini ({prices_for_users_in_fantiks['gpt-4o-mini']}{candy})',
     'claude-3-5-haiku-latest': f'claude 3.5-haiku ({prices_for_users_in_fantiks['claude-3-5-haiku-latest']}{candy})',

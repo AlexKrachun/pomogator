@@ -300,19 +300,19 @@ class WorkWithDB:
             return session.query(User).filter_by(tg_id=tg_id).first()
 
 
-    def update_sub_status_by_tg_id(self, tg_id, new_status):
-        with self._get_session() as session:
-            try:
-                user = session.query(User).filter_by(tg_id=tg_id).first()
-                if user:
-                    user.sub_status = new_status
-                    session.commit()
-                    logging.info(f'Updated sub_status to {new_status} for tg_id {tg_id}.')
-                else:
-                    logging.warning(f'User with tg_id {tg_id} not found.')
-            except Exception as e:
-                session.rollback()
-                logging.error(f'Error updating sub_status: {e}')
+    # def update_sub_status_by_tg_id(self, tg_id, new_status):
+    #     with self._get_session() as session:
+    #         try:
+    #             user = session.query(User).filter_by(tg_id=tg_id).first()
+    #             if user:
+    #                 user.sub_status = new_status
+    #                 session.commit()
+    #                 logging.info(f'Updated sub_status to {new_status} for tg_id {tg_id}.')
+    #             else:
+    #                 logging.warning(f'User with tg_id {tg_id} not found.')
+    #         except Exception as e:
+    #             session.rollback()
+    #             logging.error(f'Error updating sub_status: {e}')
 
 
     def update_site_id_by_tg_id(self, tg_id, new_site_id):
@@ -376,8 +376,8 @@ class WorkWithDB:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
                 if user:
-                    logging.info(f'User with tg_id {tg_id} has {user.daily_candy_left} daily candies and {user.paid_candy_left} paid candies.')
-                    return (user.daily_candy_left, user.paid_candy_left)
+                    logging.info(f'User with tg_id {tg_id} has {user.candy_left} candies.')
+                    return user.candy_left
 
             except Exception as e:
                 session.rollback()

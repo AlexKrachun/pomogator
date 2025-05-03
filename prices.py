@@ -31,3 +31,15 @@ price_of_1_token_in_usd = {
     'dall-e-3': {'1024x1024': 0.08, '1024x1792': 0.12, '1792x1024': 0.12},
     # 'face-swap': face_swap_handler_first_photo,
 }
+
+
+sub_plan_costs = {  # rub
+    'month: 100/week': 160,
+    'month: 300/week': 480,
+    'month: 1000/week': 1600,
+}
+
+
+
+at_login_user_fantiks_amount = 100
+

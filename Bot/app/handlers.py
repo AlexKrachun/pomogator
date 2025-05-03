@@ -63,6 +63,7 @@ async def language_cmd(message: types.Message):
 @router.message(Command('pay'))
 async def pay_cmd(message: types.Message):
     try:
+        # ans = ''
         await message.answer(
             'Пока тут все for free, мы возьмем от вас деньги в next time.',
             reply_markup=inline_pay
@@ -600,7 +601,7 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
     if (price == float('inf')):
         logger.critical('\n' * 3 + '!' * 100 + 'Ты блин гребаный гений не везде добавил новую модель. А ну добавь быстее, не позорь блин. ЛОХ' + '\n' * 3)
 
-    if price > sum(db_client.get_candy_left_by_tg_id(tg_id)):
+    if price > db_client.get_candy_left_by_tg_id(tg_id):
         await message.answer("Вам не хватает фантиков 😢")
         return None
 

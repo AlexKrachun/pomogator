@@ -1,5 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, func
 from sqlalchemy.orm import declarative_base, relationship, Mapped, mapped_column
+from prices import at_login_user_fantiks_amount
 
 
 Base = declarative_base()
@@ -21,20 +22,20 @@ class User(Base):
 
     current_chat_id = Column(Integer, nullable=True)
 
-    # Конец подписки
-    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
 
     # Последний запрос
     last_request: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False)
 
-    # Сколько фантиков пользователь получает каждый день
-    daily_candy: Mapped[int] = mapped_column(default=300, nullable=False)
+    # Сколько ежедневных осталось
+    candy_left: Mapped[int] = mapped_column(default=at_login_user_fantiks_amount, nullable=False)
+    
 
-    # Сколько ежедневных фантиков осталось
-    daily_candy_left: Mapped[int] = mapped_column(default=300, nullable=False)
+    # Кол-во фантиков приходят в неделю по подписке
+    weekly_candy_from_sub: Mapped[int] = mapped_column(default=0, nullable=False)
+    
+    # Конец подписки
+    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
 
-    # Кол-во платных фантиков
-    paid_candy_left: Mapped[int] = mapped_column(default=0, nullable=False)
 
     chats = relationship(
         'Chat',

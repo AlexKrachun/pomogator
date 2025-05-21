@@ -1,5 +1,5 @@
 from Bot.app.consts import candy
-from prices import sub_plan_costs, at_login_user_fantiks_amount
+from prices import sub_plan_costs, at_login_user_fantiks_amount, prices_for_users_in_fantiks
 
 message_templates = {
     'en': {
@@ -47,22 +47,22 @@ f'''*Помагатор - это агрегатор нейросетей*
 
 *Доступные нейросети:*
 Для простых задач. Дешевые, глупые:
-    🤖 `gpt-4o-mini`
-    🤖 `claude 3.5-haiku`
-они обе довольно не плохо работают, но если не помогла одна, как правило может помочь другая
+     {prices_for_users_in_fantiks["gpt-4o-mini"]} {candy}: 🤖 `gpt-4o-mini`
+     {prices_for_users_in_fantiks["claude-3-5-haiku-latest"]} {candy}: 🤖 `claude 3.5-haiku`
+они обе довольно не плохо работают, но если не помогла одна, как правило, помогает другая
 
 Рабочие лошадки. Не дорогие и умные:
-    🤖 `gpt-4o`
-    🤖 `o3-mini`
-    🤖 `gpt-4o-search-preview`
+     {prices_for_users_in_fantiks["gpt-4o"]} {candy}: 🤖 `gpt-4o`
+     {prices_for_users_in_fantiks["o3-mini"]} {candy}: 🤖 `o3-mini`
+     {prices_for_users_in_fantiks["gpt-4o-search-preview"]} {candy}: 🤖 `gpt-4o-search-preview`
 
 Для сложных задач. Дорогие и очень умные
-    🤖 `claude 3.7-sonnet`
-    🤖 `o1`
-    🤖 `gpt-4.5-preview`
+     {prices_for_users_in_fantiks["claude-3-7-sonnet-latest"]} {candy}: 🤖 `claude 3.7-sonnet`
+     {prices_for_users_in_fantiks["o1"]} {candy}: 🤖 `o1`
+     {prices_for_users_in_fantiks["gpt-4.5-preview"]} {candy}: 🤖 `gpt-4.5-preview`
 
 Для рисования картинок:
-    🌃 `dall-e-3` - рисует картинку по текстовому описанию
+    {prices_for_users_in_fantiks["dall-e-3"]} {candy}: 🌃 `dall-e-3` - рисует картинку по текстовому описанию
 
 ''',
         'language_confirmation': "Язык был изменен на русский",

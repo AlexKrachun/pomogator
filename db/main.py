@@ -367,9 +367,9 @@ class WorkWithDB:
                 if user:
                     # если еженедельные фантики еще не приходили или приходили больше недели назад 
                     if (not user.last_fantiks_update_date) or ((datetime.now().date() - user.last_fantiks_update_date.date()).days >= 7):
-                        user.candy_left = user.weekly_candy_from_sub  # либо 0, либо как в подписке
                         user.last_request = datetime.now()
                         if user.has_sub:
+                            user.candy_left = user.weekly_candy_from_sub  # либо 0, либо как в подписке
                             user.deposits_amount -= 1
                         session.commit()
                     print(f'Updated candy_left to {user.weekly_candy_from_sub} for tg_id {tg_id}.')

@@ -297,7 +297,7 @@ async def fantiki_cmd(message: Message):
         candy_left = user.candy_left
         weekly_candy_from_sub = user.weekly_candy_from_sub
         
-        answer = f"У вас осталось {candy_left} ежедневных фантиков"
+        answer = f"У вас осталось {candy_left} еженедельных фантиков"
         
         if user.has_sub:  # есть подписка
             answer += f"Ваша подписка дает вам: {weekly_candy_from_sub} {candy} в неделю\n"

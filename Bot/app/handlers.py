@@ -25,8 +25,7 @@ from prices import prices_for_users_in_fantiks, price_of_1_token_in_usd, fantik_
 from Bot.app.consts import candy
 
 
-import base64
-import aiohttp
+
 from dotenv import load_dotenv
 import os
 import datetime
@@ -86,11 +85,11 @@ async def mode_cmd(message: types.Message):
         )
         
         tg_id = message.from_user.id
-        daily_candy_left, paid_candy_left = db_client.get_candy_left_by_tg_id(tg_id)
-        daily_candy = db_client.get_daily_candy_by_tg_id(tg_id)
+        candy_left = db_client.get_candy_left_by_tg_id(tg_id)
+        weekly_candy_from_sub = db_client.get_weekly_candy_by_tg_id(tg_id)
 
         await message.answer(
-            f"Выберите подходящую вам модель.\nУ вас есть: {daily_candy_left}/{daily_candy} {candy} (ежедневных)",
+            f"Выберите подходящую вам модель.\nУ вас есть: {candy_left}/{weekly_candy_from_sub} {candy} (еженедельных)",
             reply_markup=reply_markup
         )
         logger.debug("Ответ на /mode успешно отправлен.")
@@ -134,19 +133,27 @@ async def profile_command(message: Message):
         username = message.from_user.username or "не указан"
         # first_name = message.from_user.first_name or "не указан"
         # last_name = message.from_user.last_name or "не указан"
-
         tg_id = message.from_user.id
-        daily_candy_left, paid_candy_left = db_client.get_candy_left_by_tg_id(tg_id)
-        daily_candy = db_client.get_daily_candy_by_tg_id(tg_id)
+        user = db_client.get_user_by_tg_id(tg_id)
+
+        candy_left = user.candy_left
+        weekly_candy_from_sub = user.weekly_candy_from_sub
 
         profile_info = (
             f"👤 Профиль пользователя:\n"
             f"Логин: @{username}\n"
-            f"Счет: {daily_candy_left}/{daily_candy} {candy} (ежедневных) + {paid_candy_left} {candy} (штучно купленных)\n"
-            # f"ID: {user_id}\n"
-            # f"Имя: {first_name}\n"
-            # f"Фамилия: {last_name}\n"
+            f"Счет: {candy_left} {candy}\n"
         )
+        if user.has_sub:  # есть подписка
+            profile_info += f"Ваша подписка дает вам: {weekly_candy_from_sub} {candy} в неделю\n"
+            
+            if user.deposits_amount <= 0: # следующего пополнения уже не будет
+                profile_info += "Подписка заканчивается, пополнений больше не будет, оформите подписку еще раз.\n"
+            else: # пополденение будет
+                profile_info += f"Дата следующего пополнения {user.last_fantiks_update_date + datetime.timedelta(weeks=1)}.\n"
+                profile_info += f"У вас осталось {user.deposits_amount} пополнений."
+            
+            
         # await message.answer(profile_info)
         await print_text_message(profile_info, message)
         logger.debug("Ответ на /profile успешно отправлен.")
@@ -168,9 +175,22 @@ async def info_cmd(message: Message):
 async def fantiki_cmd(message: Message):
     try:
         tg_id = message.from_user.id
-        daily_candy_left, paid_candy_left = db_client.get_candy_left_by_tg_id(tg_id)
-        daily_candy = db_client.get_daily_candy_by_tg_id(tg_id)
-        await print_text_message(f"У вас осталось {daily_candy_left}/{daily_candy} ежедневных фантиков и {paid_candy_left} платных.", message)
+        user = db_client.get_user_by_tg_id(tg_id)
+        candy_left = user.candy_left
+        weekly_candy_from_sub = user.weekly_candy_from_sub
+        
+        answer = f"У вас осталось {candy_left} ежедневных фантиков"
+        
+        if user.has_sub:  # есть подписка
+            answer += f"Ваша подписка дает вам: {weekly_candy_from_sub} {candy} в неделю\n"
+            
+            if user.deposits_amount <= 0: # следующего пополнения уже не будет
+                answer += "Подписка заканчивается, пополнений больше не будет, оформите подписку еще раз.\n"
+            else: # пополденение будет
+                answer += f"Дата следующего пополнения {user.last_fantiks_update_date + datetime.timedelta(weeks=1)}.\n"
+                answer += f"У вас осталось {user.deposits_amount} пополнений."
+
+        await print_text_message(answer, message)
         logger.debug("Ответ на /fantiki успешно отправлен.")
     except Exception as e:
         logger.debug(f'Ошибка в обработчике /fantiki : {e}')
@@ -246,12 +266,12 @@ async def handle_model_switch(callback: types.CallbackQuery):
 
 
             tg_id = us_id
-            daily_candy_left, paid_candy_left = db_client.get_candy_left_by_tg_id(tg_id)
-            daily_candy = db_client.get_daily_candy_by_tg_id(tg_id)
+            candy_left = db_client.get_candy_left_by_tg_id(tg_id)
+            weekly_candy_from_sub = db_client.get_weekly_candy_by_tg_id(tg_id)
 
 
             await callback.message.edit_text(
-                f"Выберите подходящую вам модель.\nУ вас есть: {daily_candy_left}/{daily_candy} {candy} (ежедневных)",
+                f"Выберите подходящую вам модель.\nУ вас есть: {candy_left}/{weekly_candy_from_sub} {candy} (еженедельных)",
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
             if model_name in ['dall-e-3']:
@@ -587,12 +607,13 @@ model_handler = {  # для нейронки храним хендлер
 @router.message()
 @processing_guard
 async def echo_msg(message: Message, bot: Bot, state: FSMContext):
+
     time_of_begin_processing_request = time.time()
 
     tg_id = message.from_user.id
 
-    db_client.update_sub_by_tg_id(tg_id)
-    db_client.update_candy_by_tg_id(tg_id)
+    db_client.update_sub_by_tg_id(tg_id)  # если подписка была, но кончилась - зануляем еженедельные фантики
+    db_client.update_candy_by_tg_id(tg_id)  # даем челу еженедельных фантиков согласно подписке или ее отсутвию
 
     last_used_model = str(db_client.get_user_model_by_tg_id(tg_id))
     logging.debug(f'Дебаг - {last_used_model}')
@@ -612,9 +633,9 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
         statistics = await handler_now(message, bot, state)
         is_success = statistics['succeed']
         user = db_client.get_user_by_tg_id(tg_id)
-        statistics['daily_candy'] = user.daily_candy
-        statistics['daily_candy_left'] = user.daily_candy_left
-        statistics['paid_candy_left'] = user.paid_candy_left
+        statistics['weekly_candy_from_sub'] = user.weekly_candy_from_sub
+        statistics['candy_left'] = user.candy_left
+        statistics['user_tg_tag'] = '@' + str(message.from_user.username)
         if tg_id not in [1102889940] and is_success:
             db_client.decrease_candy_by_tg_id(tg_id, price)
 
@@ -623,7 +644,9 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
 
         save_statistics(statistics)
     else:
-        logging.debug(f'Model {last_used_model} is not available')
+        logging.error(f'Model {last_used_model} is not available')
+        await message.answer("С этой моделью неполадки")
+
 
 
 '''
@@ -631,5 +654,17 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
 2. update_sub
 3. update_candy
 4. check_price
-4.
+
+
+
+доделать
+
+- перечитать весь код на соответветствие тому что подписка ежемесячная и есть только понедельные фантики. без штучных или дневных
+- когда пользователь оформляет подписку (держать в голове, что у него может быть только одна подписка единовременно)
+    - чекнуть, что подписки до сих пор нет. новую подписку нельзя начать, пока есть старая
+    - weekly_candy_from_sub = сколько эта подписка дает
+    - оставить last_fantiks_update_date = None (чтобы при очередном запросе у чела пришли фантики)
+    - user.has_sub = True
+    - deposits_amount = 4
 '''
+

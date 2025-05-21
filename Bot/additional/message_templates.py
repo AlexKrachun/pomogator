@@ -1,5 +1,5 @@
 from Bot.app.consts import candy
-
+from prices import sub_plan_costs, at_login_user_fantiks_amount
 
 message_templates = {
     'en': {
@@ -24,9 +24,6 @@ message_templates = {
         # 'about': 'Этот бот работает на OpenAI GPT-4.',
         'info':
 f'''*Помагатор - это агрегатор нейросетей*
-помогатор выручит своих фиксиков в любой ситуации, тыыыщщщщ
-
-
 *Команды бота:*
 /mode - выбор нейросети
 /new\_context - перейти в новый пустой чат с языковой моделью
@@ -37,7 +34,14 @@ f'''*Помагатор - это агрегатор нейросетей*
 
 
 Валюта за которую мы оплачиваем запросы в нейросети: {candy}
-На каждый день вам выдается по 300{candy}
+На старте вам дается {at_login_user_fantiks_amount} {candy}
+Вы можете оформить одну из подписок:
+- 100 {candy} в неделю за {sub_plan_costs['month: 100/week']}₽ на 4 недели.
+- 300 {candy} в неделю за {sub_plan_costs['month: 300/week']}₽ на 4 недели.
+- 1000 {candy} в неделю за {sub_plan_costs['month: 1000/week']}₽ на 4 недели.
+остаток {candy} за прошлую неделю не схраняется.
+
+
 у каждой нейросети своя цена за запрос
 
 

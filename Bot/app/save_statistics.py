@@ -3,12 +3,31 @@ import csv
 from datetime import datetime
 
 
+# fieldnames = [
+#     'user_bd_id', 'user_tg_id', 'succeed', 'date', 'model',
+#     'cost_for_user_in_fantiks', 'cost_for_us_in_usd',
+#     'sent_to_input_size_tok', 'answer_size_tok', 'daily_candy',
+#     'daily_candy_left', 'paid_candy_left', 'answer_time',
+# ]
+
+'''
+обработал в хендлерах
++user_tg_tag
++weekly_candy_from_sub
++candy_left
+
+-daily_candy
+-daily_candy_left
+-paid_candy_left
+'''
+
 fieldnames = [
-    'user_bd_id', 'user_tg_id', 'succeed', 'date', 'model',
+    'user_bd_id', 'user_tg_id', 'user_tg_tag', 'succeed', 'date', 'model',
     'cost_for_user_in_fantiks', 'cost_for_us_in_usd',
-    'sent_to_input_size_tok', 'answer_size_tok', 'daily_candy',
-    'daily_candy_left', 'paid_candy_left', 'answer_time',
+    'sent_to_input_size_tok', 'answer_size_tok', 'weekly_candy_from_sub',
+    'candy_left', 'answer_time',
 ]
+
 
 
 def save_statistics(statistics: dict):

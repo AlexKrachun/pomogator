@@ -25,16 +25,26 @@ class User(Base):
 
     # Последний запрос
     last_request: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False)
+    
 
-    # Сколько ежедневных осталось
+    # Сколько еженедельных фантиков осталось
     candy_left: Mapped[int] = mapped_column(default=at_login_user_fantiks_amount, nullable=False)
     
 
     # Кол-во фантиков приходят в неделю по подписке
     weekly_candy_from_sub: Mapped[int] = mapped_column(default=0, nullable=False)
     
-    # Конец подписки
-    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
+    # есть ли подписка
+    has_sub: Mapped[bool] = mapped_column(default=False, nullable=False)
+    
+    # сколько еженедельных пополнений счета по подписке осталось 
+    deposits_amount: Mapped[int] = mapped_column(default=0, nullable=False)
+    
+    # дата последнего добавления фантиков по подписке
+    last_fantiks_update_date: Mapped[DateTime] = mapped_column(DateTime, default=None, nullable=True)
+    
+    # Конец подписки. None если подписки нет или она кончилась
+    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True) 
 
 
     chats = relationship(
@@ -47,6 +57,12 @@ class User(Base):
     def __repr__(self):
         return f'<User: id = {self.id}>'
 
+'''
+depricated:
+
+paid_candy_left
+
+'''
 
 
 class Chat(Base):

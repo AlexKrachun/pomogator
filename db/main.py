@@ -347,25 +347,32 @@ class WorkWithDB:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
                 if user:
+                    # если подписка была, но кончилась
                     if user.sub_end and user.sub_end.date() < datetime.now().date():
-                        default = User.__table__.c.daily_candy.default.arg
-                        user.daily_candy = default
+                        # default = User.__table__.c.weekly_candy_from_sub.default.arg
+                        user.weekly_candy_from_sub = 0
+                        user.sub_end = None
+                        user.has_sub = False
                         session.commit()
-                        logging.info(f'Updated daily_candy to {default} for tg_id {tg_id}.')
+                        logging.info(f'Updated weekly_candy_from_sub to {0} for tg_id {tg_id}.')
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error updating sub: {e}')
+
 
     def update_candy_by_tg_id(self, tg_id):
         with self._get_session() as session:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
                 if user:
-                    if user.last_request.date() != datetime.now().date():
-                        user.daily_candy_left = user.daily_candy
+                    # если еженедельные фантики еще не приходили или приходили больше недели назад 
+                    if (not user.last_fantiks_update_date) or ((datetime.now().date() - user.last_fantiks_update_date.date()).days >= 7):
+                        user.candy_left = user.weekly_candy_from_sub  # либо 0, либо как в подписке
                         user.last_request = datetime.now()
+                        if user.has_sub:
+                            user.deposits_amount -= 1
                         session.commit()
-                    print(f'Updated daily_candy_left to {user.daily_candy} for tg_id {tg_id}.')
+                    print(f'Updated candy_left to {user.weekly_candy_from_sub} for tg_id {tg_id}.')
 
             except Exception as e:
                 session.rollback()
@@ -382,15 +389,14 @@ class WorkWithDB:
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error getting candy: {e}')
-                # return (0, 0)
-            return (0, 0)
+            return 0
 
-    def get_daily_candy_by_tg_id(self, tg_id):
+    def get_weekly_candy_by_tg_id(self, tg_id):
         with self._get_session() as session:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
                 if user:
-                    return user.daily_candy
+                    return user.weekly_candy_from_sub
 
             except Exception as e:
                 session.rollback()
@@ -403,19 +409,13 @@ class WorkWithDB:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
                 if user:
-                    daily_left = user.daily_candy_left
-                    paid_left = user.paid_candy_left
-                    if amount > daily_left:
-                        user.daily_candy_left = 0
-                        user.paid_candy_left = paid_left - (amount - daily_left)
-                    else:
-                        user.daily_candy_left -= amount
+                    candy_left = user.candy_left
+                    user.candy_left = max(0, candy_left - amount)
                     session.commit()
             except Exception as e:
                 session.rollback()
                 logging.error(f'Error getting candy: {e}')
-
-
+            
 
 
 

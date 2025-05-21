@@ -1,9 +1,13 @@
 import logging
 from aiogram import types, Bot
-from aiogram.types import Message
+from aiogram.types import Message, LabeledPrice
 from aiogram import Router, F
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+
+from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
+                           InlineKeyboardMarkup, InlineKeyboardButton)
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from aiogram.filters import Command
 from Bot.additional.message_templates import message_templates, get_changed_context_line
@@ -59,18 +63,132 @@ async def language_cmd(message: types.Message):
         await message.answer("Произошла ошибка при обработке команды /contexts.")
 
 
-@router.message(Command('pay'))
-async def pay_cmd(message: types.Message):
-    try:
-        # ans = ''
-        await message.answer(
-            'Пока тут все for free, мы возьмем от вас деньги в next time.',
-            reply_markup=inline_pay
+
+
+
+
+
+
+
+SUBSCRIPTIONS = {
+    "basic": {"title": "Базовый уровень", "description": "1 month access", "price": 80_00},
+    "premium": {"title": "Продвинутый уровень", "description": "1 months access", "price": 240_00},
+    "vip": {"title": "Премиум уровень", "description": "1 months access", "price": 800_00},
+}
+
+
+@router.message(Command("pay"))
+async def cmd_pay(message: types.Message):
+    builder = InlineKeyboardBuilder()
+    for key, plan in SUBSCRIPTIONS.items():
+        builder.button(
+            text=f"{plan['title']} — ️{plan['price']//100}⭐️",
+            callback_data=f"subscribe:{key}"
         )
-        logger.debug("Ответ на /pay успешно отправлен.")
-    except Exception as e:
-        logger.debug(f"Ошибка в обработчике /pay : {e}")
-        await message.answer("Произошла ошибка при обработке команды /pay.")
+    builder.adjust(1)  # 1 кнопка в ряд
+    await message.answer(
+        message_templates['ru']['subscribe_plan'],
+        reply_markup=builder.as_markup()
+    )
+
+PAYMENT_PROVIDER_TOKEN = ""
+@router.callback_query(F.data.startswith("subscribe:"))
+async def process_subscription(callback: types.CallbackQuery):
+    """User chose a subscription: send invoice."""
+    await callback.answer()  # Acknowledge callback
+    plan_key = callback.data.split(':')[1]
+    plan = SUBSCRIPTIONS.get(plan_key)
+    if not plan:
+        return await callback.message.answer("Неверный план.")
+
+    prices = [LabeledPrice(label=plan['title'], amount=plan['price'])]
+
+    await callback.bot.send_invoice(
+        chat_id=callback.from_user.id,
+        title=plan['title'],
+        description=plan['description'],
+        payload=f"subscription_{plan_key}",
+        provider_token=PAYMENT_PROVIDER_TOKEN,
+        currency="XTR",
+        prices=prices,
+        start_parameter=f"subscription-{plan_key}",
+        need_email=True  # Request email if needed
+    )
+
+@router.pre_checkout_query()
+async def process_pre_checkout(query: types.PreCheckoutQuery, bot: Bot):
+    """Answer pre-checkout queries."""
+    await bot.answer_pre_checkout_query(query.id, ok=True)
+
+@router.message(F.successful_payment)
+async def process_successful_payment(message: types.Message):
+    """Handle successful payment."""
+    payment = message.successful_payment
+    payload = payment.invoice_payload
+    plan_key = payload.replace("subscription_", "")
+    await message.reply(f"Спасибо за оплату! Ваша подписка: {plan_key} активирована.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @router.message(Command('mode'))

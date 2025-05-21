@@ -32,8 +32,15 @@ price_of_1_token_in_usd = {
     # 'face-swap': face_swap_handler_first_photo,
 }
 
+
+
 sub_plan_costs = {  # rub
-    '100/week': 80,
-    '300/week': 240,
-    '1000/week': 800,
+    'month: 100/week': 160,
+    'month: 300/week': 480,
+    'month: 1000/week': 1600,
 }
+
+
+
+at_login_user_fantiks_amount = 100
+

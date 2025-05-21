@@ -1,5 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, func
 from sqlalchemy.orm import declarative_base, relationship, Mapped, mapped_column
+from prices import at_login_user_fantiks_amount
 
 
 Base = declarative_base()
@@ -21,20 +22,30 @@ class User(Base):
 
     current_chat_id = Column(Integer, nullable=True)
 
-    # Конец подписки
-    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True)
 
     # Последний запрос
     last_request: Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False)
+    
 
-    # Сколько фантиков пользователь получает каждый день
-    daily_candy: Mapped[int] = mapped_column(default=300, nullable=False)
+    # Сколько еженедельных фантиков осталось
+    candy_left: Mapped[int] = mapped_column(default=at_login_user_fantiks_amount, nullable=False)
+    
 
-    # Сколько ежедневных фантиков осталось
-    daily_candy_left: Mapped[int] = mapped_column(default=300, nullable=False)
+    # Кол-во фантиков приходят в неделю по подписке
+    weekly_candy_from_sub: Mapped[int] = mapped_column(default=0, nullable=False)
+    
+    # есть ли подписка
+    has_sub: Mapped[bool] = mapped_column(default=False, nullable=False)
+    
+    # сколько еженедельных пополнений счета по подписке осталось 
+    deposits_amount: Mapped[int] = mapped_column(default=0, nullable=False)
+    
+    # дата последнего добавления фантиков по подписке
+    last_fantiks_update_date: Mapped[DateTime] = mapped_column(DateTime, default=None, nullable=True)
+    
+    # Конец подписки. None если подписки нет или она кончилась
+    sub_end: Mapped[DateTime] = mapped_column(DateTime, nullable=True) 
 
-    # Кол-во платных фантиков
-    paid_candy_left: Mapped[int] = mapped_column(default=0, nullable=False)
 
     chats = relationship(
         'Chat',
@@ -46,6 +57,12 @@ class User(Base):
     def __repr__(self):
         return f'<User: id = {self.id}>'
 
+'''
+depricated:
+
+paid_candy_left
+
+'''
 
 
 class Chat(Base):

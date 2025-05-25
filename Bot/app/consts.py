@@ -3,5 +3,5 @@ max_tokens = 5000  # максимальная длина генерации в �
 CONTEXT_SIZE = 5
 
 
-# candy = '🍬'
-candy = '👶🏿'
+candy = '🍬'
+# candy = '👶🏿'

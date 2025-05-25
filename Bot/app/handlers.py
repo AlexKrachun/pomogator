@@ -79,16 +79,16 @@ SUBSCRIPTIONS = {
 
 @router.message(Command("pay"))
 async def cmd_pay(message: types.Message):
-    builder = InlineKeyboardBuilder()
-    for key, plan in SUBSCRIPTIONS.items():
-        builder.button(
-            text=f"{plan['title']} — ️{plan['price']//100}⭐️",
-            callback_data=f"subscribe:{key}"
-        )
-    builder.adjust(1)  # 1 кнопка в ряд
+    # builder = InlineKeyboardBuilder()
+    # for key, plan in SUBSCRIPTIONS.items():
+    #     builder.button(
+    #         text=f"{plan['title']} — ️{plan['price']//100}⭐️",
+    #         callback_data=f"subscribe:{key}"
+    #     )
+    # builder.adjust(1)  # 1 кнопка в ряд
     await message.answer(
         message_templates['ru']['subscribe_plan'],
-        reply_markup=builder.as_markup()
+        # reply_markup=builder.as_markup()
     )
 
 PAYMENT_PROVIDER_TOKEN = ""

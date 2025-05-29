@@ -1,4 +1,4 @@
-from Bot.app.con sts import candy
+from Bot.app.consts import candy
 from prices import sub_plan_costs, at_login_user_fantiks_amount, prices_for_users_in_fantiks
 
 message_templates = {

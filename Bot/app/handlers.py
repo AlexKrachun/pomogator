@@ -72,8 +72,8 @@ async def language_cmd(message: types.Message):
 
 SUBSCRIPTIONS = {
     "basic": {"title": "Базовый уровень", "description": "1 month access", "price": 80_00},
-    "premium": {"title": "Продвинутый уровень", "description": "1 months access", "price": 240_00},
-    "vip": {"title": "Премиум уровень", "description": "1 months access", "price": 800_00},
+    "optim": {"title": "Продвинутый уровень", "description": "1 months access", "price": 240_00},
+    "pro": {"title": "Премиум уровень", "description": "1 months access", "price": 800_00},
 }
 
 
@@ -109,7 +109,7 @@ async def process_subscription(callback: types.CallbackQuery):
         description=plan['description'],
         payload=f"subscription_{plan_key}",
         provider_token=PAYMENT_PROVIDER_TOKEN,
-        currency="XTR",
+        currency="RUB",
         prices=prices,
         start_parameter=f"subscription-{plan_key}",
         need_email=True  # Request email if needed

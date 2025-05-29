@@ -1,5 +1,11 @@
 from Bot.app.consts import candy
-from prices import sub_plan_costs, at_login_user_fantiks_amount, prices_for_users_in_fantiks
+from prices import sub_plan_costs, at_login_user_fantiks_amount, prices_for_users_in_fantiks, sub_plan_costs_stars
+
+sub_plan_info = f'''\
+- 100 {candy} в неделю за {sub_plan_costs_stars['month: 100/week']}⭐️ на 4 недели.
+- 300 {candy} в неделю за {sub_plan_costs_stars['month: 300/week']}⭐️ на 4 недели.
+- 1000 {candy} в неделю за {sub_plan_costs_stars['month: 1000/week']}⭐️ на 4 недели.
+'''
 
 message_templates = {
     'en': {
@@ -36,11 +42,9 @@ f'''*Помагатор - это агрегатор нейросетей*
 Валюта за которую мы оплачиваем запросы в нейросети: {candy}
 На старте вам дается {at_login_user_fantiks_amount} {candy}
 Вы можете оформить одну из подписок:
-- 100 {candy} в неделю за {sub_plan_costs['month: 100/week']}₽ на 4 недели.
-- 300 {candy} в неделю за {sub_plan_costs['month: 300/week']}₽ на 4 недели.
-- 1000 {candy} в неделю за {sub_plan_costs['month: 1000/week']}₽ на 4 недели.
-остаток {candy} за прошлую неделю не схраняется.
+{sub_plan_info}
 
+остаток {candy} за прошлую неделю не схраняется.
 
 у каждой нейросети своя цена за запрос
 
@@ -110,12 +114,9 @@ f'''*Помагатор - это агрегатор нейросетей*
 
 Уровни подписок:
 
-- 100 {candy} в неделю за {sub_plan_costs['month: 100/week']}₽ на 4 недели.
-- 300 {candy} в неделю за {sub_plan_costs['month: 300/week']}₽ на 4 недели.
-- 1000 {candy} в неделю за {sub_plan_costs['month: 1000/week']}₽ на 4 недели.
+{sub_plan_info}
 
-
-Каждые 7 дней пользователю начисляется определенное количество единиц внутренней валюты (фантики).
+Каждые 7 дней вам будет начисляется определенное количество фантиков.
 
 Остаток {candy} за прошлую неделю не схраняется.
 """

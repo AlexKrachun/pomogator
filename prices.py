@@ -40,6 +40,10 @@ sub_plan_costs = {  # rub
     'month: 1000/week': 1600,
 }
 
+star_cost = 1/2  # ⭐️ = 2₽
+
+sub_plan_costs_stars = {k: int(v / star_cost )for k, v in sub_plan_costs.items()}  # stars
+
 
 
 at_login_user_fantiks_amount = 100

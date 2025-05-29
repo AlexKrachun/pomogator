@@ -25,7 +25,7 @@ from Bot.app.utils.state import id_in_processing
 
 from Bot.app.utils.utils import print_text_message
 
-from prices import prices_for_users_in_fantiks, price_of_1_token_in_usd, fantik_to_usd, usd_to_fantik
+from prices import prices_for_users_in_fantiks, price_of_1_token_in_usd, fantik_to_usd, usd_to_fantik, SUBSCRIPTIONS, subs_stars_reward
 from Bot.app.consts import candy
 
 
@@ -68,21 +68,12 @@ async def language_cmd(message: types.Message):
 
 
 
-
-
-SUBSCRIPTIONS = {
-    "basic": {"title": "Базовый уровень", "description": "1 month access", "price": 80_00},
-    "optim": {"title": "Продвинутый уровень", "description": "1 months access", "price": 240_00},
-    "pro": {"title": "Премиум уровень", "description": "1 months access", "price": 800_00},
-}
-
-
 @router.message(Command("pay"))
 async def cmd_pay(message: types.Message):
     builder = InlineKeyboardBuilder()
     for key, plan in SUBSCRIPTIONS.items():
         builder.button(
-            text=f"{plan['title']} — ️{plan['price']//100}⭐️",
+            text=f"{plan['title']} — ️{plan['price']//100}₽",
             callback_data=f"subscribe:{key}"
         )
     builder.adjust(1)  # 1 кнопка в ряд
@@ -98,6 +89,9 @@ async def process_subscription(callback: types.CallbackQuery):
     await callback.answer()  # Acknowledge callback
     plan_key = callback.data.split(':')[1]
     plan = SUBSCRIPTIONS.get(plan_key)
+    print("=" * 100 + "\n" * 3 + plan_key + "\n" * 3)
+    print("=" * 100 + "\n" * 3, plan, "\n" * 3)
+
     if not plan:
         return await callback.message.answer("Неверный план.")
 
@@ -118,7 +112,12 @@ async def process_subscription(callback: types.CallbackQuery):
 @router.pre_checkout_query()
 async def process_pre_checkout(query: types.PreCheckoutQuery, bot: Bot):
     """Answer pre-checkout queries."""
-    await bot.answer_pre_checkout_query(query.id, ok=True)
+    tg_id = query.from_user.id
+    user = db_client.get_user_by_tg_id(tg_id)
+    if user.has_sub:
+            await bot.answer_pre_checkout_query(query.id, ok=False, error_message='У вас уже есть подписка. Дождитесь ее окончания прежде чем покупать новую')
+    else:
+        await bot.answer_pre_checkout_query(query.id, ok=True)
 
 @router.message(F.successful_payment)
 async def process_successful_payment(message: types.Message):
@@ -127,9 +126,24 @@ async def process_successful_payment(message: types.Message):
     payload = payment.invoice_payload
     plan_key = payload.replace("subscription_", "")
     await message.reply(f"Спасибо за оплату! Ваша подписка: {plan_key} активирована.")
+    print(f'{payment = } \n{payload = } \n{plan_key = }')
+    
+    # итак, оформляем подписочку в бд
+    tg_id = message.from_user.id
+    db_client.create_sub_by_tg_id(tg_id, subs_stars_reward[plan_key])
 
 
+'''
+- weekly_candy_from_sub = сколько эта подписка дает
+- оставить last_fantiks_update_date = None (чтобы при очередном запросе у чела пришли фантики)
+- user.has_sub = True
+- deposits_amount = 4
 
+
+===========
+- чекнуть, что подписки до сих пор нет. новую подписку нельзя начать, пока есть старая
+
+'''
 
 
 
@@ -207,7 +221,7 @@ async def mode_cmd(message: types.Message):
         weekly_candy_from_sub = db_client.get_weekly_candy_by_tg_id(tg_id)
 
         await message.answer(
-            f"Выберите подходящую вам модель.\nУ вас есть: {candy_left}/{weekly_candy_from_sub} {candy} (еженедельных)",
+            f"Выберите подходящую вам модель.\nУ вас есть: {candy_left} {candy}",
             reply_markup=reply_markup
         )
         logger.debug("Ответ на /mode успешно отправлен.")
@@ -268,7 +282,7 @@ async def profile_command(message: Message):
             if user.deposits_amount <= 0: # следующего пополнения уже не будет
                 profile_info += "Подписка заканчивается, пополнений больше не будет, оформите подписку еще раз.\n"
             else: # пополденение будет
-                profile_info += f"Дата следующего пополнения {user.last_fantiks_update_date + datetime.timedelta(weeks=1)}.\n"
+                profile_info += f"Дата следующего пополнения {(user.last_fantiks_update_date + datetime.timedelta(weeks=1)).strftime("%d.%m.%Y")}.\n"
                 profile_info += f"У вас осталось {user.deposits_amount} пополнений."
             
             
@@ -297,7 +311,7 @@ async def fantiki_cmd(message: Message):
         candy_left = user.candy_left
         weekly_candy_from_sub = user.weekly_candy_from_sub
         
-        answer = f"У вас осталось {candy_left} еженедельных фантиков"
+        answer = f"У вас осталось {candy_left} {candy}"
         
         if user.has_sub:  # есть подписка
             answer += f"Ваша подписка дает вам: {weekly_candy_from_sub} {candy} в неделю\n"
@@ -389,7 +403,7 @@ async def handle_model_switch(callback: types.CallbackQuery):
 
 
             await callback.message.edit_text(
-                f"Выберите подходящую вам модель.\nУ вас есть: {candy_left}/{weekly_candy_from_sub} {candy} (еженедельных)",
+                f"Выберите подходящую вам модель.\nУ вас есть: {candy_left} {candy}",
                 reply_markup=await inline_modes(us_id, db_client.get_user_model_by_tg_id(tg_id=us_id))
             )
             if model_name in ['dall-e-3']:
@@ -730,7 +744,7 @@ async def echo_msg(message: Message, bot: Bot, state: FSMContext):
 
     tg_id = message.from_user.id
 
-    db_client.update_sub_by_tg_id(tg_id)  # если подписка была, но кончилась - зануляем еженедельные фантики
+    db_client.check_sub_ended_by_tg_id(tg_id)  # если подписка была, но кончилась - зануляем еженедельные фантики
     db_client.update_candy_by_tg_id(tg_id)  # даем челу еженедельных фантиков согласно подписке или ее отсутвию
 
     last_used_model = str(db_client.get_user_model_by_tg_id(tg_id))

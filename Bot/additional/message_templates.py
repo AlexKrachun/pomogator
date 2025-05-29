@@ -2,9 +2,9 @@ from Bot.app.consts import candy
 from prices import sub_plan_costs, at_login_user_fantiks_amount, prices_for_users_in_fantiks, sub_plan_costs_stars
 
 sub_plan_info = f'''\
-- 100 {candy} в неделю за {sub_plan_costs_stars['month: 100/week']}⭐️ на 4 недели.
-- 300 {candy} в неделю за {sub_plan_costs_stars['month: 300/week']}⭐️ на 4 недели.
-- 1000 {candy} в неделю за {sub_plan_costs_stars['month: 1000/week']}⭐️ на 4 недели.
+- 100 {candy} в неделю за {sub_plan_costs['month: 100/week']} на 4 недели.
+- 300 {candy} в неделю за {sub_plan_costs['month: 300/week']} на 4 недели.
+- 1000 {candy} в неделю за {sub_plan_costs['month: 1000/week']} на 4 недели.
 '''
 
 message_templates = {

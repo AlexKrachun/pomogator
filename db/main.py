@@ -1,6 +1,6 @@
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy import asc, create_engine
 from sqlalchemy.orm import sessionmaker
@@ -342,7 +342,7 @@ class WorkWithDB:
                 logging.error(f'Error updating token_has: {e}')
 
 
-    def update_sub_by_tg_id(self, tg_id):
+    def check_sub_ended_by_tg_id(self, tg_id):
         with self._get_session() as session:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
@@ -360,17 +360,34 @@ class WorkWithDB:
                 logging.error(f'Error updating sub: {e}')
 
 
+    def create_sub_by_tg_id(self, tg_id, sub_weekly_fantiks_amount: int):
+        with self._get_session() as session:
+            try:
+                user = session.query(User).filter_by(tg_id=tg_id).first()
+                if user:
+                    user.weekly_candy_from_sub = sub_weekly_fantiks_amount
+                    user.has_sub = True
+                    user.deposits_amount = 4  # в течении подписки у него будет 4 пополнения (28 дней)
+                    user.sub_end = datetime.now() + timedelta(days=28)
+                    session.commit()
+                    print(f'Updated candy_left to {user.weekly_candy_from_sub} for tg_id {tg_id}.')
+
+            except Exception as e:
+                session.rollback()
+                logging.error(f'Error updating candy: {e}')
+
     def update_candy_by_tg_id(self, tg_id):
         with self._get_session() as session:
             try:
                 user = session.query(User).filter_by(tg_id=tg_id).first()
                 if user:
-                    # если еженедельные фантики еще не приходили или приходили больше недели назад 
+                    # если еженедельные фантики еще ни разу не приходили или приходили больше недели назад 
                     if (not user.last_fantiks_update_date) or ((datetime.now().date() - user.last_fantiks_update_date.date()).days >= 7):
                         user.last_request = datetime.now()
                         if user.has_sub:
                             user.candy_left = user.weekly_candy_from_sub  # либо 0, либо как в подписке
                             user.deposits_amount -= 1
+                            user.last_fantiks_update_date = datetime.now()
                         session.commit()
                     print(f'Updated candy_left to {user.weekly_candy_from_sub} for tg_id {tg_id}.')
 

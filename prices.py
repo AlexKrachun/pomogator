@@ -44,6 +44,17 @@ star_cost = 1/2  # ⭐️ = 2₽
 
 sub_plan_costs_stars = {k: int(v / star_cost )for k, v in sub_plan_costs.items()}  # stars
 
+SUBSCRIPTIONS = {
+'100-per-week': {"title": "Базовый уровень", "description": "1 month access", "price": sub_plan_costs['month: 100/week'] * 100},
+'300-per-week': {"title": "Стандартный уровень", "description": "1 months access", "price": sub_plan_costs['month: 300/week'] * 100},
+'1000-per-week': {"title": "Продвинутый уровень", "description": "1 months access", "price": sub_plan_costs['month: 1000/week'] * 100},
+}
+
+subs_stars_reward = {
+'100-per-week': 100, 
+'300-per-week': 300, 
+'1000-per-week': 1000, 
+}
 
 
 at_login_user_fantiks_amount = 100

@@ -82,7 +82,8 @@ async def cmd_pay(message: types.Message):
         reply_markup=builder.as_markup()
     )
 
-PAYMENT_PROVIDER_TOKEN = "381764678:TEST:125708"
+PAYMENT_PROVIDER_TOKEN = "390540012:LIVE:71227"
+
 @router.callback_query(F.data.startswith("subscribe:"))
 async def process_subscription(callback: types.CallbackQuery):
     """User chose a subscription: send invoice."""

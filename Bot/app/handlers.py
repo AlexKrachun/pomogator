@@ -126,7 +126,10 @@ async def process_successful_payment(message: types.Message):
     payment = message.successful_payment
     payload = payment.invoice_payload
     plan_key = payload.replace("subscription_", "")
-    await message.reply(f"Спасибо за оплату! Ваша подписка: {plan_key} активирована.")
+    # await message.reply(f"Спасибо за оплату! Ваша подписка: {plan_key} активирована.")
+    
+    await message.reply(f"Спасибо за оплату! Ваша подписка {subs_stars_reward[plan_key]} {candy} в неделю активирована.")
+    
     print(f'{payment = } \n{payload = } \n{plan_key = }')
     
     # итак, оформляем подписочку в бд
@@ -273,8 +276,8 @@ async def profile_command(message: Message):
         weekly_candy_from_sub = user.weekly_candy_from_sub
 
         profile_info = (
-            f"👤 Профиль пользователя:\n"
-            f"Логин: @{username}\n"
+            # f"👤 Профиль пользователя:\n"
+            # f"Логин: @{username}\n"
             f"Счет: {candy_left} {candy}\n"
         )
         if user.has_sub:  # есть подписка
@@ -283,7 +286,8 @@ async def profile_command(message: Message):
             if user.deposits_amount <= 0: # следующего пополнения уже не будет
                 profile_info += "Подписка заканчивается, пополнений больше не будет, оформите подписку еще раз.\n"
             else: # пополденение будет
-                profile_info += f"Дата следующего пополнения {(user.last_fantiks_update_date + datetime.timedelta(weeks=1)).strftime("%d.%m.%Y")}.\n"
+                if user.last_fantiks_update_date:
+                    profile_info += f"Дата следующего пополнения {(user.last_fantiks_update_date + datetime.timedelta(weeks=1)).strftime("%d.%m.%Y")}.\n"
                 profile_info += f"У вас осталось {user.deposits_amount} пополнений."
             
             

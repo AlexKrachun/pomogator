@@ -25,7 +25,7 @@ from Bot.app.utils.state import id_in_processing
 
 from Bot.app.utils.utils import print_text_message
 
-from prices import prices_for_users_in_fantiks, price_of_1_token_in_usd, fantik_to_usd, usd_to_fantik, SUBSCRIPTIONS, subs_stars_reward
+from prices import prices_for_users_in_fantiks, price_of_1_token_in_usd, fantik_to_usd, usd_to_fantik, SUBSCRIPTIONS, subs_stars_reward, subs_keys_translate, sub_plan_costs
 from Bot.app.consts import candy
 
 
@@ -135,6 +135,9 @@ async def process_successful_payment(message: types.Message):
     # итак, оформляем подписочку в бд
     tg_id = message.from_user.id
     db_client.create_sub_by_tg_id(tg_id, subs_stars_reward[plan_key])
+    
+    with open("subs_bought.txt", 'a') as f:
+        print(f'@{message.from_user.username} {sub_plan_costs[subs_keys_translate[plan_key]]}₽ {plan_key} {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', file=f)
 
 
 '''

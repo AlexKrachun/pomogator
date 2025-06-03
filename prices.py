@@ -56,6 +56,11 @@ subs_stars_reward = {
 '1000-per-week': 1000, 
 }
 
+subs_keys_translate = {
+'100-per-week': 'month: 100/week',
+'300-per-week': 'month: 300/week',
+'1000-per-week': 'month: 1000/week',
+}
 
 at_login_user_fantiks_amount = 100
 

@@ -12,7 +12,7 @@ class UserRegistrationMiddleware(BaseMiddleware):
         us_id = event.from_user.id
 
         if db_client.user_is_new_by_tg_id(us_id):
-            db_client.add_user(name=event.from_user.full_name, tg_id=us_id, last_used_model='gpt-4o-mini')
+            db_client.add_user(name=event.from_user.full_name, tg_id=us_id, last_used_model='gpt-4o')
             chat_id = db_client.create_new_context_by_tg_id(tg_id=us_id)
             db_client.set_current_context_by_tg_id(tg_id=us_id, context_id=chat_id)
             logger.debug("Пользователь успешно зарегистрирован через Middleware!")

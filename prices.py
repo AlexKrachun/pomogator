@@ -36,9 +36,9 @@ price_of_1_token_in_usd = {
 k = 4
 
 sub_plan_costs = {  # rub
-    'month: 100/week': 160 / k,
-    'month: 300/week': 480 / k,
-    'month: 1000/week': 1600 / k,
+    'month: 100/week': int(160 / k),
+    'month: 300/week': int(480 / k),
+    'month: 1000/week': int(1600 / k),
 }
 
 star_cost = 1/2  # ⭐️ = 2₽

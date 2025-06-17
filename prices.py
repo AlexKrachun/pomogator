@@ -33,7 +33,7 @@ price_of_1_token_in_usd = {
 }
 
 
-k = 4
+k = 2 
 
 sub_plan_costs = {  # rub
     'month: 100/week': int(160 / k),
